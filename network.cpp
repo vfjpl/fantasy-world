@@ -15,6 +15,11 @@ std::string get_PLAYER_TOKEN(const std::string& body)
 }
 }
 
+Network::Network():
+    session("54.37.227.73", 9001),
+    request(Poco::Net::HTTPRequest::HTTP_GET, "/echobot", Poco::Net::HTTPRequest::HTTP_1_1),
+    socket(session, request, response) {}
+
 std::string Network::login(const std::string& login, const std::string& password)
 {
     sf::Http http("fantasy-world.pl");
