@@ -40,6 +40,8 @@
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />
 		</Linker>
+		<Unit filename="engine.cpp" />
+		<Unit filename="engine.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="network.cpp" />
 		<Unit filename="network.hpp" />

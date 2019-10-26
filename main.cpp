@@ -1,8 +1,8 @@
-#include "network.hpp"
+#include "engine.hpp"
 
 int main()
 {
-    Network network;
-
+    Engine engine;
+    while(engine.run_game());
     return EXIT_SUCCESS;
 }
