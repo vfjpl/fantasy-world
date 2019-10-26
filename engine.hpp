@@ -19,6 +19,8 @@ private:
 
     void process_input();
     void draw_frame();
+
+    void process_network(const Poco::JSON::Object& json);
 };
 
 #endif // ENGINE_HPP_INCLUDED

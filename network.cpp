@@ -1,6 +1,5 @@
 #include "network.hpp"
 #include <SFML/Network/Http.hpp>
-#include <Poco/JSON/Object.h>
 
 namespace
 {
@@ -77,13 +76,13 @@ void Network::load_send(sf::Vector2u size)
     send(ss.str());
 }
 
-std::string Network::load_receive()
+Poco::JSON::Object::Ptr Network::load_receive()
 {
     sf::Http http("fantasy-world.pl");
     sf::Http::Request request1("/game/init/" + token);
     request1.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response1 = http.sendRequest(request1);
-    return response1.getBody();
+    return parser.parse(response1.getBody()).extract<Poco::JSON::Object::Ptr>();
 }
 
 void Network::send(const std::string& json)
@@ -91,10 +90,10 @@ void Network::send(const std::string& json)
     socket.sendFrame(json.data(), json.size());
 }
 
-std::string Network::receive()
+Poco::JSON::Object::Ptr Network::receive()
 {
     int flags;
-    socket.receiveFrame(buffer, flags);
     buffer.resize(0, false);
-    return buffer.begin();
+    socket.receiveFrame(buffer, flags);
+    return parser.parse(std::string(buffer.begin(), buffer.size())).extract<Poco::JSON::Object::Ptr>();
 }
