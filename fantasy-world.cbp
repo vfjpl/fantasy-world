@@ -33,6 +33,7 @@
 		</Compiler>
 		<Linker>
 			<Add library="PocoNet" />
+			<Add library="PocoJSON" />
 			<Add library="PocoFoundation" />
 			<Add library="sfml-network" />
 			<Add library="sfml-graphics" />

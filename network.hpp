@@ -12,10 +12,13 @@ class Network
     Poco::Net::HTTPRequest request;
     Poco::Net::HTTPResponse response;
     Poco::Net::WebSocket socket;
+    Poco::Buffer<char> buffer;
 
 public:
     Network();
     std::string login(const std::string& login, const std::string& password);
+    void send(const std::string& str);
+    std::string receive();
 };
 
 #endif // NETWORK_HPP_INCLUDED

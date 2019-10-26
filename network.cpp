@@ -18,7 +18,8 @@ std::string get_PLAYER_TOKEN(const std::string& body)
 Network::Network():
     session("54.37.227.73", 9001),
     request(Poco::Net::HTTPRequest::HTTP_GET, "/echobot", Poco::Net::HTTPRequest::HTTP_1_1),
-    socket(session, request, response) {}
+    socket(session, request, response),
+    buffer(0) {}
 
 std::string Network::login(const std::string& login, const std::string& password)
 {
@@ -49,4 +50,16 @@ std::string Network::login(const std::string& login, const std::string& password
     sf::Http::Response response5 = http.sendRequest(request5);
 
     return get_PLAYER_TOKEN(response5.getBody());
+}
+
+void Network::send(const std::string& str)
+{
+    socket.sendFrame(str.data(), str.size());
+}
+
+std::string Network::receive()
+{
+    int flags;
+    socket.receiveFrame(buffer, flags);
+    return buffer.begin();
 }
