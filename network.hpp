@@ -5,6 +5,7 @@
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/WebSocket.h>
+#include <SFML/System/Vector2.hpp>
 
 class Network
 {
@@ -19,7 +20,9 @@ class Network
 public:
     Network();
     void login(const std::string& login, const std::string& password);
-    std::string get_init();
+
+    void load_send(sf::Vector2u size);
+    std::string load_receive();
 
     void send(const std::string& json);
     std::string receive();

@@ -1,8 +1,8 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include "network.hpp"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 class Engine
 {

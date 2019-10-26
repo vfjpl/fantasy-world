@@ -1,5 +1,6 @@
 #include "network.hpp"
 #include <SFML/Network/Http.hpp>
+#include <Poco/JSON/Object.h>
 
 namespace
 {
@@ -61,7 +62,22 @@ void Network::login(const std::string& login, const std::string& password)
     token = get_PLAYER_TOKEN(response5.getBody());
 }
 
-std::string Network::get_init()
+void Network::load_send(sf::Vector2u size)
+{
+    Poco::JSON::Object json;
+    json.set("code", 1);
+    Poco::JSON::Array array;
+    array.add(size.x);
+    array.add(size.y);
+    json.set("window", array);
+    json.set("token", token);
+
+    std::stringstream ss;
+    json.stringify(ss);
+    send(ss.str());
+}
+
+std::string Network::load_receive()
 {
     sf::Http http("fantasy-world.pl");
     sf::Http::Request request1("/game/init/" + token);
@@ -79,5 +95,6 @@ std::string Network::receive()
 {
     int flags;
     socket.receiveFrame(buffer, flags);
+    buffer.resize(0, false);
     return buffer.begin();
 }

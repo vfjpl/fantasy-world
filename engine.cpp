@@ -1,5 +1,6 @@
 #include "engine.hpp"
 #include <SFML/Window/Event.hpp>
+#include <iostream>
 
 Engine::Engine()
 {
@@ -10,11 +11,14 @@ bool Engine::run_game()
 {
     process_input();
     draw_frame();
+
     return window.isOpen();
 }
 
 bool Engine::run_network()
 {
+    std::cout << network.receive() << '\n';
+
     return window.isOpen();
 }
 
