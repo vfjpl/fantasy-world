@@ -13,11 +13,15 @@ class Network
     Poco::Net::HTTPResponse response;
     Poco::Net::WebSocket socket;
     Poco::Buffer<char> buffer;
+    std::string cookies;
+    std::string token;
 
 public:
     Network();
-    std::string login(const std::string& login, const std::string& password);
-    void send(const std::string& str);
+    void login(const std::string& login, const std::string& password);
+    std::string get_init();
+
+    void send(const std::string& json);
     std::string receive();
 };
 
