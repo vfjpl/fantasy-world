@@ -36,7 +36,7 @@ void Network::login(const std::string& login, const std::string& password)
 
     // 2. log in and get second cookie
     sf::Http::Request request2("/ajax/login", sf::Http::Request::Post, "login=" + login + "&password=" + password);
-    request2.setField(Poco::Net::HTTPRequest::COOKIE, getCOOKIE(cookies, 0));
+    request2.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response2 = http.sendRequest(request2);
     cookies += getCOOKIE(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE), 0);
 

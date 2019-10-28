@@ -5,6 +5,8 @@
 Engine::Engine()
 {
     setup_window(false);
+    network.login();
+    network.sendInit(window.getSize());
 }
 
 bool Engine::run_game()
@@ -78,5 +80,5 @@ void Engine::draw_frame()
 
 void Engine::process_network(const Poco::DynamicStruct& json)
 {
-
+    std::cout << json["code"].toString() << '\n';
 }
