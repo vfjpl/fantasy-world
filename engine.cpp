@@ -17,7 +17,7 @@ bool Engine::run_game()
 
 bool Engine::run_network()
 {
-    process_network(*network.receive());
+    process_network(network.receive());
 
     return window.isOpen();
 }
@@ -76,10 +76,7 @@ void Engine::draw_frame()
     window.display();
 }
 
-void Engine::process_network(const Poco::JSON::Object& json)
+void Engine::process_network(const Poco::DynamicStruct& json)
 {
-    for(auto &i: json)
-    {
-        std::cout << i.first << '\n';
-    }
+
 }

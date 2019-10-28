@@ -3,20 +3,16 @@
 
 namespace
 {
-std::string get_COOKIE1(const std::string& body)
+std::string getCOOKIE(const std::string& body, size_t k)
 {
-    return body.substr(0, body.find(';') + 2);
+    return body.substr(0, body.find(';') + k);
 }
-std::string get_COOKIE2(const std::string& body)
-{
-    return body.substr(0, body.find(';'));
-}
-std::string get_ID(const std::string& body)
+std::string getID(const std::string& body)
 {
     size_t pos = body.find("value") + 7;
     return body.substr(pos, body.find('\"', pos) - pos);
 }
-std::string get_PLAYER_TOKEN(const std::string& body)
+std::string getPLAYER_TOKEN(const std::string& body)
 {
     size_t pos = body.find("player_token") + 16;
     return body.substr(pos, body.find('\'', pos) - pos);
@@ -36,13 +32,13 @@ void Network::login(const std::string& login, const std::string& password)
     // 1. get first cookie
     sf::Http::Request request1("/modal/get/login");
     sf::Http::Response response1 = http.sendRequest(request1);
-    cookies = get_COOKIE1(response1.getField(Poco::Net::HTTPResponse::SET_COOKIE));
+    cookies = getCOOKIE(response1.getField(Poco::Net::HTTPResponse::SET_COOKIE), 2);
 
     // 2. log in and get second cookie
     sf::Http::Request request2("/ajax/login", sf::Http::Request::Post, "login=" + login + "&password=" + password);
-    request2.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
+    request2.setField(Poco::Net::HTTPRequest::COOKIE, getCOOKIE(cookies, 0));
     sf::Http::Response response2 = http.sendRequest(request2);
-    cookies += get_COOKIE2(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE));
+    cookies += getCOOKIE(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE), 0);
 
     // 3. get hero id
     sf::Http::Request request3;
@@ -50,7 +46,7 @@ void Network::login(const std::string& login, const std::string& password)
     sf::Http::Response response3 = http.sendRequest(request3);
 
     // 4. set hero id
-    sf::Http::Request request4("/game/login", sf::Http::Request::Post, "id=" + get_ID(response3.getBody()));
+    sf::Http::Request request4("/game/login", sf::Http::Request::Post, "id=" + getID(response3.getBody()));
     request4.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response4 = http.sendRequest(request4);
 
@@ -58,31 +54,30 @@ void Network::login(const std::string& login, const std::string& password)
     sf::Http::Request request5("/game");
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
-    token = get_PLAYER_TOKEN(response5.getBody());
+    token = getPLAYER_TOKEN(response5.getBody());
 }
 
-void Network::load_send(sf::Vector2u size)
+void Network::sendInit(sf::Vector2u windowSize)
 {
-    Poco::JSON::Object json;
-    json.set("code", 1);
-    Poco::JSON::Array array;
-    array.add(size.x);
-    array.add(size.y);
-    json.set("window", array);
-    json.set("token", token);
+    std::vector<Poco::DynamicAny> tmp;
+    tmp.emplace_back(windowSize.x);
+    tmp.emplace_back(windowSize.y);
 
-    std::stringstream ss;
-    json.stringify(ss);
-    send(ss.str());
+    Poco::DynamicStruct json;
+    json.insert("code", 1);
+    json.insert("window", tmp);
+    json.insert("token", token);
+
+    send(json.toString());
 }
 
-Poco::JSON::Object::Ptr Network::load_receive()
+Poco::DynamicStruct Network::receiveInit()
 {
     sf::Http http("fantasy-world.pl");
     sf::Http::Request request1("/game/init/" + token);
     request1.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response1 = http.sendRequest(request1);
-    return parser.parse(response1.getBody()).extract<Poco::JSON::Object::Ptr>();
+    return Poco::DynamicAny::parse(response1.getBody()).extract<Poco::DynamicStruct>();
 }
 
 void Network::send(const std::string& json)
@@ -90,10 +85,10 @@ void Network::send(const std::string& json)
     socket.sendFrame(json.data(), json.size());
 }
 
-Poco::JSON::Object::Ptr Network::receive()
+Poco::DynamicStruct Network::receive()
 {
     int flags;
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
-    return parser.parse(std::string(buffer.begin(), buffer.size())).extract<Poco::JSON::Object::Ptr>();
+    return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.size())).extract<Poco::DynamicStruct>();
 }
