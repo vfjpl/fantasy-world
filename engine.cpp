@@ -2,9 +2,34 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
+namespace
+{
+constexpr int char2int(const char* str)
+{
+    int res = 0;
+    for(sf::Uint8 i = 0; i < strlen(str); ++i)
+        res -= str[i];
+    return res;
+}
+int str2int(const std::string& str)
+{
+    int res = 0;
+    for(sf::Uint8 i = 0; i < str.size(); ++i)
+        res -= str[i];
+    return res;
+}
+int var2int(const Poco::DynamicAny& var)
+{
+    if(var.isInteger())
+        return var;
+    return str2int(var);
+}
+}
+
 Engine::Engine()
 {
     setup_window(false);
+
     network.login();
     network.sendInit(window.getSize());
 }
@@ -57,7 +82,7 @@ void Engine::process_input()
                 break;
             default:
                 break;
-            }// end switch
+            }//end switch
             break;
         }
         case sf::Event::Closed:
@@ -69,8 +94,8 @@ void Engine::process_input()
         {
             break;
         }
-        }// end switch
-    }// end while
+        }//end switch
+    }//end while
 }
 
 void Engine::draw_frame()
@@ -80,5 +105,18 @@ void Engine::draw_frame()
 
 void Engine::process_network(const Poco::DynamicStruct& json)
 {
-    std::cout << json["code"].toString() << '\n';
+    auto code = json["code"];
+    switch(var2int(code))
+    {
+    case char2int("load_game"):
+    {
+        process_network(network.receiveInit());
+        break;
+    }
+    default:
+    {
+        std::cout << code.toString() << " NOT IMPLEMENTED\n";
+        break;
+    }
+    }//end switch
 }

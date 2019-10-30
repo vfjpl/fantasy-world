@@ -59,13 +59,13 @@ void Network::login(const std::string& login, const std::string& password)
 
 void Network::sendInit(sf::Vector2u windowSize)
 {
-    std::vector<Poco::DynamicAny> tmp;
-    tmp.emplace_back(windowSize.x);
-    tmp.emplace_back(windowSize.y);
+    std::vector<Poco::DynamicAny> jsonArray;
+    jsonArray.emplace_back(windowSize.x);
+    jsonArray.emplace_back(windowSize.y);
 
     Poco::DynamicStruct json;
     json.insert("code", 1);
-    json.insert("window", tmp);
+    json.insert("window", jsonArray);
     json.insert("token", token);
 
     send(json.toString());
