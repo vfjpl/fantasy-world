@@ -115,7 +115,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
         {
             auto map_tile = map_data[i];
-            std::cout << map_tile["source"].extract<std::string>() << '\n';
+            resourceManager.load_graphic(map_tile["source"], MAP_TILE);
         }
         break;
     }

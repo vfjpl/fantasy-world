@@ -7,13 +7,21 @@ const sf::Texture& Resource_Manager::get_texture(const std::string& name) const
     return storage.at(name);
 }
 
-void Resource_Manager::load_graphic(const std::string& name)
+void Resource_Manager::load_graphic(const std::string& name, Graphic type)
 {
     if(storage.count(name))
         return;
 
+    std::string uri;
+    switch(type)
+    {
+    case MAP_TILE:
+        uri = "/assets/" + name + ".png";
+        break;
+    }//end switch
+
     sf::Http http("fantasy-world.pl");
-    sf::Http::Request req(name);
+    sf::Http::Request req(uri);
     sf::Http::Response resp = http.sendRequest(req);
 
     unsigned long lenght = std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH));
