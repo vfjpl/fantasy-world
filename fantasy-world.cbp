@@ -44,6 +44,8 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="network.cpp" />
 		<Unit filename="network.hpp" />
+		<Unit filename="resource_manager.cpp" />
+		<Unit filename="resource_manager.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

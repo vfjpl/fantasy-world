@@ -2,12 +2,14 @@
 #define ENGINE_HPP_INCLUDED
 
 #include "network.hpp"
+#include "resource_manager.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class Engine
 {
     sf::RenderWindow window;
     Network network;
+    Resource_Manager resourceManager;
 
 public:
     Engine();

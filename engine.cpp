@@ -108,6 +108,17 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     auto code = json["code"];
     switch(var2int(code))
     {
+    case 100:
+    {
+        auto data = json["data"];
+        auto map_data = data["map_data"];
+        for(sf::Uint8 i = 0; i < map_data.size(); ++i)
+        {
+            auto map_tile = map_data[i];
+            std::cout << map_tile["source"].extract<std::string>() << '\n';
+        }
+        break;
+    }
     case char2int("load_game"):
     {
         process_network(network.receiveInit());
