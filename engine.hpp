@@ -1,6 +1,7 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
+#include "map.hpp"
 #include "network.hpp"
 #include "resource_manager.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -8,6 +9,7 @@
 class Engine
 {
     sf::RenderWindow window;
+    Map map;
     Network network;
     Resource_Manager resourceManager;
 

@@ -100,6 +100,7 @@ void Engine::process_input()
 
 void Engine::draw_frame()
 {
+    map.draw(window);
     window.display();
 }
 
@@ -116,6 +117,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         {
             auto map_tile = map_data[i];
             resourceManager.load_graphic(map_tile["source"], MAP_TILE);
+            map.set_texture(resourceManager.get_texture(map_tile["source"]), map_tile["x"], map_tile["y"]);
         }
         break;
     }
