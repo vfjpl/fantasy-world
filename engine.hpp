@@ -4,7 +4,6 @@
 #include "map.hpp"
 #include "network.hpp"
 #include "resource_manager.hpp"
-#include <SFML/Graphics/RenderWindow.hpp>
 
 class Engine
 {

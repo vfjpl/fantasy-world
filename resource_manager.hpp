@@ -16,7 +16,7 @@ class Resource_Manager
 
 public:
     //give you texture that you can use with sprites
-    const sf::Texture& get_texture(const std::string& name) const;
+    const sf::Texture& get_texture(const std::string& name);
 
     //download graphic with given name and type
     void load_graphic(const std::string& name, Graphic type);

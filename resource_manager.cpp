@@ -2,9 +2,9 @@
 #include <SFML/Network/Http.hpp>
 #include <Poco/Net/HTTPMessage.h>
 
-const sf::Texture& Resource_Manager::get_texture(const std::string& name) const
+const sf::Texture& Resource_Manager::get_texture(const std::string& name)
 {
-    return storage.at(name);
+    return storage[name];
 }
 
 void Resource_Manager::load_graphic(const std::string& name, Graphic type)
