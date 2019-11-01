@@ -7,6 +7,7 @@
 enum Graphic
 {
     MAP_TILE,
+    MONSTER,
 };
 
 class Resource_Manager

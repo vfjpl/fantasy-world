@@ -18,6 +18,9 @@ void Resource_Manager::load_graphic(const std::string& name, Graphic type)
     case MAP_TILE:
         uri = "/assets/" + name + ".png";
         break;
+    case MONSTER:
+        uri = "/templates/client/default/images/monsters/" + name + ".gif";
+        break;
     }//end switch
 
     sf::Http http("fantasy-world.pl");

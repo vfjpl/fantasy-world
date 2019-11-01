@@ -116,9 +116,18 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
         {
             auto map_tile = map_data[i];
-            std::string name = map_tile["source"];
+            const std::string& name = map_tile["source"];
             resourceManager.load_graphic(name, MAP_TILE);
             map.set_texture(resourceManager.get_texture(name), map_tile["x"], map_tile["y"]);
+        }
+        auto monsters = data["monsters"];
+        for(sf::Uint8 i = 0; i < monsters.size(); ++i)
+        {
+            auto monster = monsters[i];
+            int id = monster["id"];
+            const std::string& looktype = monster["looktype"];
+            resourceManager.load_graphic(looktype, MONSTER);
+            map.monsters.emplace(id, resourceManager.get_texture(looktype));
         }
         break;
     }
