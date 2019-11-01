@@ -109,6 +109,29 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     auto code = json["code"];
     switch(var2int(code))
     {
+    case 55:
+    {
+        auto data = json["data"].extract<Poco::DynamicStruct>();
+        switch(str2int(data.begin()->first))
+        {
+        case char2int("moves"):
+        {
+            auto array = data.begin()->second;
+            for(sf::Uint8 i = 0; i < array.size(); ++i)
+            {
+                auto v = array[i];
+                map.monsters[v["monster"]].set_position(v["x"], v["y"]);
+            }
+            break;
+        }
+        default:
+        {
+            std::cout << data.begin()->first << " NOT IMPLEMENTED\n";
+            break;
+        }
+        }//end switch
+        break;
+    }
     case 100:
     {
         auto data = json["data"];
@@ -127,7 +150,8 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             int id = monster["id"];
             const std::string& looktype = monster["looktype"];
             resourceManager.load_graphic(looktype, MONSTER);
-            map.monsters.emplace(id, resourceManager.get_texture(looktype));
+            map.monsters[id].set_texture(resourceManager.get_texture(looktype), monster["width"], monster["height"]);
+            map.monsters[id].set_position(monster["x"], monster["y"]);
         }
         break;
     }
