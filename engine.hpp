@@ -8,6 +8,7 @@
 class Engine
 {
     sf::RenderWindow window;
+    sf::View camera;
     Map map;
     Network network;
     Resource_Manager resourceManager;
@@ -19,6 +20,7 @@ public:
 
 private:
     void setup_window(bool fullscreen);
+    void cameraCenter(int x, int y);
 
     void process_input();
     void draw_frame();

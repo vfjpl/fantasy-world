@@ -63,7 +63,12 @@ void Engine::setup_window(bool fullscreen)
         window.create(mode, "fantasy-world", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
-    window.clear();
+    camera = window.getDefaultView();
+}
+
+void Engine::cameraCenter(int x, int y)
+{
+    camera.setCenter((32 * x) + 16, (32 * y) + 16);
 }
 
 void Engine::process_input()
@@ -77,6 +82,18 @@ void Engine::process_input()
         {
             switch(event.key.code)
             {
+            case sf::Keyboard::W:
+                network.move(3);
+                break;
+            case sf::Keyboard::A:
+                network.move(1);
+                break;
+            case sf::Keyboard::S:
+                network.move(4);
+                break;
+            case sf::Keyboard::D:
+                network.move(2);
+                break;
             case sf::Keyboard::Escape:
                 window.close();
                 break;
@@ -100,6 +117,7 @@ void Engine::process_input()
 
 void Engine::draw_frame()
 {
+    window.setView(camera);
     map.draw(window);
     window.display();
 }
@@ -124,6 +142,16 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             }
             break;
         }
+        case char2int("npc_moves"):
+        {
+            auto array = data.begin()->second;
+            for(sf::Uint8 i = 0; i < array.size(); ++i)
+            {
+                auto v = array[i];
+                map.NPCs[v["npc"]].set_position(v["x"], v["y"]);
+            }
+            break;
+        }
         default:
         {
             std::cout << data.begin()->first << " NOT IMPLEMENTED\n";
@@ -133,16 +161,41 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         break;
     }
     case 100:
+    case char2int("teleport"):
     {
         auto data = json["data"];
-        auto map_data = data["map_data"];
-        for(sf::Uint8 i = 0; i < map_data.size(); ++i)
+        auto map_positions = data["map_positions"];
+        cameraCenter(map_positions["PLAYER_X"], map_positions["PLAYER_Y"]);
+
+        auto lmap = data["map"];
+        switch(var2int(lmap["type"]))
         {
-            auto map_tile = map_data[i];
-            const std::string& name = map_tile["source"];
-            resourceManager.load_graphic(name, MAP_TILE);
-            map.set_texture(resourceManager.get_texture(name), map_tile["x"], map_tile["y"]);
+        case 1:
+        {
+            auto map_data = data["map_data"];
+            for(sf::Uint8 i = 0; i < map_data.size(); ++i)
+            {
+                auto map_tile = map_data[i];
+                const std::string& name = map_tile["source"];
+                resourceManager.load_graphic(name, MAP_TILE);
+                map.set_texture(resourceManager.get_texture(name), map_tile["x"], map_tile["y"]);
+            }
+            break;
         }
+        case 2:
+        {
+            const std::string& name = lmap["id"];
+            resourceManager.load_graphic(name, MAP_SINGLE);
+            map.set_texture(resourceManager.get_texture(name), 0, 0);
+            break;
+        }
+        default:
+        {
+            std::cout << lmap["type"].toString() << " NOT IMPLEMENTED\n";
+            break;
+        }
+        }//end switch
+
         auto monsters = data["monsters"];
         for(sf::Uint8 i = 0; i < monsters.size(); ++i)
         {
@@ -153,10 +206,28 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             map.monsters[id].set_texture(resourceManager.get_texture(looktype), monster["width"], monster["height"]);
             map.monsters[id].set_position(monster["x"], monster["y"]);
         }
+        auto npcs = data["npcs"];
+        for(sf::Uint8 i = 0; i < npcs.size(); ++i)
+        {
+            auto npc = npcs[i];
+            int id = npc["id"];
+            const std::string& looktype = npc["looktype"];
+            resourceManager.load_graphic(looktype, NPC);
+            map.NPCs[id].set_texture(resourceManager.get_texture(looktype));
+            map.NPCs[id].set_position(npc["x"], npc["y"]);
+        }
+        break;
+    }
+    case 101:
+    {
+        cameraCenter(json["x"], json["y"]);
         break;
     }
     case char2int("load_game"):
     {
+        map.tiles.clear();
+        map.monsters.clear();
+        map.NPCs.clear();
         process_network(network.receiveInit());
         break;
     }

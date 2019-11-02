@@ -92,3 +92,14 @@ Poco::DynamicStruct Network::receive()
     socket.receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.size())).extract<Poco::DynamicStruct>();
 }
+
+void Network::move(int dir)
+{
+    Poco::DynamicStruct mov;
+    mov.insert("dir", dir);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 5);
+    json.insert("data", mov);
+    send(json.toString());
+}

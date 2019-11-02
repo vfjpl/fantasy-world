@@ -18,8 +18,14 @@ void Resource_Manager::load_graphic(const std::string& name, Graphic type)
     case MAP_TILE:
         uri = "/assets/" + name + ".png";
         break;
+    case MAP_SINGLE:
+        uri = "/assets/maps/files/" + name + ".png";
+        break;
     case MONSTER:
         uri = "/templates/client/default/images/monsters/" + name + ".gif";
+        break;
+    case NPC:
+        uri = "/assets/avatars/" + name + ".gif";
         break;
     }//end switch
 

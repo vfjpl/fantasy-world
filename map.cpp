@@ -14,4 +14,6 @@ void Map::draw(sf::RenderWindow& window)
         window.draw(tiles[i]);
     for(auto &i: monsters)
         i.second.draw(window);
+    for(auto &i: NPCs)
+        i.second.draw(window);
 }

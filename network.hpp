@@ -26,6 +26,8 @@ public:
 
     void send(const std::string& json);
     Poco::DynamicStruct receive();
+
+    void move(int dir);
 };
 
 #endif // NETWORK_HPP_INCLUDED
