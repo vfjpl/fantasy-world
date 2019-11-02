@@ -20,7 +20,7 @@ class Network
 
 public:
     Network();
-    void login(const std::string& login, const std::string& password);
+    std::string login(const std::string& login, const std::string& password);
     void sendInit(sf::Vector2u windowSize);
     Poco::DynamicStruct receiveInit();
 

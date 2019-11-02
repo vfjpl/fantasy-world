@@ -17,6 +17,11 @@ std::string getPLAYER_TOKEN(const std::string& body)
     size_t pos = body.find("player_token") + 16;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
+std::string getLOOKTYPE(const std::string& body)
+{
+    size_t pos = body.find("url") + 5;
+    return body.substr(pos, body.find('\'', pos) - pos);
+}
 }
 
 Network::Network():
@@ -25,7 +30,7 @@ Network::Network():
     socket(session, request, response),
     buffer(0) {}
 
-void Network::login(const std::string& login, const std::string& password)
+std::string Network::login(const std::string& login, const std::string& password)
 {
     sf::Http http("fantasy-world.pl");
 
@@ -55,6 +60,7 @@ void Network::login(const std::string& login, const std::string& password)
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
     token = getPLAYER_TOKEN(response5.getBody());
+    return getLOOKTYPE(response5.getBody());
 }
 
 void Network::sendInit(sf::Vector2u windowSize)

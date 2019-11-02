@@ -28,9 +28,11 @@ int var2int(const Poco::DynamicAny& var)
 
 Engine::Engine()
 {
-    setup_window(false);
+    setup_window(true);
 
-    network.login();
+    std::string looktype = network.login();
+    resourceManager.load_graphic(looktype, LOOKTYPE);
+    map.player.set_texture(resourceManager.get_texture(looktype));
     network.sendInit(window.getSize());
 }
 
@@ -68,7 +70,7 @@ void Engine::setup_window(bool fullscreen)
 
 void Engine::cameraCenter(int x, int y)
 {
-    camera.setCenter((32 * x) + 16, (32 * y) + 16);
+    camera.setCenter((32 * x) - 16, (32 * y) - 16);
 }
 
 void Engine::process_input()
@@ -165,7 +167,10 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
         auto data = json["data"];
         auto map_positions = data["map_positions"];
-        cameraCenter(map_positions["PLAYER_X"], map_positions["PLAYER_Y"]);
+        int x = map_positions["PLAYER_X"];
+        int y = map_positions["PLAYER_Y"];
+        cameraCenter(x, y);
+        map.player.set_position(x, y);
 
         auto lmap = data["map"];
         switch(var2int(lmap["type"]))
@@ -220,14 +225,15 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 101:
     {
-        cameraCenter(json["x"], json["y"]);
+        int x = json["x"];
+        int y = json["y"];
+        cameraCenter(x, y);
+        map.player.set_position(x, y);
         break;
     }
     case char2int("load_game"):
     {
-        map.tiles.clear();
-        map.monsters.clear();
-        map.NPCs.clear();
+        map.clear();
         process_network(network.receiveInit());
         break;
     }

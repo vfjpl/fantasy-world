@@ -10,6 +10,7 @@ enum Graphic
     MAP_SINGLE,
     MONSTER,
     NPC,
+    LOOKTYPE,
 };
 
 class Resource_Manager

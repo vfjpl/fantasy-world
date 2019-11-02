@@ -27,6 +27,9 @@ void Resource_Manager::load_graphic(const std::string& name, Graphic type)
     case NPC:
         uri = "/assets/avatars/" + name + ".gif";
         break;
+    case LOOKTYPE:
+        uri = name;
+        break;
     }//end switch
 
     sf::Http http("fantasy-world.pl");

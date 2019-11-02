@@ -8,12 +8,24 @@ void Map::set_texture(const sf::Texture& texture, int x, int y)
     tiles.back().setPosition(texture_size.x * x, texture_size.y * y);
 }
 
+void Map::clear()
+{
+    mutex.lock();
+    tiles.clear();
+    monsters.clear();
+    NPCs.clear();
+    mutex.unlock();
+}
+
 void Map::draw(sf::RenderWindow& window)
 {
+    mutex.lock();
     for(sf::Uint8 i = 0; i < tiles.size(); ++i)
         window.draw(tiles[i]);
     for(auto &i: monsters)
         i.second.draw(window);
     for(auto &i: NPCs)
         i.second.draw(window);
+    player.draw(window);
+    mutex.unlock();
 }
