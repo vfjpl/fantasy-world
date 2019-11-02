@@ -12,6 +12,7 @@ class Engine
     Map map;
     Network network;
     Resource_Manager resourceManager;
+    sf::Vector2i center;
 
 public:
     Engine();
@@ -20,7 +21,9 @@ public:
 
 private:
     void setup_window(bool fullscreen);
+    void cameraScrool();
     void cameraCenter(int x, int y);
+    void cameraSmooth(int x, int y);
 
     void process_input();
     void draw_frame();

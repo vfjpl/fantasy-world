@@ -68,9 +68,23 @@ void Engine::setup_window(bool fullscreen)
     camera = window.getDefaultView();
 }
 
+void Engine::cameraScrool()
+{
+    sf::Vector2i diff = center - sf::Vector2i(camera.getCenter());
+    camera.move(std::max(-1, std::min(diff.x, 1)), std::max(-1, std::min(diff.y, 1)));
+}
+
 void Engine::cameraCenter(int x, int y)
 {
-    camera.setCenter((32 * x) - 16, (32 * y) - 16);
+    center.x = (32 * x) - 16;
+    center.y = (32 * y) - 16;
+    camera.setCenter(center.x, center.y);
+}
+
+void Engine::cameraSmooth(int x, int y)
+{
+    center.x = (32 * x) - 16;
+    center.y = (32 * y) - 16;
 }
 
 void Engine::process_input()
@@ -119,6 +133,7 @@ void Engine::process_input()
 
 void Engine::draw_frame()
 {
+    cameraScrool();
     window.setView(camera);
     map.draw(window);
     window.display();
@@ -140,7 +155,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             for(sf::Uint8 i = 0; i < array.size(); ++i)
             {
                 auto v = array[i];
-                map.monsters[v["monster"]].set_position(v["x"], v["y"]);
+                map.monsters[v["monster"]].move(v["x"], v["y"]);
             }
             break;
         }
@@ -150,7 +165,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             for(sf::Uint8 i = 0; i < array.size(); ++i)
             {
                 auto v = array[i];
-                map.NPCs[v["npc"]].set_position(v["x"], v["y"]);
+                map.NPCs[v["npc"]].move(v["x"], v["y"]);
             }
             break;
         }
@@ -227,7 +242,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
         int x = json["x"];
         int y = json["y"];
-        cameraCenter(x, y);
+        cameraSmooth(x, y);
         map.player.set_position(x, y);
         break;
     }
