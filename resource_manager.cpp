@@ -27,7 +27,10 @@ void Resource_Manager::load_graphic(const std::string& name, Graphic type)
     case NPC:
         uri = "/assets/avatars/" + name + ".gif";
         break;
-    case LOOKTYPE:
+    case PLAYER:
+        uri = "/assets/looktypes/" + name + ".gif";
+        break;
+    case DIRECT:
         uri = name;
         break;
     }//end switch

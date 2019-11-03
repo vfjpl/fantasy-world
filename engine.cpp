@@ -31,7 +31,7 @@ Engine::Engine()
     setup_window(true);
 
     std::string looktype = network.login();
-    resourceManager.load_graphic(looktype, LOOKTYPE);
+    resourceManager.load_graphic(looktype, DIRECT);
     map.player.set_texture(resourceManager.get_texture(looktype));
     network.sendInit(window.getSize());
 }
@@ -76,12 +76,11 @@ void Engine::cameraScrool()
 
 void Engine::cameraCenter(int x, int y)
 {
-    center.x = (32 * x) - 16;
-    center.y = (32 * y) - 16;
+    cameraMove(x, y);
     camera.setCenter(center.x, center.y);
 }
 
-void Engine::cameraSmooth(int x, int y)
+void Engine::cameraMove(int x, int y)
 {
     center.x = (32 * x) - 16;
     center.y = (32 * y) - 16;
@@ -144,37 +143,78 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     auto code = json["code"];
     switch(var2int(code))
     {
-    case 55:
+    case 10://other player movement
+    {
+        int id = json["player"];
+        map.players[id].set_dir(json["dir"]);
+        map.players[id].move(json["x"], json["y"]);
+        break;
+    }
+    case 54://remove monster
+    {
+        int id = json["id"];
+        map.monsters.erase(id);
+        break;
+    }
+    case 55://update map data
     {
         auto data = json["data"].extract<Poco::DynamicStruct>();
-        switch(str2int(data.begin()->first))
+        for(auto &i: data)
         {
-        case char2int("moves"):
-        {
-            auto array = data.begin()->second;
-            for(sf::Uint8 i = 0; i < array.size(); ++i)
+            switch(str2int(i.first))
             {
-                auto v = array[i];
-                map.monsters[v["monster"]].move(v["x"], v["y"]);
-            }
-            break;
-        }
-        case char2int("npc_moves"):
-        {
-            auto array = data.begin()->second;
-            for(sf::Uint8 i = 0; i < array.size(); ++i)
+            case char2int("moves"):
             {
-                auto v = array[i];
-                map.NPCs[v["npc"]].move(v["x"], v["y"]);
+                auto array = i.second;
+                for(sf::Uint8 i = 0; i < array.size(); ++i)
+                {
+                    auto v = array[i];
+                    map.monsters[v["monster"]].move(v["x"], v["y"]);
+                }
+                break;
             }
-            break;
-        }
-        default:
-        {
-            std::cout << data.begin()->first << " NOT IMPLEMENTED\n";
-            break;
-        }
-        }//end switch
+            case char2int("npc_moves"):
+            {
+                auto array = i.second;
+                for(sf::Uint8 i = 0; i < array.size(); ++i)
+                {
+                    auto v = array[i];
+                    map.NPCs[v["npc"]].move(v["x"], v["y"]);
+                }
+                break;
+            }
+            case char2int("respawns"):
+            {
+                auto array = i.second;
+                for(sf::Uint8 i = 0; i < array.size(); ++i)
+                {
+                    auto v = array[i];
+                    int id = v["id"];
+                    const std::string& looktype = v["looktype"];
+                    resourceManager.load_graphic(looktype, MONSTER);
+                    map.monsters[id].set_texture(resourceManager.get_texture(looktype), v["width"], v["height"]);
+                    map.monsters[id].set_position(v["x"], v["y"]);
+                }
+                break;
+            }
+            default:
+            {
+                std::cout << i.first << " NOT IMPLEMENTED\n";
+                break;
+            }
+            }//end switch
+        }//end for
+        break;
+    }
+    case 71://other player join
+    {
+        int id = json["id"];
+        int x = json["x"];
+        int y = json["y"];
+        const std::string& looktype = json["looktype"];
+        resourceManager.load_graphic(looktype, PLAYER);
+        map.players[id].set_texture(resourceManager.get_texture(looktype));
+        map.players[id].set_position(x + 1, y + 1);
         break;
     }
     case 100:
@@ -236,14 +276,42 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             map.NPCs[id].set_texture(resourceManager.get_texture(looktype));
             map.NPCs[id].set_position(npc["x"], npc["y"]);
         }
+        auto players = data["players"];
+        for(sf::Uint8 i = 0; i < players.size(); ++i)
+        {
+            auto player = players[i];
+            int id = player["id"];
+            int x = player["x"];
+            int y = player["y"];
+            const std::string& looktype = player["looktype"];
+            resourceManager.load_graphic(looktype, PLAYER);
+            map.players[id].set_texture(resourceManager.get_texture(looktype));
+            map.players[id].set_position(x + 1, y + 1);
+        }
         break;
     }
-    case 101:
+    case 101://my movement
     {
         int x = json["x"];
         int y = json["y"];
-        cameraSmooth(x, y);
+        cameraMove(x, y);
         map.player.set_position(x, y);
+        map.player.set_dir(json["dir"]);
+        break;
+    }
+    case 102://back movement
+    {
+        break;
+    }
+    case 1051://other player left
+    {
+        auto player = json["player"];
+        int id = player["id"];
+        map.players.erase(id);
+        break;
+    }
+    case 1504://other player yell
+    {
         break;
     }
     case char2int("load_game"):

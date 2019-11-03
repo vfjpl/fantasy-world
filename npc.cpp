@@ -1,5 +1,7 @@
 #include "npc.hpp"
 
+//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
+
 void NPC::set_texture(const sf::Texture& texture)
 {
     rect.width = 32;
@@ -10,9 +12,7 @@ void NPC::set_texture(const sf::Texture& texture)
 
 void NPC::set_position(int x, int y)
 {
-    //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-    position.x = (32 * x) - 32;
-    position.y = (32 * y) - 48;
+    move(x, y);
     sprite.setPosition(position.x, position.y);
 }
 

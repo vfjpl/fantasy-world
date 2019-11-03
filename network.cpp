@@ -60,6 +60,7 @@ std::string Network::login(const std::string& login, const std::string& password
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
     token = getPLAYER_TOKEN(response5.getBody());
+
     return getLOOKTYPE(response5.getBody());
 }
 
@@ -107,5 +108,6 @@ void Network::move(int dir)
     Poco::DynamicStruct json;
     json.insert("code", 5);
     json.insert("data", mov);
+
     send(json.toString());
 }

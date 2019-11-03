@@ -1,5 +1,7 @@
 #include "monster.hpp"
 
+//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
+
 void Monster::set_texture(const sf::Texture& texture, int width, int height)
 {
     rect.width = width;
@@ -10,9 +12,7 @@ void Monster::set_texture(const sf::Texture& texture, int width, int height)
 
 void Monster::set_position(int x, int y)
 {
-    //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-    position.x = (32 * x) - ((rect.width - 32)/2);
-    position.y = (32 * y) - (rect.height - 32);
+    move(x, y);
     sprite.setPosition(position.x, position.y);
 }
 
