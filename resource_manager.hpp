@@ -20,11 +20,8 @@ class Resource_Manager
     unsigned long size_in_bytes = 0;
 
 public:
-    //give you texture that you can use with sprites
-    const sf::Texture& get_texture(const std::string& name);
-
-    //download graphic with given name and type
-    void load_graphic(const std::string& name, Graphic type);
+    const sf::Texture& getTexture(const std::string& name, Graphic type);
+    void loadGraphic(const std::string& name, Graphic type);
 };
 
 #endif // RESOURCE_MANAGER_HPP_INCLUDED
