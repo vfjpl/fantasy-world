@@ -31,8 +31,8 @@ Engine::Engine()
     setup_window(true);
 
     std::string looktype = network.login();
-    resourceManager.loadGraphic(looktype, DIRECT);
-    map.player.set_texture(resourceManager.getTexture(looktype, DIRECT));
+    resourceManager.loadGraphic(looktype);
+    map.player.set_texture(resourceManager.getTexture(looktype));
     network.sendInit(window.getSize());
 }
 

@@ -1,10 +1,9 @@
 #include "resource_manager.hpp"
 #include <SFML/Network/Http.hpp>
+#include <SFML/System/Thread.hpp>
 #include <Poco/Net/HTTPMessage.h>
 
-namespace
-{
-std::string getURI(const std::string& name, Graphic type)
+std::string Resource_Manager::getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
@@ -18,12 +17,9 @@ std::string getURI(const std::string& name, Graphic type)
         return "/assets/avatars/" + name + ".gif";
     case PLAYER:
         return "/assets/looktypes/" + name + ".gif";
-    case DIRECT:
-        return name;
     default:
-        return std::string();
+        return name;
     }//end switch
-}
 }
 
 const sf::Texture& Resource_Manager::getTexture(const std::string& name, Graphic type)
@@ -31,21 +27,28 @@ const sf::Texture& Resource_Manager::getTexture(const std::string& name, Graphic
     return storage[getURI(name, type)];
 }
 
+const sf::Texture& Resource_Manager::getTexture(const std::string& name)
+{
+    return storage[name];
+}
+
 void Resource_Manager::loadGraphic(const std::string& name, Graphic type)
 {
-    std::string uri = getURI(name, type);
+    loadGraphic(getURI(name, type));
+}
 
-    if(storage.count(uri))
+void Resource_Manager::loadGraphic(const std::string& name)
+{
+    if(storage.count(name))
         return;
 
     sf::Http http("fantasy-world.pl");
-    sf::Http::Request req(uri);
+    sf::Http::Request req(name);
     sf::Http::Response resp = http.sendRequest(req);
 
     unsigned long lenght = std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH));
-    size_in_bytes += lenght;
 
-    if(!storage[uri].loadFromMemory(resp.getBody().data(), lenght))
+    if(!storage[name].loadFromMemory(resp.getBody().data(), lenght))
     {
         //RESIZING
         sf::Image orginal;
@@ -68,6 +71,20 @@ void Resource_Manager::loadGraphic(const std::string& name, Graphic type)
             for(unsigned int x = 0; x < resized_size.x; ++x)
                 resized.setPixel(x, y, orginal.getPixel(x * scale, y * scale));
 
-        storage[uri].loadFromImage(resized);
+        storage[name].loadFromImage(resized);
     }
+}
+
+void Resource_Manager::loadParallel(const std::set<std::string>& names)
+{
+    std::vector<sf::Thread*> threads;
+
+    for(auto &i: names)
+    {
+        threads.emplace_back(new sf::Thread([&] {loadGraphic(i);}));
+        threads.back()->launch();
+    }
+
+    for(auto &i: threads)
+        delete i;
 }

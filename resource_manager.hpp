@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include <map>
+#include <set>
 
 enum Graphic
 {
@@ -11,17 +12,19 @@ enum Graphic
     MONSTER,
     NPC,
     PLAYER,
-    DIRECT,
 };
 
 class Resource_Manager
 {
     std::map<std::string, sf::Texture> storage;
-    unsigned long size_in_bytes = 0;
 
 public:
+    std::string getURI(const std::string& name, Graphic type);
     const sf::Texture& getTexture(const std::string& name, Graphic type);
+    const sf::Texture& getTexture(const std::string& name);
     void loadGraphic(const std::string& name, Graphic type);
+    void loadGraphic(const std::string& name);
+    void loadParallel(const std::set<std::string>& names);
 };
 
 #endif // RESOURCE_MANAGER_HPP_INCLUDED
