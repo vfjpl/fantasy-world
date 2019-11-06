@@ -81,7 +81,10 @@ void Resource_Manager::loadParallel(const std::set<std::string>& names)
 
     for(auto &i: names)
     {
-        threads.emplace_back(new sf::Thread([&] {loadGraphic(i);}));
+        threads.emplace_back(new sf::Thread([&]
+        {
+            loadGraphic(i);
+        }));
         threads.back()->launch();
     }
 

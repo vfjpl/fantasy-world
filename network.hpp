@@ -15,12 +15,15 @@ class Network
     Poco::Net::HTTPResponse response;
     Poco::Net::WebSocket socket;
     Poco::Buffer<char> buffer;
-    std::string cookies;
+    std::string looktype;
     std::string token;
+    std::string cookies;
 
 public:
     Network();
-    std::string login(const std::string& login, const std::string& password);
+    void login(const std::string& login, const std::string& password);
+    std::string getPlayerLooktype();
+
     void sendInit(sf::Vector2u windowSize);
     Poco::DynamicStruct receiveInit();
 

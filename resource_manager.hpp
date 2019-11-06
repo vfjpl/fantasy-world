@@ -20,10 +20,13 @@ class Resource_Manager
 
 public:
     std::string getURI(const std::string& name, Graphic type);
+
     const sf::Texture& getTexture(const std::string& name, Graphic type);
     const sf::Texture& getTexture(const std::string& name);
+
     void loadGraphic(const std::string& name, Graphic type);
     void loadGraphic(const std::string& name);
+
     void loadParallel(const std::set<std::string>& names);
 };
 

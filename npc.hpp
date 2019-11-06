@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-class NPC
+class Npc
 {
     sf::Sprite sprite;
     sf::IntRect rect;
@@ -12,6 +12,7 @@ class NPC
 
 public:
     void set_texture(const sf::Texture& texture);
+    void set_dir(int dir);
     void set_position(int x, int y);
     void move(int x, int y);
     void draw(sf::RenderWindow& window);

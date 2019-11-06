@@ -15,7 +15,7 @@ void Map::clear()
 
     tiles.clear();
     monsters.clear();
-    NPCs.clear();
+    npcs.clear();
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -26,7 +26,7 @@ void Map::draw(sf::RenderWindow& window)
         window.draw(tiles[i]);
     for(auto &i: monsters)
         i.second.draw(window);
-    for(auto &i: NPCs)
+    for(auto &i: npcs)
         i.second.draw(window);
     for(auto &i: players)
         i.second.draw(window);

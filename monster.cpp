@@ -10,6 +10,12 @@ void Monster::set_texture(const sf::Texture& texture, int width, int height)
     sprite.setTextureRect(rect);
 }
 
+void Monster::set_dir(int dir)
+{
+    rect.top = dir%4 * rect.height;
+    sprite.setTextureRect(rect);
+}
+
 void Monster::set_position(int x, int y)
 {
     move(x, y);

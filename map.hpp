@@ -13,7 +13,7 @@ class Map
 
 public:
     std::map<int, Monster> monsters;
-    std::map<int, NPC> NPCs;
+    std::map<int, Npc> npcs;
     std::map<int, Player> players;
     std::vector<sf::Sprite> tiles;
     Player player;

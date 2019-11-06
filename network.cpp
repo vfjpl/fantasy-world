@@ -30,7 +30,7 @@ Network::Network():
     socket(session, request, response),
     buffer(0) {}
 
-std::string Network::login(const std::string& login, const std::string& password)
+void Network::login(const std::string& login, const std::string& password)
 {
     sf::Http http("fantasy-world.pl");
 
@@ -55,13 +55,17 @@ std::string Network::login(const std::string& login, const std::string& password
     request4.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response4 = http.sendRequest(request4);
 
-    // 5. get player token
+    // 5. get player looktype and token
     sf::Http::Request request5("/game");
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
+    looktype = getLOOKTYPE(response5.getBody());
     token = getPLAYER_TOKEN(response5.getBody());
+}
 
-    return getLOOKTYPE(response5.getBody());
+std::string Network::getPlayerLooktype()
+{
+    return looktype;
 }
 
 void Network::sendInit(sf::Vector2u windowSize)

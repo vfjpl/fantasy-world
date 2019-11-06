@@ -29,10 +29,7 @@ int var2int(const Poco::DynamicAny& var)
 Engine::Engine()
 {
     setup_window(true);
-
-    std::string looktype = network.login();
-    resourceManager.loadGraphic(looktype);
-    map.player.set_texture(resourceManager.getTexture(looktype));
+    network.login();
     network.sendInit(window.getSize());
 }
 
@@ -179,7 +176,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
                 for(sf::Uint8 i = 0; i < array.size(); ++i)
                 {
                     auto v = array[i];
-                    map.NPCs[v["npc"]].move(v["x"], v["y"]);
+                    map.npcs[v["npc"]].move(v["x"], v["y"]);
                 }
                 break;
             }
@@ -220,6 +217,9 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case 100:
     case char2int("teleport"):
     {
+        resourceManager.loadGraphic(network.getPlayerLooktype());
+        map.player.set_texture(resourceManager.getTexture(network.getPlayerLooktype()));
+
         auto data = json["data"];
         auto map_positions = data["map_positions"];
         int x = map_positions["PLAYER_X"];
@@ -273,8 +273,8 @@ void Engine::process_network(const Poco::DynamicStruct& json)
             int id = npc["id"];
             const std::string& looktype = npc["looktype"];
             resourceManager.loadGraphic(looktype, NPC);
-            map.NPCs[id].set_texture(resourceManager.getTexture(looktype, NPC));
-            map.NPCs[id].set_position(npc["x"], npc["y"]);
+            map.npcs[id].set_texture(resourceManager.getTexture(looktype, NPC));
+            map.npcs[id].set_position(npc["x"], npc["y"]);
         }
         auto players = data["players"];
         for(sf::Uint8 i = 0; i < players.size(); ++i)
