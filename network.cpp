@@ -14,7 +14,7 @@ std::string getID(const std::string& body)
 }
 std::string getPLAYER_TOKEN(const std::string& body)
 {
-    size_t pos = body.find("player_token") + 16;
+    size_t pos = body.find("token") + 9;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
 std::string getLOOKTYPE(const std::string& body)
@@ -59,8 +59,8 @@ void Network::login(const std::string& login, const std::string& password)
     sf::Http::Request request5("/game");
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
-    looktype = getLOOKTYPE(response5.getBody());
     token = getPLAYER_TOKEN(response5.getBody());
+    looktype = getLOOKTYPE(response5.getBody());
 }
 
 std::string Network::getPlayerLooktype()

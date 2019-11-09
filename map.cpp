@@ -16,6 +16,7 @@ void Map::clear()
     tiles.clear();
     monsters.clear();
     npcs.clear();
+    players.clear();
 }
 
 void Map::draw(sf::RenderWindow& window)
