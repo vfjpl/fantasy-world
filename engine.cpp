@@ -142,6 +142,10 @@ void Engine::process_network(const Poco::DynamicStruct& json)
 {
     switch(var2int(json["code"]))
     {
+    case 5://show damage
+    {
+        break;
+    }
     case 10://other player movement
     {
         int id = json["player"];
@@ -184,8 +188,22 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         cameraCenterSmooth(x, y);
         break;
     }
-    case 102://back movement
+    case 102://my back movement
     {
+        break;
+    }
+    case 877://remove map item
+    {
+        int id = json["id"];
+        map.items.erase(id);
+        break;
+    }
+    case 878://new map item
+    {
+        auto& item = json["item"];
+        int id = item["id"];
+        map.items[id].setTexture(resourceManager.getTexture(item["item_id"], ITEM));
+        map.items[id].set_position(item["x"], item["y"]);
         break;
     }
     case 1051://other player left
@@ -200,7 +218,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("load_game"):
     {
-        map.clear();
         process_network(network.receiveInit());
         break;
     }
@@ -254,6 +271,10 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
             }
             break;
         }
+        case char2int("yells"):
+        {
+            break;
+        }
         default:
         {
             std::cout << i.first << " NOT IMPLEMENTED\n";
@@ -266,6 +287,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
 void Engine::loadData(const Poco::DynamicStruct& data)
 {
     resourceManager.loadParallel(data);
+    map.clear();
 
     auto& map_positions = data["map_positions"];
     int x = map_positions["PLAYER_X"];
@@ -285,6 +307,18 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     else
     {
         map.setTexture(resourceManager.getTexture(data["map"]["id"], MAP_SINGLE), 0, 0);
+    }
+
+    if(data.contains("map_items"))
+    {
+        auto& map_items = data["map_items"];
+        for(sf::Uint8 i = 0; i < map_items.size(); ++i)
+        {
+            auto& item = map_items[i];
+            int id = item["id"];
+            map.items[id].setTexture(resourceManager.getTexture(item["item_id"], ITEM));
+            map.items[id].set_position(item["x"], item["y"]);
+        }
     }
 
     auto& monsters = data["monsters"];

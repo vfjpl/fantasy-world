@@ -41,6 +41,8 @@
 		</Linker>
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.hpp" />
+		<Unit filename="item.cpp" />
+		<Unit filename="item.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.hpp" />

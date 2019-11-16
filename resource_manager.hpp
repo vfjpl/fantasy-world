@@ -8,6 +8,7 @@ enum Graphic
 {
     MAP_TILE,
     MAP_SINGLE,
+    ITEM,
     MONSTER,
     NPC,
     PLAYER,

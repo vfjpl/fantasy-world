@@ -1,6 +1,7 @@
 #ifndef MAP_HPP_INCLUDED
 #define MAP_HPP_INCLUDED
 
+#include "item.hpp"
 #include "monster.hpp"
 #include "npc.hpp"
 #include "player.hpp"
@@ -12,6 +13,7 @@ class Map
     sf::Mutex mutex;
 
 public:
+    std::map<int, Item> items;
     std::map<int, Monster> monsters;
     std::map<int, Npc> npcs;
     std::map<int, Player> players;
