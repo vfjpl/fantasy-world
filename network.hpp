@@ -15,9 +15,9 @@ class Network
     Poco::Net::HTTPResponse response;
     Poco::Net::WebSocket socket;
     Poco::Buffer<char> buffer;
-    std::string looktype;
     std::string token;
     std::string cookies;
+    std::string looktype;
 
 public:
     Network();

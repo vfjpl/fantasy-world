@@ -162,10 +162,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         int id = json["id"];
         int x = json["x"];
         int y = json["y"];
-        const std::string& looktype = json["looktype"];
-
-        resourceManager.loadGraphic(looktype, PLAYER);
-        map.players[id].set_texture(resourceManager.getTexture(looktype, PLAYER));
+        map.players[id].set_texture(resourceManager.getTexture(json["looktype"], PLAYER));
         map.players[id].set_position(x + 1, y + 1);//server bug
         break;
     }
@@ -190,8 +187,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1051://other player left
     {
-        auto& player = json["player"];
-        int id = player["id"];
+        int id = json["player"]["id"];
         map.players.erase(id);
         break;
     }
@@ -250,10 +246,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
             {
                 auto& v = array[i];
                 int id = v["id"];
-                const std::string& looktype = v["looktype"];
-
-                resourceManager.loadGraphic(looktype, MONSTER);
-                map.monsters[id].set_texture(resourceManager.getTexture(looktype, MONSTER), v["width"], v["height"]);
+                map.monsters[id].set_texture(resourceManager.getTexture(v["looktype"], MONSTER), v["width"], v["height"]);
                 map.monsters[id].set_position(v["x"], v["y"]);
             }
             break;
@@ -269,8 +262,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
 
 void Engine::loadData(const Poco::DynamicStruct& data)
 {
-    resourceManager.loadGraphic(network.getPlayerLooktype());
-    map.player.set_texture(resourceManager.getTexture(network.getPlayerLooktype()));
+    resourceManager.loadParallel(data);
 
     auto& map_positions = data["map_positions"];
     int x = map_positions["PLAYER_X"];
@@ -287,19 +279,13 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
         {
             auto& map_tile = map_data[i];
-            const std::string& name = map_tile["source"];
-
-            resourceManager.loadGraphic(name, MAP_TILE);
-            map.set_texture(resourceManager.getTexture(name, MAP_TILE), map_tile["x"], map_tile["y"]);
+            map.set_texture(resourceManager.getTexture(map_tile["source"], MAP_TILE), map_tile["x"], map_tile["y"]);
         }
         break;
     }
     case 2:
     {
-        const std::string& name = lmap["id"];
-
-        resourceManager.loadGraphic(name, MAP_SINGLE);
-        map.set_texture(resourceManager.getTexture(name, MAP_SINGLE), 0, 0);
+        map.set_texture(resourceManager.getTexture(lmap["id"], MAP_SINGLE), 0, 0);
         break;
     }
     default:
@@ -314,10 +300,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& monster = monsters[i];
         int id = monster["id"];
-        const std::string& looktype = monster["looktype"];
-
-        resourceManager.loadGraphic(looktype, MONSTER);
-        map.monsters[id].set_texture(resourceManager.getTexture(looktype, MONSTER), monster["width"], monster["height"]);
+        map.monsters[id].set_texture(resourceManager.getTexture(monster["looktype"], MONSTER), monster["width"], monster["height"]);
         map.monsters[id].set_position(monster["x"], monster["y"]);
     }
     auto& npcs = data["npcs"];
@@ -325,10 +308,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& npc = npcs[i];
         int id = npc["id"];
-        const std::string& looktype = npc["looktype"];
-
-        resourceManager.loadGraphic(looktype, NPC);
-        map.npcs[id].set_texture(resourceManager.getTexture(looktype, NPC));
+        map.npcs[id].set_texture(resourceManager.getTexture(npc["looktype"], NPC));
         map.npcs[id].set_position(npc["x"], npc["y"]);
     }
     auto& players = data["players"];
@@ -338,10 +318,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         int id = player["id"];
         int x = player["x"];
         int y = player["y"];
-        const std::string& looktype = player["looktype"];
-
-        resourceManager.loadGraphic(looktype, PLAYER);
-        map.players[id].set_texture(resourceManager.getTexture(looktype, PLAYER));
+        map.players[id].set_texture(resourceManager.getTexture(player["looktype"], PLAYER));
         map.players[id].set_position(x + 1, y + 1);//server bug
     }
 }

@@ -1,9 +1,11 @@
 #include "resource_manager.hpp"
+#include <Poco/Net/HTTPMessage.h>
 #include <SFML/Network/Http.hpp>
 #include <SFML/System/Thread.hpp>
-#include <Poco/Net/HTTPMessage.h>
 
-std::string Resource_Manager::getURI(const std::string& name, Graphic type)
+namespace
+{
+std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
@@ -21,20 +23,65 @@ std::string Resource_Manager::getURI(const std::string& name, Graphic type)
         return name;
     }//end switch
 }
+std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
+{
+    std::set<std::string> names;
+
+    auto& monsters = data["monsters"];
+    for(sf::Uint8 i = 0; i < monsters.size(); ++i)
+    {
+        auto& monster = monsters[i];
+        names.emplace(getURI(monster["looktype"], MONSTER));
+    }
+    auto& npcs = data["npcs"];
+    for(sf::Uint8 i = 0; i < npcs.size(); ++i)
+    {
+        auto& npc = npcs[i];
+        names.emplace(getURI(npc["looktype"], NPC));
+    }
+    auto& players = data["players"];
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+    {
+        auto& player = players[i];
+        names.emplace(getURI(player["looktype"], PLAYER));
+    }
+
+    return names;
+}
+}
 
 const sf::Texture& Resource_Manager::getTexture(const std::string& name, Graphic type)
 {
-    return storage[getURI(name, type)];
+    return getTexture(getURI(name, type));
 }
 
 const sf::Texture& Resource_Manager::getTexture(const std::string& name)
 {
+    loadGraphic(name);
+
     return storage[name];
 }
 
-void Resource_Manager::loadGraphic(const std::string& name, Graphic type)
+void Resource_Manager::loadParallel(const Poco::DynamicStruct& data)
 {
-    loadGraphic(getURI(name, type));
+    loadParallel(getNAMES(data));
+}
+
+void Resource_Manager::loadParallel(const std::set<std::string>& names)
+{
+    std::vector<sf::Thread*> threads;
+
+    for(auto &i: names)
+    {
+        threads.emplace_back(new sf::Thread([&]
+        {
+            loadGraphic(i);
+        }));
+        threads.back()->launch();
+    }
+
+    for(auto &i: threads)
+        delete i;
 }
 
 void Resource_Manager::loadGraphic(const std::string& name)
@@ -73,21 +120,4 @@ void Resource_Manager::loadGraphic(const std::string& name)
 
         storage[name].loadFromImage(resized);
     }
-}
-
-void Resource_Manager::loadParallel(const std::set<std::string>& names)
-{
-    std::vector<sf::Thread*> threads;
-
-    for(auto &i: names)
-    {
-        threads.emplace_back(new sf::Thread([&]
-        {
-            loadGraphic(i);
-        }));
-        threads.back()->launch();
-    }
-
-    for(auto &i: threads)
-        delete i;
 }
