@@ -101,17 +101,28 @@ Poco::DynamicStruct Network::receiveInit()
 
 void Network::move(int dir)
 {
-    Poco::DynamicStruct mov;
-    mov.insert("dir", dir);
+    Poco::DynamicStruct data;
+    data.insert("dir", dir);
+    send(data, 5);
+}
 
-    Poco::DynamicStruct json;
-    json.insert("code", 5);
-    json.insert("data", mov);
-
-    send(json.toString());
+void Network::attack(int id)
+{
+    Poco::DynamicStruct data;
+    data.insert("monster", id);
+    data.insert("skill", 0);
+    send(data, 3);
 }
 
 // private
+
+void Network::send(const Poco::DynamicStruct& data, int code)
+{
+    Poco::DynamicStruct json;
+    json.insert("code", code);
+    json.insert("data", data);
+    send(json.toString());
+}
 
 void Network::send(const std::string& json)
 {
