@@ -2,7 +2,7 @@
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
-void Monster::set_texture(const sf::Texture& texture, int width, int height)
+void Monster::setTexture(const sf::Texture& texture, int width, int height)
 {
     rect.width = width;
     rect.height = height;

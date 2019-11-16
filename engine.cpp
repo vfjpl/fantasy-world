@@ -26,12 +26,12 @@ int var2int(const Poco::DynamicAny& var)
 }
 }
 
-Engine::Engine()
+void Engine::setup()
 {
     setup_window(true);
     network.login();
     network.sendInit(window.getSize());
-    map.player.set_texture(resourceManager.getTexture(network.getPlayerLooktype()));
+    map.player.setTexture(resourceManager.getTexture(network.getPlayerLooktype()));
 }
 
 bool Engine::run_game()
@@ -48,6 +48,8 @@ bool Engine::run_network()
 
     return window.isOpen();
 }
+
+// private
 
 void Engine::setup_window(bool fullscreen)
 {
@@ -163,7 +165,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         int id = json["id"];
         int x = json["x"];
         int y = json["y"];
-        map.players[id].set_texture(resourceManager.getTexture(json["looktype"], PLAYER));
+        map.players[id].setTexture(resourceManager.getTexture(json["looktype"], PLAYER));
         map.players[id].set_position(x + 1, y + 1);//server bug
         break;
     }
@@ -247,7 +249,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
             {
                 auto& v = array[i];
                 int id = v["id"];
-                map.monsters[id].set_texture(resourceManager.getTexture(v["looktype"], MONSTER), v["width"], v["height"]);
+                map.monsters[id].setTexture(resourceManager.getTexture(v["looktype"], MONSTER), v["width"], v["height"]);
                 map.monsters[id].set_position(v["x"], v["y"]);
             }
             break;
@@ -271,47 +273,38 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     map.player.set_position(x, y);
     cameraCenterInstant(x, y);
 
-    auto& lmap = data["map"];
-    switch(var2int(lmap["type"]))
-    {
-    case 1:
+    if(data.contains("map_data"))
     {
         auto& map_data = data["map_data"];
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
         {
             auto& map_tile = map_data[i];
-            map.set_texture(resourceManager.getTexture(map_tile["source"], MAP_TILE), map_tile["x"], map_tile["y"]);
+            map.setTexture(resourceManager.getTexture(map_tile["source"], MAP_TILE), map_tile["x"], map_tile["y"]);
         }
-        break;
     }
-    case 2:
+    else
     {
-        map.set_texture(resourceManager.getTexture(lmap["id"], MAP_SINGLE), 0, 0);
-        break;
+        map.setTexture(resourceManager.getTexture(data["map"]["id"], MAP_SINGLE), 0, 0);
     }
-    default:
-    {
-        std::cout << lmap["type"].toString() << " NOT IMPLEMENTED\n";
-        break;
-    }
-    }//end switch
 
     auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
     {
-        auto& monster = monsters[i];
-        int id = monster["id"];
-        map.monsters[id].set_texture(resourceManager.getTexture(monster["looktype"], MONSTER), monster["width"], monster["height"]);
-        map.monsters[id].set_position(monster["x"], monster["y"]);
+        auto& mns = monsters[i];
+        int id = mns["id"];
+        map.monsters[id].setTexture(resourceManager.getTexture(mns["looktype"], MONSTER), mns["width"], mns["height"]);
+        map.monsters[id].set_position(mns["x"], mns["y"]);
     }
+
     auto& npcs = data["npcs"];
     for(sf::Uint8 i = 0; i < npcs.size(); ++i)
     {
         auto& npc = npcs[i];
         int id = npc["id"];
-        map.npcs[id].set_texture(resourceManager.getTexture(npc["looktype"], NPC));
+        map.npcs[id].setTexture(resourceManager.getTexture(npc["looktype"], NPC));
         map.npcs[id].set_position(npc["x"], npc["y"]);
     }
+
     auto& players = data["players"];
     for(sf::Uint8 i = 0; i < players.size(); ++i)
     {
@@ -319,7 +312,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         int id = player["id"];
         int x = player["x"];
         int y = player["y"];
-        map.players[id].set_texture(resourceManager.getTexture(player["looktype"], PLAYER));
+        map.players[id].setTexture(resourceManager.getTexture(player["looktype"], PLAYER));
         map.players[id].set_position(x + 1, y + 1);//server bug
     }
 }

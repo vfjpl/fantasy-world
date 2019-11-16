@@ -18,7 +18,7 @@ public:
     std::vector<sf::Sprite> tiles;
     Player player;
 
-    void set_texture(const sf::Texture& texture, int x, int y);
+    void setTexture(const sf::Texture& texture, int x, int y);
     void clear();
     void draw(sf::RenderWindow& window);
 };

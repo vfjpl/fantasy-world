@@ -15,7 +15,7 @@ class Engine
     sf::Vector2i center;
 
 public:
-    Engine();
+    void setup();
     bool run_game();
     bool run_network();
 

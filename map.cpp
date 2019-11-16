@@ -2,7 +2,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Lock.hpp>
 
-void Map::set_texture(const sf::Texture& texture, int x, int y)
+void Map::setTexture(const sf::Texture& texture, int x, int y)
 {
     sf::Vector2u texture_size = texture.getSize();
     tiles.emplace_back(texture);

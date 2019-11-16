@@ -11,7 +11,7 @@ class Monster
     sf::Vector2i position;
 
 public:
-    void set_texture(const sf::Texture& texture, int width, int height);
+    void setTexture(const sf::Texture& texture, int width, int height);
     void set_dir(int dir);
     void set_position(int x, int y);
     void move(int x, int y);

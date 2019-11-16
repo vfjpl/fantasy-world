@@ -2,7 +2,7 @@
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
-void Player::set_texture(const sf::Texture& texture)
+void Player::setTexture(const sf::Texture& texture)
 {
     rect.width = 32;
     rect.height = 48;

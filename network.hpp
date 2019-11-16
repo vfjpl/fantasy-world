@@ -22,15 +22,16 @@ class Network
 public:
     Network();
     void login(const std::string& login, const std::string& password);
+    void sendInit(sf::Vector2u windowSize);
     std::string getPlayerLooktype();
 
-    void sendInit(sf::Vector2u windowSize);
+    Poco::DynamicStruct receive();
     Poco::DynamicStruct receiveInit();
 
-    void send(const std::string& json);
-    Poco::DynamicStruct receive();
-
     void move(int dir);
+
+private:
+    void send(const std::string& json);
 };
 
 #endif // NETWORK_HPP_INCLUDED

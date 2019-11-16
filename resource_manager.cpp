@@ -33,6 +33,10 @@ std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
             names.emplace(getURI(map_data[i]["source"], MAP_TILE));
     }
+    else
+    {
+        names.emplace(getURI(data["map"]["id"], MAP_SINGLE));
+    }
 
     auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
@@ -83,6 +87,8 @@ void Resource_Manager::loadParallel(const std::set<std::string>& names)
     for(auto &i: threads)
         delete i;
 }
+
+// private
 
 void Resource_Manager::loadGraphic(const std::string& name)
 {

@@ -55,17 +55,12 @@ void Network::login(const std::string& login, const std::string& password)
     request4.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response4 = http.sendRequest(request4);
 
-    // 5. get player looktype and token
+    // 5. get player token and looktype
     sf::Http::Request request5("/game");
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
     token = getPLAYER_TOKEN(response5.getBody());
     looktype = getLOOKTYPE(response5.getBody());
-}
-
-std::string Network::getPlayerLooktype()
-{
-    return looktype;
 }
 
 void Network::sendInit(sf::Vector2u windowSize)
@@ -82,18 +77,9 @@ void Network::sendInit(sf::Vector2u windowSize)
     send(json.toString());
 }
 
-Poco::DynamicStruct Network::receiveInit()
+std::string Network::getPlayerLooktype()
 {
-    sf::Http http("fantasy-world.pl");
-    sf::Http::Request request1("/game/init/" + token);
-    request1.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
-    sf::Http::Response response1 = http.sendRequest(request1);
-    return Poco::DynamicAny::parse(response1.getBody()).extract<Poco::DynamicStruct>();
-}
-
-void Network::send(const std::string& json)
-{
-    socket.sendFrame(json.data(), json.size());
+    return looktype;
 }
 
 Poco::DynamicStruct Network::receive()
@@ -102,6 +88,15 @@ Poco::DynamicStruct Network::receive()
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.size())).extract<Poco::DynamicStruct>();
+}
+
+Poco::DynamicStruct Network::receiveInit()
+{
+    sf::Http http("fantasy-world.pl");
+    sf::Http::Request request1("/game/init/" + token);
+    request1.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
+    sf::Http::Response response1 = http.sendRequest(request1);
+    return Poco::DynamicAny::parse(response1.getBody()).extract<Poco::DynamicStruct>();
 }
 
 void Network::move(int dir)
@@ -114,4 +109,11 @@ void Network::move(int dir)
     json.insert("data", mov);
 
     send(json.toString());
+}
+
+// private
+
+void Network::send(const std::string& json)
+{
+    socket.sendFrame(json.data(), json.size());
 }

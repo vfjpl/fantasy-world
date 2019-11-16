@@ -11,7 +11,7 @@ class Npc
     sf::Vector2i position;
 
 public:
-    void set_texture(const sf::Texture& texture);
+    void setTexture(const sf::Texture& texture);
     void set_dir(int dir);
     void set_position(int x, int y);
     void move(int x, int y);

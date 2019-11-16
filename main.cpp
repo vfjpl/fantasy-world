@@ -10,6 +10,8 @@ int main()
     });
 
     thread.launch();
+    engine.setup();
+
     while(engine.run_game());
 
     return EXIT_SUCCESS;
