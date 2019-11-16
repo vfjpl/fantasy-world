@@ -31,6 +31,7 @@ Engine::Engine()
     setup_window(true);
     network.login();
     network.sendInit(window.getSize());
+    map.player.set_texture(resourceManager.getTexture(network.getPlayerLooktype()));
 }
 
 bool Engine::run_game()

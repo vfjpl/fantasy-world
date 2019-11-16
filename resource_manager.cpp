@@ -27,24 +27,24 @@ std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
 {
     std::set<std::string> names;
 
+    if(data.contains("map_data"))
+    {
+        auto& map_data = data["map_data"];
+        for(sf::Uint8 i = 0; i < map_data.size(); ++i)
+            names.emplace(getURI(map_data[i]["source"], MAP_TILE));
+    }
+
     auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-    {
-        auto& monster = monsters[i];
-        names.emplace(getURI(monster["looktype"], MONSTER));
-    }
+        names.emplace(getURI(monsters[i]["looktype"], MONSTER));
+
     auto& npcs = data["npcs"];
     for(sf::Uint8 i = 0; i < npcs.size(); ++i)
-    {
-        auto& npc = npcs[i];
-        names.emplace(getURI(npc["looktype"], NPC));
-    }
+        names.emplace(getURI(npcs[i]["looktype"], NPC));
+
     auto& players = data["players"];
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-    {
-        auto& player = players[i];
-        names.emplace(getURI(player["looktype"], PLAYER));
-    }
+        names.emplace(getURI(players[i]["looktype"], PLAYER));
 
     return names;
 }
