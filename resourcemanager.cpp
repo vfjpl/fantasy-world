@@ -11,12 +11,14 @@ std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
-    case MAP_TILE:
-        return "/assets/" + name + ".png";
-    case MAP_SINGLE:
+    case MAP:
         return "/assets/maps/files/" + name + ".png";
+    case MAP_DATA:
+        return "/assets/" + name + ".png";
     case CHEST:
         return "/templates/client/default/images/tiles/chest_" + name + ".png";
+    case CHEST_OPEN:
+        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case ITEM:
         return "/templates/client/default/images/items/" + name + ".png";
     case MONSTER:
@@ -37,11 +39,11 @@ std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
     {
         auto& map_data = data["map_data"];
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
-            names.emplace(getURI(map_data[i]["source"], MAP_TILE));
+            names.emplace(getURI(map_data[i]["source"], MAP_DATA));
     }
     else
     {
-        names.emplace(getURI(data["map"]["id"], MAP_SINGLE));
+        names.emplace(getURI(data["map"]["id"], MAP));
     }
 
     if(data.contains("map_items"))

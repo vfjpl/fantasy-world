@@ -7,10 +7,8 @@
 class Engine
 {
     sf::RenderWindow window;
-    Network network;
     Map map;
-    sf::View camera;
-    sf::Vector2i center;
+    Network network;
 
 public:
     void setup();
@@ -19,17 +17,11 @@ public:
 
 private:
     void setup_window(bool fullscreen);
-    void cameraCenterInstant(int x, int y);
-    void cameraCenterSmooth(int x, int y);
 
     void process_input();
-    void scrool_camera();
     void draw_frame();
 
     void process_network(const Poco::DynamicStruct& json);
-
-    void updateMap(const Poco::DynamicStruct& data);
-    void loadData(const Poco::DynamicStruct& data);
 };
 
 #endif // ENGINE_HPP_INCLUDED

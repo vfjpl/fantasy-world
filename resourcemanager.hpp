@@ -6,9 +6,10 @@
 
 enum Graphic
 {
-    MAP_TILE,
-    MAP_SINGLE,
+    MAP,
+    MAP_DATA,
     CHEST,
+    CHEST_OPEN,
     ITEM,
     MONSTER,
     NPC,
