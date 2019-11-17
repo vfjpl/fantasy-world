@@ -58,8 +58,8 @@
 		<Unit filename="npc.hpp" />
 		<Unit filename="player.cpp" />
 		<Unit filename="player.hpp" />
-		<Unit filename="resource_manager.cpp" />
-		<Unit filename="resource_manager.hpp" />
+		<Unit filename="resourcemanager.cpp" />
+		<Unit filename="resourcemanager.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

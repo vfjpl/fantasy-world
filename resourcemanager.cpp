@@ -1,7 +1,9 @@
-#include "resource_manager.hpp"
+#include "resourcemanager.hpp"
 #include <Poco/Net/HTTPMessage.h>
 #include <SFML/Network/Http.hpp>
 #include <SFML/System/Thread.hpp>
+
+std::map<std::string, sf::Texture> ResourceManager::storage;
 
 namespace
 {
@@ -13,10 +15,8 @@ std::string getURI(const std::string& name, Graphic type)
         return "/assets/" + name + ".png";
     case MAP_SINGLE:
         return "/assets/maps/files/" + name + ".png";
-    case CHEST_CLOSED:
+    case CHEST:
         return "/templates/client/default/images/tiles/chest_" + name + ".png";
-    case CHEST_OPENED:
-        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case ITEM:
         return "/templates/client/default/images/items/" + name + ".png";
     case MONSTER:
@@ -67,24 +67,24 @@ std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
 }
 }
 
-const sf::Texture& Resource_Manager::getTexture(const std::string& name, Graphic type)
+const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)
 {
     return getTexture(getURI(name, type));
 }
 
-const sf::Texture& Resource_Manager::getTexture(const std::string& name)
+const sf::Texture& ResourceManager::getTexture(const std::string& name)
 {
     loadGraphic(name);
 
     return storage[name];
 }
 
-void Resource_Manager::loadParallel(const Poco::DynamicStruct& data)
+void ResourceManager::loadParallel(const Poco::DynamicStruct& data)
 {
     loadParallel(getNAMES(data));
 }
 
-void Resource_Manager::loadParallel(const std::set<std::string>& names)
+void ResourceManager::loadParallel(const std::set<std::string>& names)
 {
     std::vector<sf::Thread*> threads;
 
@@ -103,7 +103,7 @@ void Resource_Manager::loadParallel(const std::set<std::string>& names)
 
 // private
 
-void Resource_Manager::loadGraphic(const std::string& name)
+void ResourceManager::loadGraphic(const std::string& name)
 {
     if(storage.count(name))
         return;

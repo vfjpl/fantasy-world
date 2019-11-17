@@ -3,14 +3,12 @@
 
 #include "map.hpp"
 #include "network.hpp"
-#include "resource_manager.hpp"
 
 class Engine
 {
     sf::RenderWindow window;
     Network network;
     Map map;
-    Resource_Manager resourceManager;
     sf::View camera;
     sf::Vector2i center;
 

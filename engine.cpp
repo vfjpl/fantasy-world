@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "resourcemanager.hpp"
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
@@ -33,7 +34,7 @@ void Engine::setup()
     setup_window(true);
     network.login();
     network.sendInit(window.getSize());
-    map.player.setTexture(resourceManager.getTexture(network.getPlayerLooktype()));
+    map.player.setTexture(ResourceManager::getTexture(network.getPlayerLooktype()));
 }
 
 bool Engine::run_game()
@@ -169,7 +170,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case 71://other player join
     {
         int id = json["id"];
-        map.players[id].setTexture(resourceManager.getTexture(json["looktype"], PLAYER));
+        map.players[id].setTexture(ResourceManager::getTexture(json["looktype"], PLAYER));
         map.players[id].set_position(json["x"] + 1, json["y"] + 1);//server bug
         break;
     }
@@ -202,7 +203,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
         auto& item = json["item"];
         int id = item["id"];
-        map.items[id].setTexture(resourceManager.getTexture(item["item_id"], ITEM));
+        map.items[id].setTexture(ResourceManager::getTexture(item["item_id"], ITEM));
         map.items[id].set_position(item["x"], item["y"]);
         break;
     }
@@ -266,7 +267,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
             {
                 auto& v = array[i];
                 int id = v["id"];
-                map.monsters[id].setTexture(resourceManager.getTexture(v["looktype"], MONSTER), v["width"], v["height"]);
+                map.monsters[id].setTexture(ResourceManager::getTexture(v["looktype"], MONSTER), v["width"], v["height"]);
                 map.monsters[id].set_position(v["x"], v["y"]);
             }
             break;
@@ -286,7 +287,7 @@ void Engine::updateMap(const Poco::DynamicStruct& data)
 
 void Engine::loadData(const Poco::DynamicStruct& data)
 {
-    resourceManager.loadParallel(data);
+    ResourceManager::loadParallel(data);
     map.clear();
 
     auto& map_positions = data["map_positions"];
@@ -301,12 +302,12 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
         {
             auto& map_tile = map_data[i];
-            map.setTexture(resourceManager.getTexture(map_tile["source"], MAP_TILE), map_tile["x"], map_tile["y"]);
+            map.setTexture(ResourceManager::getTexture(map_tile["source"], MAP_TILE), map_tile["x"], map_tile["y"]);
         }
     }
     else
     {
-        map.setTexture(resourceManager.getTexture(data["map"]["id"], MAP_SINGLE), 0, 0);
+        map.setTexture(ResourceManager::getTexture(data["map"]["id"], MAP_SINGLE), 0, 0);
     }
 
     auto& tiles = data["tiles"];
@@ -316,7 +317,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         if(tile["type"] == 2)
         {
             map.doors.emplace_back();
-            map.doors.back().setTexture(resourceManager.getTexture(tile["bg"]));
+            map.doors.back().setTexture(ResourceManager::getTexture(tile["bg"]));
             map.doors.back().set_position(tile["x"], tile["y"]);
         }
     }
@@ -326,10 +327,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& chest = chests[i];
         int id = chest["id"];
-        if(chest["open"])
-            map.chests[id].setTexture(resourceManager.getTexture(chest["type"], CHEST_OPENED));
-        else
-            map.chests[id].setTexture(resourceManager.getTexture(chest["type"], CHEST_CLOSED));
+        map.chests[id].setTexture(ResourceManager::getTexture(chest["type"], CHEST));
         map.chests[id].set_position(chest["x"], chest["y"]);
     }
 
@@ -340,7 +338,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         {
             auto& item = map_items[i];
             int id = item["id"];
-            map.items[id].setTexture(resourceManager.getTexture(item["item_id"], ITEM));
+            map.items[id].setTexture(ResourceManager::getTexture(item["item_id"], ITEM));
             map.items[id].set_position(item["x"], item["y"]);
         }
     }
@@ -350,7 +348,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& mns = monsters[i];
         int id = mns["id"];
-        map.monsters[id].setTexture(resourceManager.getTexture(mns["looktype"], MONSTER), mns["width"], mns["height"]);
+        map.monsters[id].setTexture(ResourceManager::getTexture(mns["looktype"], MONSTER), mns["width"], mns["height"]);
         map.monsters[id].set_position(mns["x"], mns["y"]);
     }
 
@@ -359,7 +357,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& npc = npcs[i];
         int id = npc["id"];
-        map.npcs[id].setTexture(resourceManager.getTexture(npc["looktype"], NPC));
+        map.npcs[id].setTexture(ResourceManager::getTexture(npc["looktype"], NPC));
         map.npcs[id].set_position(npc["x"], npc["y"]);
     }
 
@@ -368,7 +366,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& player = players[i];
         int id = player["id"];
-        map.players[id].setTexture(resourceManager.getTexture(player["looktype"], PLAYER));
+        map.players[id].setTexture(ResourceManager::getTexture(player["looktype"], PLAYER));
         map.players[id].set_position(player["x"] + 1, player["y"] + 1);//server bug
     }
 }
