@@ -13,6 +13,10 @@ std::string getURI(const std::string& name, Graphic type)
         return "/assets/" + name + ".png";
     case MAP_SINGLE:
         return "/assets/maps/files/" + name + ".png";
+    case CHEST_CLOSED:
+        return "/templates/client/default/images/tiles/chest_" + name + ".png";
+    case CHEST_OPENED:
+        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case ITEM:
         return "/templates/client/default/images/items/" + name + ".png";
     case MONSTER:

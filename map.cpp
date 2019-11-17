@@ -14,6 +14,8 @@ void Map::clear()
     sf::Lock lock(mutex);
 
     tiles.clear();
+    doors.clear();
+    chests.clear();
     items.clear();
     monsters.clear();
     npcs.clear();
@@ -26,6 +28,10 @@ void Map::draw(sf::RenderWindow& window)
 
     for(auto &i: tiles)
         window.draw(i);
+    for(auto &i: doors)
+        i.draw(window);
+    for(auto &i: chests)
+        i.second.draw(window);
     for(auto &i: items)
         i.second.draw(window);
     for(auto &i: monsters)

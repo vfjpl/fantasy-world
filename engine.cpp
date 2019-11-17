@@ -309,6 +309,30 @@ void Engine::loadData(const Poco::DynamicStruct& data)
         map.setTexture(resourceManager.getTexture(data["map"]["id"], MAP_SINGLE), 0, 0);
     }
 
+    auto& tiles = data["tiles"];
+    for(sf::Uint8 i = 0; i < tiles.size(); ++i)
+    {
+        auto& tile = tiles[i];
+        if(tile["type"] == 2)
+        {
+            map.doors.emplace_back();
+            map.doors.back().setTexture(resourceManager.getTexture(tile["bg"]));
+            map.doors.back().set_position(tile["x"], tile["y"]);
+        }
+    }
+
+    auto& chests = data["chests"];
+    for(sf::Uint8 i = 0; i < chests.size(); ++i)
+    {
+        auto& chest = chests[i];
+        int id = chest["id"];
+        if(chest["open"])
+            map.chests[id].setTexture(resourceManager.getTexture(chest["type"], CHEST_OPENED));
+        else
+            map.chests[id].setTexture(resourceManager.getTexture(chest["type"], CHEST_CLOSED));
+        map.chests[id].set_position(chest["x"], chest["y"]);
+    }
+
     if(data.contains("map_items"))
     {
         auto& map_items = data["map_items"];

@@ -8,6 +8,8 @@ enum Graphic
 {
     MAP_TILE,
     MAP_SINGLE,
+    CHEST_CLOSED,
+    CHEST_OPENED,
     ITEM,
     MONSTER,
     NPC,

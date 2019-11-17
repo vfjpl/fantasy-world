@@ -39,6 +39,10 @@
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />
 		</Linker>
+		<Unit filename="chest.cpp" />
+		<Unit filename="chest.hpp" />
+		<Unit filename="door.cpp" />
+		<Unit filename="door.hpp" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.hpp" />
 		<Unit filename="item.cpp" />
