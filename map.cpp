@@ -24,8 +24,8 @@ void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
 
-    for(sf::Uint8 i = 0; i < tiles.size(); ++i)
-        window.draw(tiles[i]);
+    for(auto &i: tiles)
+        window.draw(i);
     for(auto &i: items)
         i.second.draw(window);
     for(auto &i: monsters)

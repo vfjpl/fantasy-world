@@ -2,6 +2,8 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
+//view-source:http://fantasy-world.pl/templates/client/default/js/game.js
+
 namespace
 {
 constexpr int char2int(const char* str)
@@ -167,10 +169,8 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case 71://other player join
     {
         int id = json["id"];
-        int x = json["x"];
-        int y = json["y"];
         map.players[id].setTexture(resourceManager.getTexture(json["looktype"], PLAYER));
-        map.players[id].set_position(x + 1, y + 1);//server bug
+        map.players[id].set_position(json["x"] + 1, json["y"] + 1);//server bug
         break;
     }
     case 100:
@@ -344,9 +344,7 @@ void Engine::loadData(const Poco::DynamicStruct& data)
     {
         auto& player = players[i];
         int id = player["id"];
-        int x = player["x"];
-        int y = player["y"];
         map.players[id].setTexture(resourceManager.getTexture(player["looktype"], PLAYER));
-        map.players[id].set_position(x + 1, y + 1);//server bug
+        map.players[id].set_position(player["x"] + 1, player["y"] + 1);//server bug
     }
 }
