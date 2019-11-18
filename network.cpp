@@ -1,4 +1,5 @@
 #include "network.hpp"
+#include "resourcemanager.hpp"
 #include <SFML/Network/Http.hpp>
 
 namespace
@@ -27,8 +28,8 @@ std::string getLOOKTYPE(const std::string& body)
 Network::Network():
     session("54.37.227.73", 9001),
     request(Poco::Net::HTTPRequest::HTTP_GET, "/echobot", Poco::Net::HTTPRequest::HTTP_1_1),
-    socket(session, request, response),
-    buffer(0) {}
+    buffer(0),
+    socket(session, request, response) {}
 
 void Network::login(const std::string& login, const std::string& password)
 {
@@ -60,7 +61,7 @@ void Network::login(const std::string& login, const std::string& password)
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
     token = getPLAYER_TOKEN(response5.getBody());
-    looktype = getLOOKTYPE(response5.getBody());
+    ResourceManager::setLooktype(getLOOKTYPE(response5.getBody()));
 }
 
 void Network::sendInit(sf::Vector2u windowSize)
@@ -75,11 +76,6 @@ void Network::sendInit(sf::Vector2u windowSize)
     json.insert("token", token);
 
     send(json.toString());
-}
-
-std::string Network::getPlayerLooktype()
-{
-    return looktype;
 }
 
 Poco::DynamicStruct Network::receive()

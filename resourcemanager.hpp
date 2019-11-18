@@ -18,9 +18,15 @@ enum Graphic
 
 class ResourceManager
 {
+    //48
     static std::map<std::string, sf::Texture> storage;
+    //32
+    static std::string player_looktype;
 
 public:
+    static void setLooktype(const std::string& name);
+    static const std::string& getLooktype();
+
     static const sf::Texture& getTexture(const std::string& name, Graphic type);
     static const sf::Texture& getTexture(const std::string& name);
     static void loadParallel(const Poco::DynamicStruct& data);

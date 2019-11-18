@@ -1,14 +1,14 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include "map.hpp"
 #include "network.hpp"
+#include "map.hpp"
 
 class Engine
 {
     sf::RenderWindow window;
-    Map map;
     Network network;
+    Map map;
 
 public:
     void setup();

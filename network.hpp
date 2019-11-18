@@ -10,20 +10,23 @@
 
 class Network
 {
+    //328
     Poco::Net::HTTPClientSession session;
+    //136
     Poco::Net::HTTPRequest request;
+    //112
     Poco::Net::HTTPResponse response;
-    Poco::Net::WebSocket socket;
+    //32
     Poco::Buffer<char> buffer;
-    std::string token;
     std::string cookies;
-    std::string looktype;
+    std::string token;
+    //16
+    Poco::Net::WebSocket socket;
 
 public:
     Network();
     void login(const std::string& login, const std::string& password);
     void sendInit(sf::Vector2u windowSize);
-    std::string getPlayerLooktype();
 
     Poco::DynamicStruct receive();
     Poco::DynamicStruct receiveInit();

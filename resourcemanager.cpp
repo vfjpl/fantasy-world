@@ -4,6 +4,7 @@
 #include <SFML/System/Thread.hpp>
 
 std::map<std::string, sf::Texture> ResourceManager::storage;
+std::string ResourceManager::player_looktype;
 
 namespace
 {
@@ -67,6 +68,16 @@ std::set<std::string> getNAMES(const Poco::DynamicStruct& data)
 
     return names;
 }
+}
+
+void ResourceManager::setLooktype(const std::string& name)
+{
+    player_looktype = name;
+}
+
+const std::string& ResourceManager::getLooktype()
+{
+    return player_looktype;
 }
 
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)

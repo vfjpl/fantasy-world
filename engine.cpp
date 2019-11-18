@@ -140,6 +140,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 101://my movement
     {
+        map.moveMe(json);
         break;
     }
     case 102://my back movement
