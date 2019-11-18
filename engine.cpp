@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "helperfunctions.hpp"
 #include <SFML/Window/Event.hpp>
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/game.js

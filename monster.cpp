@@ -1,4 +1,5 @@
 #include "monster.hpp"
+#include "helperfunctions.hpp"
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
@@ -31,6 +32,6 @@ void Monster::move(int x, int y)
 void Monster::draw(sf::RenderWindow& window)
 {
     sf::Vector2i diff = position - sf::Vector2i(sprite.getPosition());
-    sprite.move(std::max(-1, std::min(diff.x, 1)), std::max(-1, std::min(diff.y, 1)));
+    sprite.move(clamp(diff.x), clamp(diff.y));
     window.draw(sprite);
 }

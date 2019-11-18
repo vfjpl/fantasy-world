@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include "resourcemanager.hpp"
+#include "helperfunctions.hpp"
 #include <SFML/System/Lock.hpp>
 
 void Map::loadData(const Poco::DynamicStruct& data)
