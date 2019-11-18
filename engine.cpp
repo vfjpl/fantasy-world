@@ -124,7 +124,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 55://update map data
     {
-        map.updateData(json["data"].extract<Poco::DynamicStruct>());
+        map.updateMapData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 71://other player join
@@ -135,7 +135,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case 100:
     case char2int("teleport"):
     {
-        map.loadData(json["data"].extract<Poco::DynamicStruct>());
+        map.loadMapData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 101://my movement

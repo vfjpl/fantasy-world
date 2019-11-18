@@ -61,7 +61,7 @@ void Network::login(const std::string& login, const std::string& password)
     request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response5 = http.sendRequest(request5);
     token = getPLAYER_TOKEN(response5.getBody());
-    ResourceManager::setLooktype(getLOOKTYPE(response5.getBody()));
+    ResourceManager::playerLooktype = getLOOKTYPE(response5.getBody());
 }
 
 void Network::sendInit(sf::Vector2u windowSize)

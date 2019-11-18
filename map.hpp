@@ -23,12 +23,10 @@ class Map
     std::vector<Door> doors;
     //8
     sf::Mutex mutex;
-    //4
-    int id;
 
 public:
-    void loadData(const Poco::DynamicStruct& data);
-    void updateData(const Poco::DynamicStruct& data);
+    void loadMapData(const Poco::DynamicStruct& data);
+    void updateMapData(const Poco::DynamicStruct& data);
 
     void addMapItem(const Poco::DynamicStruct& data);
     void addPlayer(const Poco::DynamicStruct& data);
@@ -41,6 +39,9 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
+    void loadPlayerData(const Poco::DynamicStruct& data);
+    void loadMapPositions(const Poco::DynamicStruct& data);
+
     void addMap(const Poco::DynamicStruct& data);
     void addMapData(const Poco::DynamicStruct& data);
     void addMapData(const sf::Texture& texture, int x, int y);
@@ -48,7 +49,6 @@ private:
     void addChest(const Poco::DynamicStruct& data);
     void addMonster(const Poco::DynamicStruct& data);
     void addNpc(const Poco::DynamicStruct& data);
-    void addMe(const Poco::DynamicStruct& data);
     void moveMonster(const Poco::DynamicStruct& data);
     void moveNpc(const Poco::DynamicStruct& data);
 
