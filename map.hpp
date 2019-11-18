@@ -30,9 +30,6 @@ public:
 
     void addMapItem(const Poco::DynamicStruct& data);
     void addPlayer(const Poco::DynamicStruct& data);
-
-    void moveMonster(const Poco::DynamicStruct& data);
-    void moveNpc(const Poco::DynamicStruct& data);
     void movePlayer(const Poco::DynamicStruct& data);
     void deleteMapItem(const Poco::DynamicStruct& data);
     void deleteMonster(const Poco::DynamicStruct& data);
@@ -41,8 +38,6 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
-    void loadMap(const Poco::DynamicStruct& data);
-    void updateMap(const Poco::DynamicStruct& data);
     void addMap(const Poco::DynamicStruct& data);
     void addMapData(const Poco::DynamicStruct& data);
     void addMapData(const sf::Texture& texture, int x, int y);
@@ -50,6 +45,9 @@ private:
     void addChest(const Poco::DynamicStruct& data);
     void addMonster(const Poco::DynamicStruct& data);
     void addNpc(const Poco::DynamicStruct& data);
+    void moveMonster(const Poco::DynamicStruct& data);
+    void moveNpc(const Poco::DynamicStruct& data);
+
     void clear();
 };
 

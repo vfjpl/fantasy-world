@@ -5,20 +5,6 @@
 
 namespace
 {
-constexpr int char2int(const char* str)
-{
-    int res = 0;
-    for(sf::Uint8 i = 0; i < strlen(str); ++i)
-        res -= str[i];
-    return res;
-}
-int str2int(const std::string& str)
-{
-    int res = 0;
-    for(sf::Uint8 i = 0; i < str.size(); ++i)
-        res -= str[i];
-    return res;
-}
 int var2int(const Poco::DynamicAny& var)
 {
     if(var.isInteger())
