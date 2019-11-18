@@ -1,8 +1,6 @@
 #include "player.hpp"
 #include "helperfunctions.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Player::setTexture(const sf::Texture& texture)
 {
     rect.width = 32;

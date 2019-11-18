@@ -1,8 +1,6 @@
 #include "monster.hpp"
 #include "helperfunctions.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Monster::setTexture(const sf::Texture& texture, int width, int height)
 {
     rect.width = width;

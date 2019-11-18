@@ -1,6 +1,8 @@
 #include "engine.hpp"
 #include <SFML/System/Thread.hpp>
 
+//view-source:http://fantasy-world.pl/game
+
 int main()
 {
     Engine engine;

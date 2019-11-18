@@ -1,8 +1,6 @@
 #include "npc.hpp"
 #include "helperfunctions.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Npc::setTexture(const sf::Texture& texture)
 {
     rect.width = 32;

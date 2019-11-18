@@ -1,7 +1,5 @@
 #include "door.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Door::setTexture(const sf::Texture& texture)
 {
     sprite.setTexture(texture);

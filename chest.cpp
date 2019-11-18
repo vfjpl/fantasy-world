@@ -1,7 +1,5 @@
 #include "chest.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Chest::setTexture(const sf::Texture& texture)
 {
     sprite.setTexture(texture);

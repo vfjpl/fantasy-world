@@ -1,7 +1,5 @@
 #include "item.hpp"
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
-
 void Item::setTexture(const sf::Texture& texture)
 {
     sprite.setTexture(texture);

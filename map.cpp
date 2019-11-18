@@ -3,6 +3,8 @@
 #include "helperfunctions.hpp"
 #include <SFML/System/Lock.hpp>
 
+//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
+
 void Map::loadData(const Poco::DynamicStruct& data)
 {
     if(data.contains("map_data"))
