@@ -52,6 +52,7 @@ void Engine::setup_window(bool fullscreen)
         window.create(mode, "fantasy-world", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
+    map.initDefaultCamera(window.getDefaultView());
 }
 
 void Engine::process_input()

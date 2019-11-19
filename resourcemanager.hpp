@@ -30,9 +30,9 @@ public:
     static const sf::Texture& getTexture(const std::string& name, Graphic type);
     static const sf::Texture& getTexture(const std::string& name);
     static void loadParallel(const Poco::DynamicStruct& data);
-    static void loadParallel(const std::set<std::string>& names);
 
 private:
+    static void loadParallel(const std::set<std::string>& names);
     static void loadGraphic(const std::string& name);
 };
 

@@ -8,13 +8,14 @@ class Monster
 {
     sf::Sprite sprite;
     sf::IntRect rect;
-    sf::Vector2i position;
+    sf::Vector2i current_px;
+    sf::Vector2i desired_px;
 
 public:
     void setTexture(const sf::Texture& texture, int width, int height);
     void set_dir(int dir);
-    void set_position(int x, int y);
     void move(int x, int y);
+    void set_position(int x, int y);
     void draw(sf::RenderWindow& window);
 };
 

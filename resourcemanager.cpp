@@ -88,6 +88,8 @@ void ResourceManager::loadParallel(const Poco::DynamicStruct& data)
     loadParallel(getNAMES(data));
 }
 
+// private
+
 void ResourceManager::loadParallel(const std::set<std::string>& names)
 {
     std::vector<sf::Thread*> threads;
@@ -104,8 +106,6 @@ void ResourceManager::loadParallel(const std::set<std::string>& names)
     for(auto &i: threads)
         delete i;
 }
-
-// private
 
 void ResourceManager::loadGraphic(const std::string& name)
 {

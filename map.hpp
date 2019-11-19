@@ -12,6 +12,8 @@
 
 class Map
 {
+    //168
+    sf::View camera;
     //48
     std::map<int, Chest> chests;
     std::map<int, Item> map_items;
@@ -22,9 +24,12 @@ class Map
     std::vector<sf::Sprite> map_data;
     std::vector<Door> doors;
     //8
+    sf::Vector2i current_camera;
+    sf::Vector2i desired_camera;
     sf::Mutex mutex;
 
 public:
+    void initDefaultCamera(const sf::View& view);
     void loadMapData(const Poco::DynamicStruct& data);
     void updateMapData(const Poco::DynamicStruct& data);
 
@@ -41,6 +46,9 @@ public:
 private:
     void loadPlayerData(const Poco::DynamicStruct& data);
     void loadMapPositions(const Poco::DynamicStruct& data);
+
+    void moveCamera(int x, int y);
+    void setCamera(int x, int y);
 
     void addMap(const Poco::DynamicStruct& data);
     void addMapData(const Poco::DynamicStruct& data);

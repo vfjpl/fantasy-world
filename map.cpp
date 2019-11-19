@@ -5,9 +5,19 @@
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
+void Map::initDefaultCamera(const sf::View& view)
+{
+    camera = view;
+}
+
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
+    ResourceManager::loadParallel(data);
     clear();
+
+    if(data.contains("player"))
+        loadPlayerData(data["player"].extract<Poco::DynamicStruct>());
+    loadMapPositions(data["map_positions"].extract<Poco::DynamicStruct>());
 
     if(data.contains("map_data"))
     {
@@ -46,11 +56,6 @@ void Map::loadMapData(const Poco::DynamicStruct& data)
     auto& players = data["players"];
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         addPlayer(players[i].extract<Poco::DynamicStruct>());
-
-    if(data.contains("player"))
-        loadPlayerData(data["player"].extract<Poco::DynamicStruct>());
-
-    loadMapPositions(data["map_positions"].extract<Poco::DynamicStruct>());
 }
 
 void Map::updateMapData(const Poco::DynamicStruct& data)
@@ -111,8 +116,11 @@ void Map::movePlayer(const Poco::DynamicStruct& data)
 
 void Map::moveMe(const Poco::DynamicStruct& data)
 {
+    int x = data["x"];
+    int y = data["y"];
+    moveCamera(x, y);
     players[ResourceManager::playerId].set_dir(data["dir"]);
-    players[ResourceManager::playerId].move(data["x"], data["y"]);
+    players[ResourceManager::playerId].move(x, y);
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)
@@ -136,6 +144,10 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
+
+    current_camera += clamp(desired_camera - current_camera);
+    camera.setCenter(current_camera.x, current_camera.y);
+    window.setView(camera);
 
     for(auto &i: map_data)
         window.draw(i);
@@ -162,8 +174,23 @@ void Map::loadPlayerData(const Poco::DynamicStruct& data)
 
 void Map::loadMapPositions(const Poco::DynamicStruct& data)
 {
+    int x = data["PLAYER_X"];
+    int y = data["PLAYER_Y"];
+    setCamera(x, y);
     players[ResourceManager::playerId].setTexture(ResourceManager::getTexture(ResourceManager::playerLooktype));
-    players[ResourceManager::playerId].set_position(data["PLAYER_X"], data["PLAYER_Y"]);
+    players[ResourceManager::playerId].set_position(x, y);
+}
+
+void Map::moveCamera(int x, int y)
+{
+    desired_camera.x = (32 * x) - 16;
+    desired_camera.y = (32 * y) - 16;
+}
+
+void Map::setCamera(int x, int y)
+{
+    moveCamera(x, y);
+    current_camera = desired_camera;
 }
 
 void Map::addMap(const Poco::DynamicStruct& data)

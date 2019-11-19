@@ -2,6 +2,7 @@
 #define HELPERFUNCTIONS_HPP_INCLUDED
 
 int clamp(int val);
+sf::Vector2i clamp(sf::Vector2i val);
 int str2int(const std::string& str);
 
 constexpr int char2int(const char* str)
