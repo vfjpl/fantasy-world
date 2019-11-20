@@ -6,7 +6,9 @@
 
 class Engine
 {
+    //528
     sf::RenderWindow window;
+
     Network network;
     Map map;
 

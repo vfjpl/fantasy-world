@@ -6,6 +6,7 @@
 
 class Chest
 {
+    //288
     sf::Sprite sprite;
 
 public:

@@ -6,6 +6,7 @@
 
 class Door
 {
+    //288
     sf::Sprite sprite;
 
 public:

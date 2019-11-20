@@ -6,8 +6,11 @@
 
 class Npc
 {
+    //288
     sf::Sprite sprite;
+    //16
     sf::IntRect rect;
+    //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
 

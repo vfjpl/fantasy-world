@@ -6,6 +6,7 @@
 
 class Item
 {
+    //288
     sf::Sprite sprite;
 
 public:
