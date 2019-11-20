@@ -68,25 +68,41 @@ void Engine::process_input()
             switch(event.key.code)
             {
             case sf::Keyboard::W:
+            {
                 network.move(3);
                 break;
+            }
             case sf::Keyboard::A:
+            {
                 network.move(1);
                 break;
+            }
             case sf::Keyboard::S:
+            {
                 network.move(4);
                 break;
+            }
             case sf::Keyboard::D:
+            {
                 network.move(2);
                 break;
+            }
             case sf::Keyboard::F:
-                network.attack(map.getCloseMonsterId());
+            {
+                int id = map.getCloseMonsterId();
+                if(id)
+                    network.attack(id);
                 break;
+            }
             case sf::Keyboard::Escape:
+            {
                 window.close();
                 break;
+            }
             default:
+            {
                 break;
+            }
             }//end switch
             break;
         }

@@ -87,11 +87,11 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
                 addMonster(monsters[i].extract<Poco::DynamicStruct>());
             break;
         }
-        case char2int("yells"):
+        case char2int("damages"):
         {
             break;
         }
-        case char2int("damages"):
+        case char2int("yells"):
         {
             break;
         }
