@@ -2,6 +2,7 @@
 #include "resourcemanager.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/System/Lock.hpp>
+#include <iostream>
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
@@ -89,6 +90,11 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
         {
             break;
         }
+        default:
+        {
+            std::cout << i.first << '\n';
+            break;
+        }
         }//end switch
     }//end for
 }
@@ -139,6 +145,15 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
 {
     int id = data["id"];
     players.erase(id);
+}
+
+int Map::getCloseMonsterId()
+{
+    sf::Vector2i myPos = players[ResourceManager::playerId].getPosition();
+    for(auto &i : monsters)
+        if(inRange(i.second.getPosition() - myPos))
+            return i.first;
+    return 0;
 }
 
 void Map::draw(sf::RenderWindow& window)

@@ -41,6 +41,7 @@ public:
     void deleteMonster(const Poco::DynamicStruct& data);
     void deletePlayer(const Poco::DynamicStruct& data);
 
+    int getCloseMonsterId();
     void draw(sf::RenderWindow& window);
 
 private:

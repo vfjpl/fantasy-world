@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/Window/Event.hpp>
+#include <iostream>
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/game.js
 
@@ -78,6 +79,13 @@ void Engine::process_input()
             case sf::Keyboard::D:
                 network.move(2);
                 break;
+            case sf::Keyboard::F:
+            {
+                int id = map.getCloseMonsterId();
+                if(id)
+                    network.attack(id);
+                break;
+            }
             case sf::Keyboard::Escape:
                 window.close();
                 break;
@@ -158,6 +166,10 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         map.addMapItem(json["item"].extract<Poco::DynamicStruct>());
         break;
     }
+    case 1030://my health
+    {
+        break;
+    }
     case 1051://other player left
     {
         map.deletePlayer(json["player"].extract<Poco::DynamicStruct>());
@@ -167,9 +179,18 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
         break;
     }
+    case char2int("loot"):
+    {
+        break;
+    }
     case char2int("load_game"):
     {
         process_network(network.receiveInit());
+        break;
+    }
+    default:
+    {
+        std::cout << json["code"].toString() << '\n';
         break;
     }
     }//end switch

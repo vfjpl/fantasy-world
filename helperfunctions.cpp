@@ -12,6 +12,16 @@ sf::Vector2i clamp(sf::Vector2i val)
     return sf::Vector2i(clamp(val.x), clamp(val.y));
 }
 
+bool inRange(int val)
+{
+    return val == clamp(val);
+}
+
+bool inRange(sf::Vector2i val)
+{
+    return inRange(val.x) && inRange(val.y);
+}
+
 int str2int(const std::string& str)
 {
     int res = 0;
