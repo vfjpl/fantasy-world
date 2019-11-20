@@ -33,10 +33,10 @@ public:
     void loadMapData(const Poco::DynamicStruct& data);
     void updateMapData(const Poco::DynamicStruct& data);
 
-    void addMapItem(const Poco::DynamicStruct& data);
-    void addPlayer(const Poco::DynamicStruct& data);
     void movePlayer(const Poco::DynamicStruct& data);
     void moveMe(const Poco::DynamicStruct& data);
+    void addMapItem(const Poco::DynamicStruct& data);
+    void addPlayer(const Poco::DynamicStruct& data);
     void deleteMapItem(const Poco::DynamicStruct& data);
     void deleteMonster(const Poco::DynamicStruct& data);
     void deletePlayer(const Poco::DynamicStruct& data);
@@ -50,6 +50,8 @@ private:
     void moveCamera(int x, int y);
     void setCamera(int x, int y);
 
+    void moveMonster(const Poco::DynamicStruct& data);
+    void moveNpc(const Poco::DynamicStruct& data);
     void addMap(const Poco::DynamicStruct& data);
     void addMapData(const Poco::DynamicStruct& data);
     void addMapData(const sf::Texture& texture, int x, int y);
@@ -57,8 +59,6 @@ private:
     void addChest(const Poco::DynamicStruct& data);
     void addMonster(const Poco::DynamicStruct& data);
     void addNpc(const Poco::DynamicStruct& data);
-    void moveMonster(const Poco::DynamicStruct& data);
-    void moveNpc(const Poco::DynamicStruct& data);
 
     void clear();
 };

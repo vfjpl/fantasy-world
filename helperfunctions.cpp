@@ -1,5 +1,5 @@
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Config.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <string>
 
 int clamp(int val)

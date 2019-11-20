@@ -12,7 +12,7 @@ void Map::initDefaultCamera(const sf::View& view)
 
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
-    //ResourceManager::loadParallel(data);
+    ResourceManager::loadParallel(data);
     clear();
 
     if(data.contains("player"))
@@ -93,20 +93,6 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
     }//end for
 }
 
-void Map::addMapItem(const Poco::DynamicStruct& data)
-{
-    int id = data["id"];
-    map_items[id].setTexture(ResourceManager::getTexture(data["item_id"], ITEM));
-    map_items[id].set_position(data["x"], data["y"]);
-}
-
-void Map::addPlayer(const Poco::DynamicStruct& data)
-{
-    int id = data["id"];
-    players[id].setTexture(ResourceManager::getTexture(data["looktype"], PLAYER));
-    players[id].set_position_server_bug(data["x"], data["y"]);
-}
-
 void Map::movePlayer(const Poco::DynamicStruct& data)
 {
     int id = data["player"];
@@ -121,6 +107,20 @@ void Map::moveMe(const Poco::DynamicStruct& data)
     moveCamera(x, y);
     players[ResourceManager::playerId].set_dir(data["dir"]);
     players[ResourceManager::playerId].move(x, y);
+}
+
+void Map::addMapItem(const Poco::DynamicStruct& data)
+{
+    int id = data["id"];
+    map_items[id].setTexture(ResourceManager::getTexture(data["item_id"], ITEM));
+    map_items[id].set_position(data["x"], data["y"]);
+}
+
+void Map::addPlayer(const Poco::DynamicStruct& data)
+{
+    int id = data["id"];
+    players[id].setTexture(ResourceManager::getTexture(data["looktype"], PLAYER));
+    players[id].set_position_server_bug(data["x"], data["y"]);
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)
@@ -193,6 +193,20 @@ void Map::setCamera(int x, int y)
     current_camera = desired_camera;
 }
 
+void Map::moveMonster(const Poco::DynamicStruct& data)
+{
+    int id = data["monster"];
+    monsters[id].set_dir(data["dir"]);
+    monsters[id].move(data["x"], data["y"]);
+}
+
+void Map::moveNpc(const Poco::DynamicStruct& data)
+{
+    int id = data["npc"];
+    npcs[id].set_dir(data["dir"]);
+    npcs[id].move(data["x"], data["y"]);
+}
+
 void Map::addMap(const Poco::DynamicStruct& data)
 {
     map_data.emplace_back(ResourceManager::getTexture(data["id"], MAP));
@@ -241,20 +255,6 @@ void Map::addNpc(const Poco::DynamicStruct& data)
     int id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], NPC));
     npcs[id].set_position(data["x"], data["y"]);
-}
-
-void Map::moveMonster(const Poco::DynamicStruct& data)
-{
-    int id = data["monster"];
-    monsters[id].set_dir(data["dir"]);
-    monsters[id].move(data["x"], data["y"]);
-}
-
-void Map::moveNpc(const Poco::DynamicStruct& data)
-{
-    int id = data["npc"];
-    npcs[id].set_dir(data["dir"]);
-    npcs[id].move(data["x"], data["y"]);
 }
 
 void Map::clear()

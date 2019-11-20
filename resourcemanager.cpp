@@ -2,6 +2,7 @@
 #include <Poco/Net/HTTPMessage.h>
 #include <SFML/Network/Http.hpp>
 #include <SFML/System/Thread.hpp>
+#include <SFML/System/MemoryInputStream.hpp>
 
 std::map<std::string, sf::Texture> ResourceManager::storage;
 std::string ResourceManager::playerLooktype;
@@ -116,14 +117,15 @@ void ResourceManager::loadGraphic(const std::string& name)
     sf::Http::Request req(name);
     sf::Http::Response resp = http.sendRequest(req);
 
-    unsigned long lenght = std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH));
+    sf::MemoryInputStream data;
+    data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
 
-    if(!storage[name].loadFromMemory(resp.getBody().data(), lenght))
+    if(!storage[name].loadFromStream(data))
     {
         //RESIZING
         sf::Image orginal;
         sf::Image resized;
-        orginal.loadFromMemory(resp.getBody().data(), lenght);
+        orginal.loadFromStream(data);
 
         float scale = sf::Texture::getMaximumSize();
         sf::Vector2u orginal_size = orginal.getSize();
