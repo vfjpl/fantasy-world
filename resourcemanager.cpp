@@ -5,8 +5,6 @@
 #include <SFML/System/MemoryInputStream.hpp>
 
 std::map<std::string, sf::Texture> ResourceManager::storage;
-std::string ResourceManager::playerLooktype;
-int ResourceManager::playerId;
 
 namespace
 {

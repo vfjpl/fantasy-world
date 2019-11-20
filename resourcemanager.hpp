@@ -22,11 +22,6 @@ class ResourceManager
     static std::map<std::string, sf::Texture> storage;
 
 public:
-    //32
-    static std::string playerLooktype;
-    //4
-    static int playerId;
-
     static const sf::Texture& getTexture(const std::string& name, Graphic type);
     static const sf::Texture& getTexture(const std::string& name);
     static void loadParallel(const Poco::DynamicStruct& data);

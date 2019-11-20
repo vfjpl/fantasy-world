@@ -48,8 +48,8 @@ private:
     void loadPlayerData(const Poco::DynamicStruct& data);
     void loadMapPositions(const Poco::DynamicStruct& data);
 
-    void moveCamera(int x, int y);
-    void setCamera(int x, int y);
+    void moveCamera(sf::Vector2i pos);
+    void setCamera(sf::Vector2i pos);
 
     void moveMonster(const Poco::DynamicStruct& data);
     void moveNpc(const Poco::DynamicStruct& data);

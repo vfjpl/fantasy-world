@@ -11,7 +11,6 @@ class Player
     //16
     sf::IntRect rect;
     //8
-    sf::Vector2i position;
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
 
@@ -19,10 +18,9 @@ public:
     void setTexture(const sf::Texture& texture);
     void set_dir(int dir);
     void move(int x, int y);
-    void set_position(int x, int y);
+    void move(sf::Vector2i pos);
+    void set_position(sf::Vector2i pos);
     void set_position_server_bug(int x, int y);
-
-    sf::Vector2i getPosition();
     void draw(sf::RenderWindow& window);
 };
 

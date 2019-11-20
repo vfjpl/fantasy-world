@@ -60,6 +60,8 @@
 		<Unit filename="npc.hpp" />
 		<Unit filename="player.cpp" />
 		<Unit filename="player.hpp" />
+		<Unit filename="playerdata.cpp" />
+		<Unit filename="playerdata.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
 		<Extensions>

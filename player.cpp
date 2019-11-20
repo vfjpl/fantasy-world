@@ -17,30 +17,26 @@ void Player::set_dir(int dir)
 
 void Player::move(int x, int y)
 {
-    position.x = x;
-    position.y = y;
     desired_px.x = (32 * x) - 32;
     desired_px.y = (32 * y) - 48;
 }
 
-void Player::set_position(int x, int y)
+void Player::move(sf::Vector2i pos)
 {
-    move(x, y);
+    move(pos.x, pos.y);
+}
+
+void Player::set_position(sf::Vector2i pos)
+{
+    move(pos.x, pos.y);
     current_px = desired_px;
 }
 
 void Player::set_position_server_bug(int x, int y)
 {
-    position.x = x;
-    position.y = y;
     desired_px.x = (32 * x);
     desired_px.y = (32 * y) - 16;
     current_px = desired_px;
-}
-
-sf::Vector2i Player::getPosition()
-{
-    return position;
 }
 
 void Player::draw(sf::RenderWindow& window)

@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include "resourcemanager.hpp"
+#include "playerdata.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/System/Lock.hpp>
 #include <iostream>
@@ -108,11 +109,11 @@ void Map::movePlayer(const Poco::DynamicStruct& data)
 
 void Map::moveMe(const Poco::DynamicStruct& data)
 {
-    int x = data["x"];
-    int y = data["y"];
-    moveCamera(x, y);
-    players[ResourceManager::playerId].set_dir(data["dir"]);
-    players[ResourceManager::playerId].move(x, y);
+    PlayerData::position.x = data["x"];
+    PlayerData::position.y = data["y"];
+    moveCamera(PlayerData::position);
+    players[PlayerData::id].set_dir(data["dir"]);
+    players[PlayerData::id].move(PlayerData::position);
 }
 
 void Map::addMapItem(const Poco::DynamicStruct& data)
@@ -149,9 +150,8 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
 
 int Map::getCloseMonsterId()
 {
-    sf::Vector2i myPos = players[ResourceManager::playerId].getPosition();
     for(auto &i : monsters)
-        if(inRange(i.second.getPosition() - myPos))
+        if(inRange(i.second.getPosition() - PlayerData::position))
             return i.first;
     return 0;
 }
@@ -184,27 +184,27 @@ void Map::draw(sf::RenderWindow& window)
 
 void Map::loadPlayerData(const Poco::DynamicStruct& data)
 {
-    ResourceManager::playerId = data["id"];
+    PlayerData::id = data["id"];
 }
 
 void Map::loadMapPositions(const Poco::DynamicStruct& data)
 {
-    int x = data["PLAYER_X"];
-    int y = data["PLAYER_Y"];
-    setCamera(x, y);
-    players[ResourceManager::playerId].setTexture(ResourceManager::getTexture(ResourceManager::playerLooktype));
-    players[ResourceManager::playerId].set_position(x, y);
+    PlayerData::position.x = data["PLAYER_X"];
+    PlayerData::position.y = data["PLAYER_Y"];
+    setCamera(PlayerData::position);
+    players[PlayerData::id].setTexture(ResourceManager::getTexture(PlayerData::looktype));
+    players[PlayerData::id].set_position(PlayerData::position);
 }
 
-void Map::moveCamera(int x, int y)
+void Map::moveCamera(sf::Vector2i pos)
 {
-    desired_camera.x = (32 * x) - 16;
-    desired_camera.y = (32 * y) - 16;
+    desired_camera.x = (32 * pos.x) - 16;
+    desired_camera.y = (32 * pos.y) - 16;
 }
 
-void Map::setCamera(int x, int y)
+void Map::setCamera(sf::Vector2i pos)
 {
-    moveCamera(x, y);
+    moveCamera(pos);
     current_camera = desired_camera;
 }
 
