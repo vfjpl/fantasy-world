@@ -80,12 +80,8 @@ void Engine::process_input()
                 network.move(2);
                 break;
             case sf::Keyboard::F:
-            {
-                int id = map.getCloseMonsterId();
-                if(id)
-                    network.attack(id);
+                network.attack(map.getCloseMonsterId());
                 break;
-            }
             case sf::Keyboard::Escape:
                 window.close();
                 break;

@@ -19,7 +19,7 @@ bool inRange(int val)
 
 bool inRange(sf::Vector2i val)
 {
-    return inRange(val.x) && inRange(val.y);
+    return val == clamp(val);
 }
 
 int str2int(const std::string& str)

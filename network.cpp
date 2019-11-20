@@ -104,6 +104,9 @@ void Network::move(int dir)
 
 void Network::attack(int id)
 {
+    if(id == 0)
+        return;
+
     Poco::DynamicStruct data;
     data.insert("monster", id);
     data.insert("skill", 0);
