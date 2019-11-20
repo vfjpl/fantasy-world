@@ -12,7 +12,7 @@ void Map::initDefaultCamera(const sf::View& view)
 
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
-    ResourceManager::loadParallel(data);
+    //ResourceManager::loadParallel(data);
     clear();
 
     if(data.contains("player"))
@@ -104,7 +104,7 @@ void Map::addPlayer(const Poco::DynamicStruct& data)
 {
     int id = data["id"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], PLAYER));
-    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
+    players[id].set_position_server_bug(data["x"], data["y"]);
 }
 
 void Map::movePlayer(const Poco::DynamicStruct& data)
@@ -214,8 +214,7 @@ void Map::addTile(const Poco::DynamicStruct& data)
 {
     if(data["type"] == 2)
     {
-        doors.emplace_back();
-        doors.back().setTexture(ResourceManager::getTexture(data["bg"]));
+        doors.emplace_back(ResourceManager::getTexture(data["bg"]));
         doors.back().set_position(data["x"], data["y"]);
     }
 }

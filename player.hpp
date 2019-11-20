@@ -16,6 +16,7 @@ public:
     void set_dir(int dir);
     void move(int x, int y);
     void set_position(int x, int y);
+    void set_position_server_bug(int x, int y);
     void draw(sf::RenderWindow& window);
 };
 
