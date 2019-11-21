@@ -4,9 +4,13 @@
 
 namespace
 {
-std::string getCOOKIE(const std::string& body, size_t k)
+std::string getCOOKIE0(const std::string& body)
 {
-    return body.substr(0, body.find(';') + k);
+    return body.substr(0, body.find(';'));
+}
+std::string getCOOKIE2(const std::string& body)
+{
+    return body.substr(0, body.find(';') + 2);
 }
 std::string getID(const std::string& body)
 {
@@ -38,13 +42,13 @@ void Network::login(const std::string& login, const std::string& password)
     // 1. get first cookie
     sf::Http::Request request1("/modal/get/login");
     sf::Http::Response response1 = http.sendRequest(request1);
-    cookies = getCOOKIE(response1.getField(Poco::Net::HTTPResponse::SET_COOKIE), 2);
+    cookies = getCOOKIE2(response1.getField(Poco::Net::HTTPResponse::SET_COOKIE));
 
     // 2. log in and get second cookie
     sf::Http::Request request2("/ajax/login", sf::Http::Request::Post, "login=" + login + "&password=" + password);
     request2.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
     sf::Http::Response response2 = http.sendRequest(request2);
-    cookies += getCOOKIE(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE), 0);
+    cookies += getCOOKIE0(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE));
 
     // 3. get hero id
     sf::Http::Request request3;
@@ -74,7 +78,6 @@ void Network::sendInit(sf::Vector2u windowSize)
     json.insert("code", 1);
     json.insert("window", jsonArray);
     json.insert("token", token);
-
     send(json.toString());
 }
 
@@ -99,7 +102,11 @@ void Network::move(int dir)
 {
     Poco::DynamicStruct data;
     data.insert("dir", dir);
-    send(data, 5);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 5);
+    json.insert("data", data);
+    send(json.toString());
 }
 
 void Network::attack(int id)
@@ -107,18 +114,14 @@ void Network::attack(int id)
     Poco::DynamicStruct data;
     data.insert("monster", id);
     data.insert("skill", 0);
-    send(data, 3);
-}
 
-// private
-
-void Network::send(const Poco::DynamicStruct& data, int code)
-{
     Poco::DynamicStruct json;
-    json.insert("code", code);
+    json.insert("code", 3);
     json.insert("data", data);
     send(json.toString());
 }
+
+// private
 
 void Network::send(const std::string& json)
 {

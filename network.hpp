@@ -35,7 +35,6 @@ public:
     void attack(int id);
 
 private:
-    void send(const Poco::DynamicStruct& data, int code);
     void send(const std::string& json);
 };
 
