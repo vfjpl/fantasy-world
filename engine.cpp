@@ -25,6 +25,7 @@ void Engine::setup()
 bool Engine::run_game()
 {
     process_input();
+    game_logic();
     draw_frame();
 
     return window.isOpen();
@@ -63,52 +64,17 @@ void Engine::process_input()
     {
         switch(event.type)
         {
-        case sf::Event::KeyPressed:
-        {
-            switch(event.key.code)
-            {
-            case sf::Keyboard::W:
-            {
-                network.move(3);
-                break;
-            }
-            case sf::Keyboard::A:
-            {
-                network.move(1);
-                break;
-            }
-            case sf::Keyboard::S:
-            {
-                network.move(4);
-                break;
-            }
-            case sf::Keyboard::D:
-            {
-                network.move(2);
-                break;
-            }
-            case sf::Keyboard::F:
-            {
-                int id = map.getCloseMonsterId();
-                if(id)
-                    network.attack(id);
-                break;
-            }
-            case sf::Keyboard::Escape:
-            {
-                window.close();
-                break;
-            }
-            default:
-            {
-                break;
-            }
-            }//end switch
-            break;
-        }
         case sf::Event::Closed:
         {
             window.close();
+            break;
+        }
+        case sf::Event::KeyPressed:
+        {
+            break;
+        }
+        case sf::Event::KeyReleased:
+        {
             break;
         }
         default:
@@ -117,6 +83,40 @@ void Engine::process_input()
         }
         }//end switch
     }//end while
+}
+
+void Engine::game_logic()
+{
+    for(Event code = timer.getEvent(); code != NONE; code = timer.getEvent())
+    {
+        switch(code)
+        {
+        case MOVE_LEFT:
+        {
+            network.move(1);
+            break;
+        }
+        case MOVE_RIGHT:
+        {
+            network.move(2);
+            break;
+        }
+        case MOVE_UP:
+        {
+            network.move(3);
+            break;
+        }
+        case MOVE_DOWN:
+        {
+            network.move(4);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }//end switch
+    }//end for
 }
 
 void Engine::draw_frame()

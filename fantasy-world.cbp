@@ -64,6 +64,8 @@
 		<Unit filename="playerdata.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
+		<Unit filename="timer.cpp" />
+		<Unit filename="timer.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

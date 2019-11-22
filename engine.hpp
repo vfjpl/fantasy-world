@@ -3,6 +3,7 @@
 
 #include "network.hpp"
 #include "map.hpp"
+#include "timer.hpp"
 
 class Engine
 {
@@ -11,6 +12,7 @@ class Engine
 
     Network network;
     Map map;
+    Timer timer;
 
 public:
     void setup();
@@ -21,6 +23,7 @@ private:
     void setup_window(bool fullscreen);
 
     void process_input();
+    void game_logic();
     void draw_frame();
 
     void process_network(const Poco::DynamicStruct& json);
