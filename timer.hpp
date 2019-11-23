@@ -3,6 +3,7 @@
 
 #include <SFML/Config.hpp>
 #include <deque>
+#include <array>
 
 enum Event
 {
@@ -12,6 +13,7 @@ enum Event
     MOVE_UP,
     MOVE_DOWN,
     ATTACK,
+    EVENT_COUNT,
 };
 
 class Timer
@@ -19,9 +21,9 @@ class Timer
     //80
     std::deque<Event> events;
     //32
-    std::deque<Event>::iterator it;
-    //5
-    sf::Uint8 delaytable[5];
+    std::deque<Event>::const_iterator it = events.cbegin();
+    //EVENT_COUNT
+    std::array<sf::Uint8, EVENT_COUNT> delaytable;
 
 public:
     Event getEvent();

@@ -7,6 +7,14 @@
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
+namespace
+{
+bool inRange(sf::Vector2i val)
+{
+    return val == clamp(val);
+}
+}
+
 void Map::initDefaultCamera(const sf::View& view)
 {
     camera = view;

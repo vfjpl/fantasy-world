@@ -3,16 +3,17 @@
 
 Event Timer::getEvent()
 {
-    while(it != events.end())
+    while(it != events.cend())
     {
-        if(!delaytable[*it])
+        Event code = *it++;
+        if(!delaytable[code])
         {
-            addDelay(*it);
-            return *it++;
+            addDelay(code);
+            return code;
         }
-        --delaytable[*it++];
+        --delaytable[code];
     }
-    it = events.begin();
+    it = events.cbegin();
     return NONE;
 }
 
@@ -24,7 +25,7 @@ void Timer::startEvent(Event code)
 
 void Timer::stopEvent(Event code)
 {
-    events.erase(std::find(events.begin(), events.end(), code));
+    events.erase(std::find(events.cbegin(), events.cend(), code));
 }
 
 // private
@@ -37,10 +38,10 @@ void Timer::addDelay(Event code)
     case MOVE_RIGHT:
     case MOVE_UP:
     case MOVE_DOWN:
-        delaytable[code] = 16;
+        delaytable[code] = 15;
         break;
     case ATTACK:
-        delaytable[code] = 120;
+        delaytable[code] = 119;
         break;
     default:
         break;

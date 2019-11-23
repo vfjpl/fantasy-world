@@ -71,10 +71,69 @@ void Engine::process_input()
         }
         case sf::Event::KeyPressed:
         {
+            switch(event.key.code)
+            {
+            case sf::Keyboard::A:
+            {
+                timer.startEvent(MOVE_LEFT);
+                break;
+            }
+            case sf::Keyboard::D:
+            {
+                timer.startEvent(MOVE_RIGHT);
+                break;
+            }
+            case sf::Keyboard::S:
+            {
+                timer.startEvent(MOVE_DOWN);
+                break;
+            }
+            case sf::Keyboard::W:
+            {
+                timer.startEvent(MOVE_UP);
+                break;
+            }
+            case sf::Keyboard::Escape:
+            {
+                window.close();
+                break;
+            }
+            default:
+            {
+                break;
+            }
+            }//end switch
             break;
         }
         case sf::Event::KeyReleased:
         {
+            switch(event.key.code)
+            {
+            case sf::Keyboard::A:
+            {
+                timer.stopEvent(MOVE_LEFT);
+                break;
+            }
+            case sf::Keyboard::D:
+            {
+                timer.stopEvent(MOVE_RIGHT);
+                break;
+            }
+            case sf::Keyboard::S:
+            {
+                timer.stopEvent(MOVE_DOWN);
+                break;
+            }
+            case sf::Keyboard::W:
+            {
+                timer.stopEvent(MOVE_UP);
+                break;
+            }
+            default:
+            {
+                break;
+            }
+            }//end switch
             break;
         }
         default:
