@@ -9,8 +9,6 @@ class PlayerData
 public:
     //32
     static std::string looktype;
-    //8
-    static sf::Vector2i position;
     //4
     static int id;
 };

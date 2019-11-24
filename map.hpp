@@ -41,15 +41,15 @@ public:
     void deleteMonster(const Poco::DynamicStruct& data);
     void deletePlayer(const Poco::DynamicStruct& data);
 
-    int getCloseMonsterId();
+    int getMonsterId(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 
 private:
     void loadPlayerData(const Poco::DynamicStruct& data);
     void loadMapPositions(const Poco::DynamicStruct& data);
 
-    void moveCamera(sf::Vector2i pos);
-    void setCamera(sf::Vector2i pos);
+    void moveCamera(int x, int y);
+    void setCamera(int x, int y);
 
     void moveMonster(const Poco::DynamicStruct& data);
     void moveNpc(const Poco::DynamicStruct& data);

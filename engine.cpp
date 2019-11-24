@@ -136,6 +136,10 @@ void Engine::process_input()
             }//end switch
             break;
         }
+        case sf::Event::MouseButtonPressed:
+        {
+            break;
+        }
         default:
         {
             break;

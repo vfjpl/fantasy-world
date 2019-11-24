@@ -11,7 +11,6 @@ class Monster
     //16
     sf::IntRect rect;
     //8
-    sf::Vector2i position;
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
 
@@ -21,7 +20,7 @@ public:
     void move(int x, int y);
     void set_position(int x, int y);
 
-    sf::Vector2i getPosition();
+    bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };
 

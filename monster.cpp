@@ -17,8 +17,6 @@ void Monster::set_dir(int dir)
 
 void Monster::move(int x, int y)
 {
-    position.x = x;
-    position.y = y;
     desired_px.x = (32 * x) - ((rect.width - 32)/2);
     desired_px.y = (32 * y) - (rect.height - 32);
 }
@@ -29,9 +27,9 @@ void Monster::set_position(int x, int y)
     current_px = desired_px;
 }
 
-sf::Vector2i Monster::getPosition()
+bool Monster::contains(sf::Vector2f coords)
 {
-    return position;
+    return sprite.getGlobalBounds().contains(coords);
 }
 
 void Monster::draw(sf::RenderWindow& window)

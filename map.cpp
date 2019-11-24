@@ -7,14 +7,6 @@
 
 //view-source:http://fantasy-world.pl/templates/client/default/js/map.js
 
-namespace
-{
-bool inRange(sf::Vector2i val)
-{
-    return val == clamp(val);
-}
-}
-
 void Map::initDefaultCamera(const sf::View& view)
 {
     camera = view;
@@ -121,11 +113,11 @@ void Map::movePlayer(const Poco::DynamicStruct& data)
 
 void Map::moveMe(const Poco::DynamicStruct& data)
 {
-    PlayerData::position.x = data["x"];
-    PlayerData::position.y = data["y"];
-    moveCamera(PlayerData::position);
+    int x = data["x"];
+    int y = data["y"];
+    moveCamera(x, y);
     players[PlayerData::id].set_dir(data["dir"]);
-    players[PlayerData::id].move(PlayerData::position);
+    players[PlayerData::id].move(x, y);
 }
 
 void Map::addMapItem(const Poco::DynamicStruct& data)
@@ -160,10 +152,10 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
     players.erase(id);
 }
 
-int Map::getCloseMonsterId()
+int Map::getMonsterId(sf::Vector2f coords)
 {
-    for(auto &i : monsters)
-        if(inRange(i.second.getPosition() - PlayerData::position))
+    for(auto &i: monsters)
+        if(i.second.contains(coords))
             return i.first;
     return 0;
 }
@@ -201,22 +193,22 @@ void Map::loadPlayerData(const Poco::DynamicStruct& data)
 
 void Map::loadMapPositions(const Poco::DynamicStruct& data)
 {
-    PlayerData::position.x = data["PLAYER_X"];
-    PlayerData::position.y = data["PLAYER_Y"];
-    setCamera(PlayerData::position);
+    int x = data["PLAYER_X"];
+    int y = data["PLAYER_Y"];
+    setCamera(x, y);
     players[PlayerData::id].setTexture(ResourceManager::getTexture(PlayerData::looktype));
-    players[PlayerData::id].set_position(PlayerData::position);
+    players[PlayerData::id].set_position(x, y);
 }
 
-void Map::moveCamera(sf::Vector2i pos)
+void Map::moveCamera(int x, int y)
 {
-    desired_camera.x = (32 * pos.x) - 16;
-    desired_camera.y = (32 * pos.y) - 16;
+    desired_camera.x = (32 * x) - 16;
+    desired_camera.y = (32 * y) - 16;
 }
 
-void Map::setCamera(sf::Vector2i pos)
+void Map::setCamera(int x, int y)
 {
-    moveCamera(pos);
+    moveCamera(x, y);
     current_camera = desired_camera;
 }
 

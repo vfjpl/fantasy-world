@@ -18,9 +18,9 @@ public:
     void setTexture(const sf::Texture& texture);
     void set_dir(int dir);
     void move(int x, int y);
-    void move(sf::Vector2i pos);
-    void set_position(sf::Vector2i pos);
+    void set_position(int x, int y);
     void set_position_server_bug(int x, int y);
+
     void draw(sf::RenderWindow& window);
 };
 

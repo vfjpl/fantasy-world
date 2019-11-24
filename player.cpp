@@ -21,14 +21,9 @@ void Player::move(int x, int y)
     desired_px.y = (32 * y) - 48;
 }
 
-void Player::move(sf::Vector2i pos)
+void Player::set_position(int x, int y)
 {
-    move(pos.x, pos.y);
-}
-
-void Player::set_position(sf::Vector2i pos)
-{
-    move(pos.x, pos.y);
+    move(x, y);
     current_px = desired_px;
 }
 
