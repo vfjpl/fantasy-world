@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "playerdata.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/Window/Event.hpp>
 #include <iostream>
@@ -20,6 +21,7 @@ void Engine::setup()
     setup_window(true);
     network.login();
     network.sendInit(window.getSize());
+    interface.setup(window.getSize());
 }
 
 bool Engine::run_game()
@@ -42,15 +44,15 @@ bool Engine::run_network()
 
 void Engine::setup_window(bool fullscreen)
 {
-    sf::VideoMode mode = sf::VideoMode::getDesktopMode();
     if(fullscreen)
     {
-        window.create(mode, "fantasy-world", sf::Style::Fullscreen);
+        window.create(sf::VideoMode::getDesktopMode(), "fantasy-world", sf::Style::Fullscreen);
     }
     else
     {
-        mode.width = (mode.width*2)/3;
-        mode.height = (mode.height*2)/3;
+        sf::VideoMode mode = sf::VideoMode::getDesktopMode();
+        mode.width = (mode.width*3)/4;
+        mode.height = (mode.height*3)/4;
         window.create(mode, "fantasy-world", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
@@ -174,6 +176,11 @@ void Engine::game_logic()
             network.move(4);
             break;
         }
+        case ATTACK:
+        {
+            network.attack(PlayerData::attackId);
+            break;
+        }
         default:
         {
             break;
@@ -185,6 +192,7 @@ void Engine::game_logic()
 void Engine::draw_frame()
 {
     map.draw(window);
+    interface.draw(window);
     window.display();
 }
 
@@ -256,6 +264,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
+        timer.stopEvent(ATTACK);
         break;
     }
     case char2int("load_game"):

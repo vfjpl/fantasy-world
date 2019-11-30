@@ -4,6 +4,7 @@
 #include "network.hpp"
 #include "map.hpp"
 #include "timer.hpp"
+#include "interface.hpp"
 
 class Engine
 {
@@ -13,6 +14,7 @@ class Engine
     Network network;
     Map map;
     Timer timer;
+    Interface interface;
 
 public:
     void setup();

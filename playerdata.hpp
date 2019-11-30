@@ -1,7 +1,6 @@
 #ifndef PLAYERDATA_HPP_INCLUDED
 #define PLAYERDATA_HPP_INCLUDED
 
-#include <SFML/System/Vector2.hpp>
 #include <string>
 
 class PlayerData
@@ -11,6 +10,7 @@ public:
     static std::string looktype;
     //4
     static int id;
+    static int attackId;
 };
 
 #endif // PLAYERDATA_HPP_INCLUDED

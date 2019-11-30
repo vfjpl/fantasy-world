@@ -203,7 +203,7 @@ void Map::loadMapPositions(const Poco::DynamicStruct& data)
 void Map::moveCamera(int x, int y)
 {
     desired_camera.x = (32 * x) - 16;
-    desired_camera.y = (32 * y) - 16;
+    desired_camera.y = (32 * y);
 }
 
 void Map::setCamera(int x, int y)
