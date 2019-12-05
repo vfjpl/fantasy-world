@@ -3,23 +3,23 @@
 
 Event Timer::getEvent()
 {
-    while(it != events.cend())
+    while(table.front() < events.size())
     {
-        Event code = *it++;
-        if(!delaytable[code])
+        Event code = events[table.front()++];
+        if(!table[code])
         {
             addDelay(code);
             return code;
         }
-        --delaytable[code];
+        --table[code];
     }
-    it = events.cbegin();
+    table.front() = 0;
     return NONE;
 }
 
 void Timer::startEvent(Event code)
 {
-    delaytable[code] = 0;
+    table[code] = 0;
     events.emplace_front(code);
 }
 
@@ -38,10 +38,10 @@ void Timer::addDelay(Event code)
     case MOVE_RIGHT:
     case MOVE_UP:
     case MOVE_DOWN:
-        delaytable[code] = 15;
+        table[code] = 15;
         break;
     case ATTACK:
-        delaytable[code] = 119;
+        table[code] = 119;
         break;
     default:
         break;

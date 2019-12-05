@@ -14,7 +14,7 @@ void Map::initDefaultCamera(const sf::View& view)
 
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
-    ResourceManager::loadParallel(data);
+    //ResourceManager::loadParallel(data);
     clear();
 
     if(data.contains("player"))

@@ -20,10 +20,8 @@ class Timer
 {
     //80
     std::deque<Event> events;
-    //32
-    std::deque<Event>::const_iterator it = events.cbegin();
     //EVENT_COUNT
-    std::array<sf::Uint8, EVENT_COUNT> delaytable;
+    std::array<sf::Uint8, EVENT_COUNT> table;
 
 public:
     Event getEvent();
