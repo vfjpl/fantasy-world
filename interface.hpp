@@ -1,16 +1,22 @@
 #ifndef INTERFACE_HPP_INCLUDED
 #define INTERFACE_HPP_INCLUDED
 
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFGUI/Desktop.hpp>
+#include <SFGUI/SFGUI.hpp>
+#include <SFML/System/Clock.hpp>
 
 class Interface
 {
-    //24
-    std::vector<sf::Sprite> elements;
+    //136
+    sfg::Desktop desktop;
+    //8
+    sf::Clock clock;
+    //1
+    sfg::SFGUI sfgui;
 
 public:
     void setup(sf::Vector2u size);
+    void handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window);
 };
 

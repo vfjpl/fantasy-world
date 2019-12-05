@@ -32,6 +32,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
+			<Add library="sfgui" />
 			<Add library="PocoNet" />
 			<Add library="PocoFoundation" />
 			<Add library="sfml-network" />

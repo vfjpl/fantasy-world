@@ -3,8 +3,8 @@
 
 #include "network.hpp"
 #include "map.hpp"
-#include "timer.hpp"
 #include "interface.hpp"
+#include "timer.hpp"
 
 class Engine
 {
@@ -13,8 +13,8 @@ class Engine
 
     Network network;
     Map map;
-    Timer timer;
     Interface interface;
+    Timer timer;
 
 public:
     void setup();
