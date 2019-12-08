@@ -18,10 +18,8 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(true);
-    network.login();
-    network.sendInit(window.getSize());
-    interface.setup(window.getSize());
+    setup_window(false);
+    interface.login_screen(window.getSize());
 }
 
 bool Engine::run_game()
@@ -57,6 +55,7 @@ void Engine::setup_window(bool fullscreen)
     }
     window.setKeyRepeatEnabled(false);
     map.initDefaultCamera(window.getDefaultView());
+    window.resetGLStates();
 }
 
 void Engine::process_input()
@@ -69,85 +68,9 @@ void Engine::process_input()
         switch(event.type)
         {
         case sf::Event::Closed:
-        {
             window.close();
-            break;
-        }
-        case sf::Event::KeyPressed:
-        {
-            switch(event.key.code)
-            {
-            case sf::Keyboard::A:
-            {
-                timer.startEvent(MOVE_LEFT);
-                break;
-            }
-            case sf::Keyboard::D:
-            {
-                timer.startEvent(MOVE_RIGHT);
-                break;
-            }
-            case sf::Keyboard::S:
-            {
-                timer.startEvent(MOVE_DOWN);
-                break;
-            }
-            case sf::Keyboard::W:
-            {
-                timer.startEvent(MOVE_UP);
-                break;
-            }
-            case sf::Keyboard::Escape:
-            {
-                window.close();
-                break;
-            }
-            default:
-            {
-                break;
-            }
-            }//end switch
-            break;
-        }
-        case sf::Event::KeyReleased:
-        {
-            switch(event.key.code)
-            {
-            case sf::Keyboard::A:
-            {
-                timer.stopEvent(MOVE_LEFT);
-                break;
-            }
-            case sf::Keyboard::D:
-            {
-                timer.stopEvent(MOVE_RIGHT);
-                break;
-            }
-            case sf::Keyboard::S:
-            {
-                timer.stopEvent(MOVE_DOWN);
-                break;
-            }
-            case sf::Keyboard::W:
-            {
-                timer.stopEvent(MOVE_UP);
-                break;
-            }
-            default:
-            {
-                break;
-            }
-            }//end switch
-            break;
-        }
-        case sf::Event::MouseButtonPressed:
-        {
-            break;
-        }
         default:
-        {
             break;
-        }
         }//end switch
     }//end while
 }
@@ -193,6 +116,7 @@ void Engine::game_logic()
 
 void Engine::draw_frame()
 {
+    window.clear();
     map.draw(window);
     interface.draw(window);
     window.display();

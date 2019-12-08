@@ -11,7 +11,7 @@ int main()
         while(engine.run_network());
     });
 
-    thread.launch();
+    //thread.launch();
     engine.setup();
 
     while(engine.run_game());

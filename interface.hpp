@@ -15,7 +15,7 @@ class Interface
     sfg::SFGUI sfgui;
 
 public:
-    void setup(sf::Vector2u size);
+    void login_screen(sf::Vector2u size);
     void handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window);
 };
