@@ -1,6 +1,7 @@
 #ifndef INTERFACE_HPP_INCLUDED
 #define INTERFACE_HPP_INCLUDED
 
+#include "network.hpp"
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include <SFML/System/Clock.hpp>
@@ -13,10 +14,11 @@ class Interface
     sf::Clock clock;
     //1
     sfg::SFGUI sfgui;
+    bool captureEvents = true;
 
 public:
-    void login_screen(sf::Vector2u size);
-    void handleEvent(const sf::Event& event);
+    void login_screen(Network* network, sf::Vector2u windowSize);
+    bool handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window);
 };
 

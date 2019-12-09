@@ -19,7 +19,7 @@ int var2int(const Poco::DynamicAny& var)
 void Engine::setup()
 {
     setup_window(false);
-    interface.login_screen(window.getSize());
+    interface.login_screen(&network, window.getSize());
 }
 
 bool Engine::run_game()
@@ -44,18 +44,18 @@ void Engine::setup_window(bool fullscreen)
 {
     if(fullscreen)
     {
-        window.create(sf::VideoMode::getDesktopMode(), "fantasy-world", sf::Style::Fullscreen);
+        window.create(sf::VideoMode::getDesktopMode(), "Fantasy World", sf::Style::Fullscreen);
     }
     else
     {
         sf::VideoMode mode = sf::VideoMode::getDesktopMode();
         mode.width = (mode.width*3)/4;
         mode.height = (mode.height*3)/4;
-        window.create(mode, "fantasy-world", sf::Style::Close);
+        window.create(mode, "Fantasy World", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
-    map.initDefaultCamera(window.getDefaultView());
     window.resetGLStates();
+    map.initDefaultCamera(window.getDefaultView());
 }
 
 void Engine::process_input()
@@ -63,14 +63,62 @@ void Engine::process_input()
     sf::Event event;
     while(window.pollEvent(event))
     {
-        interface.handleEvent(event);
+        if(interface.handleEvent(event))
+            continue;
 
         switch(event.type)
         {
         case sf::Event::Closed:
+        {
             window.close();
-        default:
             break;
+        }
+        case sf::Event::KeyPressed:
+        {
+            switch(event.key.code)
+            {
+            case sf::Keyboard::A:
+                timer.startEvent(MOVE_LEFT);
+                break;
+            case sf::Keyboard::D:
+                timer.startEvent(MOVE_RIGHT);
+                break;
+            case sf::Keyboard::S:
+                timer.startEvent(MOVE_DOWN);
+                break;
+            case sf::Keyboard::W:
+                timer.startEvent(MOVE_UP);
+                break;
+            default:
+                break;
+            }//end switch
+            break;
+        }
+        case sf::Event::KeyReleased:
+        {
+            switch(event.key.code)
+            {
+            case sf::Keyboard::A:
+                timer.stopEvent(MOVE_LEFT);
+                break;
+            case sf::Keyboard::D:
+                timer.stopEvent(MOVE_RIGHT);
+                break;
+            case sf::Keyboard::S:
+                timer.stopEvent(MOVE_DOWN);
+                break;
+            case sf::Keyboard::W:
+                timer.stopEvent(MOVE_UP);
+                break;
+            default:
+                break;
+            }//end switch
+            break;
+        }
+        default:
+        {
+            break;
+        }
         }//end switch
     }//end while
 }
