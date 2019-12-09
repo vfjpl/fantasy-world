@@ -18,7 +18,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(false);
+    setup_window(true);
     interface.login_screen(&network, window.getSize());
 }
 
@@ -174,6 +174,10 @@ void Engine::process_network(const Poco::DynamicStruct& json)
 {
     switch(var2int(json["code"]))
     {
+    case 1://chat message
+    {
+        break;
+    }
     case 5://show damage
     {
         break;

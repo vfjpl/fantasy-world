@@ -25,8 +25,9 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     box->Pack(login_button);
 
     auto window = sfg::Window::Create();
-    window->SetTitle("Fantasy World");
     window->Add(box);
+    window->SetTitle("Fantasy World");
+    window->SetAllocation(sf::FloatRect((windowSize.x/2) - 48, (windowSize.y/2) - 48, 96, 0));
 
     desktop.Add(window);
 }
