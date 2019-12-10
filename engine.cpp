@@ -176,6 +176,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
     case 1://chat message
     {
+        //interface.chatMessage(json);
         break;
     }
     case 5://show damage
@@ -238,6 +239,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1504://other player yell
     {
+        interface.chatMessage(json);
         break;
     }
     case char2int("loot"):

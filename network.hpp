@@ -31,8 +31,9 @@ public:
     Poco::DynamicStruct receive();
     Poco::DynamicStruct receiveInit();
 
-    void move(int dir);
     void attack(int id);
+    void message(const std::string& message);
+    void move(int dir);
 
 private:
     void send(const std::string& json);

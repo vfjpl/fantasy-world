@@ -98,17 +98,6 @@ Poco::DynamicStruct Network::receiveInit()
     return Poco::DynamicAny::parse(response1.getBody()).extract<Poco::DynamicStruct>();
 }
 
-void Network::move(int dir)
-{
-    Poco::DynamicStruct data;
-    data.insert("dir", dir);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 5);
-    json.insert("data", data);
-    send(json.toString());
-}
-
 void Network::attack(int id)
 {
     Poco::DynamicStruct data;
@@ -117,6 +106,28 @@ void Network::attack(int id)
 
     Poco::DynamicStruct json;
     json.insert("code", 3);
+    json.insert("data", data);
+    send(json.toString());
+}
+
+void Network::message(const std::string& message)
+{
+    Poco::DynamicStruct data;
+    data.insert("message", message);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 4);
+    json.insert("data", data);
+    send(json.toString());
+}
+
+void Network::move(int dir)
+{
+    Poco::DynamicStruct data;
+    data.insert("dir", dir);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 5);
     json.insert("data", data);
     send(json.toString());
 }

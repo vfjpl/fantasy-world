@@ -1,5 +1,9 @@
 #include "interface.hpp"
-#include <SFGUI/Widgets.hpp>
+#include <SFGUI/Label.hpp>
+#include <SFGUI/Entry.hpp>
+#include <SFGUI/Button.hpp>
+#include <SFGUI/Box.hpp>
+#include <SFGUI/Window.hpp>
 
 void Interface::login_screen(Network* network, sf::Vector2u windowSize)
 {
@@ -38,8 +42,20 @@ bool Interface::handleEvent(const sf::Event& event)
     return captureEvents;
 }
 
+void Interface::chatMessage(const Poco::DynamicStruct& data)
+{
+    addChatMessage(data["message"]);
+}
+
 void Interface::draw(sf::RenderWindow& window)
 {
     desktop.Update(clock.restart().asSeconds());
     sfgui.Display(window);
+}
+
+// private
+
+void Interface::addChatMessage(const std::string& message)
+{
+
 }
