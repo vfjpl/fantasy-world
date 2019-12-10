@@ -18,6 +18,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
+    interface.setup();
     setup_window(true);
     interface.login_screen(&network, window.getSize());
 }
@@ -54,7 +55,7 @@ void Engine::setup_window(bool fullscreen)
         window.create(mode, "Fantasy World", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
-    window.resetGLStates();
+    window.resetGLStates();//?
     map.initDefaultCamera(window.getDefaultView());
 }
 

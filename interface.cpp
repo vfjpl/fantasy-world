@@ -1,9 +1,18 @@
 #include "interface.hpp"
-#include <SFGUI/Label.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Box.hpp>
-#include <SFGUI/Window.hpp>
+
+void Interface::setup()
+{
+    chatBoxMessages = sfg::Label::Create();
+    chatBoxMessages->SetLineWrap(true);
+
+    chatBoxWindow = sfg::Window::Create();
+    chatBoxWindow->Add(chatBoxMessages);
+
+    captureEvents = true;
+}
 
 void Interface::login_screen(Network* network, sf::Vector2u windowSize)
 {
@@ -21,7 +30,7 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
         captureEvents = false;
     });
 
-    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     box->Pack(login_label);
     box->Pack(login_entry);
     box->Pack(password_label);
@@ -57,5 +66,5 @@ void Interface::draw(sf::RenderWindow& window)
 
 void Interface::addChatMessage(const std::string& message)
 {
-
+    chatBoxMessages->SetText(chatBoxMessages->GetText() + '\n' + message);
 }
