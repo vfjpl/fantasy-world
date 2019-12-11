@@ -196,7 +196,7 @@ void Map::loadMapPositions(const Poco::DynamicStruct& data)
     int x = data["PLAYER_X"];
     int y = data["PLAYER_Y"];
     setCamera(x, y);
-    players[PlayerData::id].setTexture(ResourceManager::getTexture(PlayerData::looktype));
+    players[PlayerData::id].setTexture(ResourceManager::getTexture(PlayerData::looktype, DIRECT));
     players[PlayerData::id].set_position(x, y);
 }
 
@@ -247,7 +247,7 @@ void Map::addTile(const Poco::DynamicStruct& data)
 {
     if(data["type"] == 2)
     {
-        doors.emplace_back(ResourceManager::getTexture(data["bg"]));
+        doors.emplace_back(ResourceManager::getTexture(data["bg"], DIRECT));
         doors.back().set_position(data["x"], data["y"]);
     }
 }

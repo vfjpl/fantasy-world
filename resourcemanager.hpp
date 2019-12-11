@@ -6,6 +6,7 @@
 
 enum Graphic
 {
+    DIRECT,
     MAP_DATA,
     MAP,
     CHEST_OPEN,
@@ -23,10 +24,10 @@ class ResourceManager
 
 public:
     static const sf::Texture& getTexture(const std::string& name, Graphic type);
-    static const sf::Texture& getTexture(const std::string& name);
     static void loadParallel(const Poco::DynamicStruct& data);
 
 private:
+    static const sf::Texture& getTexture(const std::string& name);
     static void loadParallel(const std::set<std::string>& names);
     static void loadGraphic(const std::string& name);
 };

@@ -75,19 +75,19 @@ const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic 
     return getTexture(getURI(name, type));
 }
 
-const sf::Texture& ResourceManager::getTexture(const std::string& name)
-{
-    loadGraphic(name);
-
-    return storage[name];
-}
-
 void ResourceManager::loadParallel(const Poco::DynamicStruct& data)
 {
     loadParallel(getNAMES(data));
 }
 
 // private
+
+const sf::Texture& ResourceManager::getTexture(const std::string& name)
+{
+    loadGraphic(name);
+
+    return storage[name];
+}
 
 void ResourceManager::loadParallel(const std::set<std::string>& names)
 {
