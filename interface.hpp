@@ -22,7 +22,7 @@ class Interface
     bool captureEvents;
 
 public:
-    void setup();
+    void setup(Network* network);
     void login_screen(Network* network, sf::Vector2u windowSize);
     bool handleEvent(const sf::Event& event);
     void chatMessage(const Poco::DynamicStruct& data);

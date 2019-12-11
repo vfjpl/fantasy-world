@@ -17,7 +17,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    interface.setup();
+    interface.setup(&network);
     setup_window(true);
     interface.login_screen(&network, window.getSize());
 }
@@ -88,6 +88,9 @@ void Engine::process_input()
                 break;
             case sf::Keyboard::W:
                 timer.startEvent(MOVE_UP);
+                break;
+            case sf::Keyboard::Escape:
+                window.close();
                 break;
             default:
                 break;

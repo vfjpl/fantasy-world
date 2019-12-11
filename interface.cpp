@@ -1,15 +1,34 @@
 #include "interface.hpp"
+#include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Box.hpp>
 
-void Interface::setup()
+void Interface::setup(Network* network)
 {
     chatBoxMessages = sfg::Label::Create();
     chatBoxMessages->SetLineWrap(true);
 
-    chatBoxWindow = sfg::Window::Create();
-    chatBoxWindow->Add(chatBoxMessages);
+    auto scrolledWindow = sfg::ScrolledWindow::Create();
+    scrolledWindow->AddWithViewport(chatBoxMessages);
+    scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
+
+    auto chatBoxEntry = sfg::Entry::Create();
+    chatBoxEntry->GetSignal(sfg::Entry::OnTextChanged).Connect([=]
+    {
+        network->message(chatBoxEntry->GetText());
+    });
+
+    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
+    box->Pack(scrolledWindow);
+    box->Pack(chatBoxEntry);
+
+    chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
+    chatBoxWindow->Add(box);
+    chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
+    {
+        desktop.Remove(chatBoxWindow);
+    });
 
     captureEvents = true;
 }
@@ -22,7 +41,7 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     auto password_entry = sfg::Entry::Create();
     password_entry->HideText('*');
     auto login_button = sfg::Button::Create("login");
-    login_button->GetSignal(sfg::Widget::OnLeftClick).Connect([=]
+    login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
         network->login(login_entry->GetText(), password_entry->GetText());
         network->sendInit(windowSize);
