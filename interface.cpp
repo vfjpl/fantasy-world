@@ -88,5 +88,5 @@ void Interface::draw(sf::RenderWindow& window)
 
 void Interface::addChatMessage(const std::string& message)
 {
-    chatBoxMessages->SetText(chatBoxMessages->GetText() + '\n' + message);
+    chatBoxMessages->SetText(chatBoxMessages->GetText() + message + '\n');
 }
