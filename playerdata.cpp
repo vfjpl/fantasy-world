@@ -2,4 +2,3 @@
 
 std::string PlayerData::looktype;
 int PlayerData::id;
-int PlayerData::attackId;

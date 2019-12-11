@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "playerdata.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/Window/Event.hpp>
 #include <iostream>
@@ -148,11 +147,6 @@ void Engine::game_logic()
         case MOVE_DOWN:
         {
             network.move(4);
-            break;
-        }
-        case ATTACK:
-        {
-            network.attack(PlayerData::attackId);
             break;
         }
         default:

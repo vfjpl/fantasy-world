@@ -10,7 +10,6 @@ public:
     static std::string looktype;
     //4
     static int id;
-    static int attackId;
 };
 
 #endif // PLAYERDATA_HPP_INCLUDED
