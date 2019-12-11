@@ -14,14 +14,17 @@ void Interface::setup(Network* network)
     scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
 
     auto chatBoxEntry = sfg::Entry::Create();
-    chatBoxEntry->GetSignal(sfg::Entry::OnTextChanged).Connect([=]
+    auto chatBoxButton = sfg::Button::Create("send");
+    chatBoxButton->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
         network->message(chatBoxEntry->GetText());
+        chatBoxEntry->SetText(sf::String());
     });
 
     auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
     box->Pack(scrolledWindow);
     box->Pack(chatBoxEntry);
+    box->Pack(chatBoxButton);
 
     chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
     chatBoxWindow->Add(box);
