@@ -1,7 +1,7 @@
 #ifndef NETWORK_HPP_INCLUDED
 #define NETWORK_HPP_INCLUDED
 
-#include <Poco/Net/HTTPClientSession.h>
+#include <Poco/Net/HTTPSClientSession.h>
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
 #include <Poco/Net/WebSocket.h>
@@ -10,15 +10,17 @@
 
 class Network
 {
+    //344
+    Poco::Net::HTTPSClientSession https;
     //328
-    Poco::Net::HTTPClientSession session;
+    Poco::Net::HTTPClientSession http;
     //136
     Poco::Net::HTTPRequest request;
     //112
     Poco::Net::HTTPResponse response;
     //32
+    Poco::Net::NameValueCollection cookies;
     Poco::Buffer<char> buffer;
-    std::string cookies;
     std::string token;
     //16
     Poco::Net::WebSocket socket;

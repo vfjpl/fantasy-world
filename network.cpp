@@ -1,23 +1,30 @@
 #include "network.hpp"
 #include "playerdata.hpp"
+#include <Poco/Net/HTMLForm.h>
 #include <SFML/Network/Http.hpp>
 
 namespace
 {
-std::string getCOOKIE0(const std::string& body)
+std::string toString(std::istream& stream)
 {
-    return body.substr(0, body.find(';'));
+    std::string body;
+    std::getline(stream, body, '\0');
+    return body;
 }
-std::string getCOOKIE2(const std::string& body)
+std::string getID(std::istream& stream)
 {
-    return body.substr(0, body.find(';') + 2);
+    std::string line;
+    std::size_t pos;
+    do
+    {
+        std::getline(stream, line);
+        pos = line.find("value");
+    }
+    while(pos == std::string::npos);
+    pos += 7;
+    return line.substr(pos, line.find('"', pos) - pos);
 }
-std::string getID(const std::string& body)
-{
-    size_t pos = body.find("value") + 7;
-    return body.substr(pos, body.find('\"', pos) - pos);
-}
-std::string getPLAYER_TOKEN(const std::string& body)
+std::string getTOKEN(const std::string& body)
 {
     size_t pos = body.find("token") + 9;
     return body.substr(pos, body.find('\'', pos) - pos);
@@ -30,41 +37,61 @@ std::string getLOOKTYPE(const std::string& body)
 }
 
 Network::Network():
-    session("54.37.227.73", 9001),
+    https("fantasy-world.pl",
+          Poco::Net::HTTPSClientSession::HTTPS_PORT,
+          new Poco::Net::Context(Poco::Net::Context::CLIENT_USE,
+                                 std::string(),
+                                 Poco::Net::Context::VERIFY_NONE)),
+    http("54.37.227.73", 9001),
     request(Poco::Net::HTTPRequest::HTTP_GET, "/echobot", Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
-    socket(session, request, response) {}
+    socket(http, request, response) {}
 
 void Network::login(const std::string& login, const std::string& password)
 {
+    //1. login
+    Poco::Net::HTTPRequest request1(Poco::Net::HTTPRequest::HTTP_POST, "/ajax/login");
+    Poco::Net::HTTPResponse response1;
+    Poco::Net::HTMLForm html1;
+    html1.add("login", login);
+    html1.add("password", password);
+    html1.prepareSubmit(request1);
+    html1.write(https.sendRequest(request1));
+    https.receiveResponse(response1);
+
+    //2. cookies
+    std::vector<Poco::Net::HTTPCookie> cookies_vector;
+    response1.getCookies(cookies_vector);
+    for(auto &i: cookies_vector)
+        cookies.add(i.getName(), i.getValue());
+
+    //3. get id
+    Poco::Net::HTTPRequest request2;
+    Poco::Net::HTTPResponse response2;
+    request2.setCookies(cookies);
+    https.sendRequest(request2);
+    std::string id = getID(https.receiveResponse(response2));
+
+    //4. set id
+    Poco::Net::HTTPRequest request3(Poco::Net::HTTPRequest::HTTP_POST, "/game/login");
+    Poco::Net::HTTPResponse response3;
+    Poco::Net::HTMLForm html3;
+    request3.setCookies(cookies);
+    html3.add("id", id);
+    html3.prepareSubmit(request3);
+    html3.write(https.sendRequest(request3));
+    https.receiveResponse(response3);
+
+    //5. token and looktype
     sf::Http http("fantasy-world.pl");
-
-    // 1. get first cookie
-    sf::Http::Request request1("/modal/get/login");
-    sf::Http::Response response1 = http.sendRequest(request1);
-    cookies = getCOOKIE2(response1.getField(Poco::Net::HTTPResponse::SET_COOKIE));
-
-    // 2. log in and get second cookie
-    sf::Http::Request request2("/ajax/login", sf::Http::Request::Post, "login=" + login + "&password=" + password);
-    request2.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
-    sf::Http::Response response2 = http.sendRequest(request2);
-    cookies += getCOOKIE0(response2.getField(Poco::Net::HTTPResponse::SET_COOKIE));
-
-    // 3. get hero id
-    sf::Http::Request request3;
-    request3.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
-    sf::Http::Response response3 = http.sendRequest(request3);
-
-    // 4. set hero id
-    sf::Http::Request request4("/game/login", sf::Http::Request::Post, "id=" + getID(response3.getBody()));
-    request4.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
-    sf::Http::Response response4 = http.sendRequest(request4);
-
-    // 5. get player token and looktype
     sf::Http::Request request5("/game");
-    request5.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
+    request5.setField(Poco::Net::HTTPRequest::COOKIE,
+                      cookies_vector.front().getName() + '=' +
+                      cookies_vector.front().getValue() + ';' +
+                      cookies_vector.back().getName() + '=' +
+                      cookies_vector.back().getValue());
     sf::Http::Response response5 = http.sendRequest(request5);
-    token = getPLAYER_TOKEN(response5.getBody());
+    token = getTOKEN(response5.getBody());
     PlayerData::looktype = getLOOKTYPE(response5.getBody());
 }
 
@@ -91,11 +118,12 @@ Poco::DynamicStruct Network::receive()
 
 Poco::DynamicStruct Network::receiveInit()
 {
-    sf::Http http("fantasy-world.pl");
-    sf::Http::Request request1("/game/init/" + token);
-    request1.setField(Poco::Net::HTTPRequest::COOKIE, cookies);
-    sf::Http::Response response1 = http.sendRequest(request1);
-    return Poco::DynamicAny::parse(response1.getBody()).extract<Poco::DynamicStruct>();
+    Poco::Net::HTTPRequest request1(Poco::Net::HTTPRequest::HTTP_GET, "/game/init/" + token);
+    Poco::Net::HTTPResponse response1;
+    request1.setCookies(cookies);
+    https.sendRequest(request1);
+    std::string body = toString(https.receiveResponse(response1));
+    return Poco::DynamicAny::parse(body).extract<Poco::DynamicStruct>();
 }
 
 void Network::attack(int id)
