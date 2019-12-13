@@ -1,4 +1,5 @@
 #include "interface.hpp"
+#include "playerdata.hpp"
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
@@ -47,6 +48,8 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
         network->login(login_entry->GetText(), password_entry->GetText());
+        network->selectHero(network->getListOfIDs());
+        PlayerData::looktype = network->getLookType();
         network->sendInit(windowSize);
         desktop.RemoveAll();
         captureEvents = false;

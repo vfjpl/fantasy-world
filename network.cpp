@@ -1,5 +1,4 @@
 #include "network.hpp"
-#include "playerdata.hpp"
 #include <Poco/Net/HTMLForm.h>
 #include <SFML/Network/Http.hpp>
 
@@ -43,56 +42,66 @@ Network::Network():
                                  std::string(),
                                  Poco::Net::Context::VERIFY_NONE)),
     http("54.37.227.73", 9001),
-    request(Poco::Net::HTTPRequest::HTTP_GET, "/echobot", Poco::Net::HTTPRequest::HTTP_1_1),
+    request(Poco::Net::HTTPRequest::HTTP_GET,
+            "/echobot",
+            Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
     socket(http, request, response) {}
 
 void Network::login(const std::string& login, const std::string& password)
 {
-    //1. login
-    Poco::Net::HTTPRequest request1(Poco::Net::HTTPRequest::HTTP_POST, "/ajax/login");
-    Poco::Net::HTTPResponse response1;
-    Poco::Net::HTMLForm html1;
-    html1.add("login", login);
-    html1.add("password", password);
-    html1.prepareSubmit(request1);
-    html1.write(https.sendRequest(request1));
-    https.receiveResponse(response1);
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
+                                "/ajax/login",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    Poco::Net::HTMLForm html;
+    html.add("login", login);
+    html.add("password", password);
+    html.prepareSubmit(requ);
+    html.write(https.sendRequest(requ));
+    https.receiveResponse(resp);
 
-    //2. cookies
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
-    response1.getCookies(cookies_vector);
+    resp.getCookies(cookies_vector);
     for(auto &i: cookies_vector)
         cookies.add(i.getName(), i.getValue());
+}
 
-    //3. get id
-    Poco::Net::HTTPRequest request2;
-    Poco::Net::HTTPResponse response2;
-    request2.setCookies(cookies);
-    https.sendRequest(request2);
-    std::string id = getID(https.receiveResponse(response2));
+std::string Network::getListOfIDs()
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    requ.setCookies(cookies);
+    https.sendRequest(requ);
+    return getID(https.receiveResponse(resp));
+}
 
-    //4. set id
-    Poco::Net::HTTPRequest request3(Poco::Net::HTTPRequest::HTTP_POST, "/game/login");
-    Poco::Net::HTTPResponse response3;
-    Poco::Net::HTMLForm html3;
-    request3.setCookies(cookies);
-    html3.add("id", id);
-    html3.prepareSubmit(request3);
-    html3.write(https.sendRequest(request3));
-    https.receiveResponse(response3);
+void Network::selectHero(const std::string& id)
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
+                                "/game/login",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    Poco::Net::HTMLForm html;
+    requ.setCookies(cookies);
+    html.add("id", id);
+    html.prepareSubmit(requ);
+    html.write(https.sendRequest(requ));
+    https.receiveResponse(resp);
+}
 
-    //5. token and looktype
-    sf::Http http("fantasy-world.pl");
-    sf::Http::Request request5("/game");
-    request5.setField(Poco::Net::HTTPRequest::COOKIE,
-                      cookies_vector.front().getName() + '=' +
-                      cookies_vector.front().getValue() + ';' +
-                      cookies_vector.back().getName() + '=' +
-                      cookies_vector.back().getValue());
-    sf::Http::Response response5 = http.sendRequest(request5);
-    token = getTOKEN(response5.getBody());
-    PlayerData::looktype = getLOOKTYPE(response5.getBody());
+std::string Network::getLookType()
+{
+    sf::Http sfhttp("fantasy-world.pl");
+    sf::Http::Request requ("/game");
+    requ.setField(Poco::Net::HTTPRequest::COOKIE,
+                  cookies.begin()->first + '=' +
+                  cookies.begin()->second + ';' +
+                  (--cookies.end())->first + '=' +
+                  (--cookies.end())->second);
+    sf::Http::Response resp = sfhttp.sendRequest(requ);
+    token = getTOKEN(resp.getBody());
+    return getLOOKTYPE(resp.getBody());
 }
 
 void Network::sendInit(sf::Vector2u windowSize)
@@ -108,22 +117,23 @@ void Network::sendInit(sf::Vector2u windowSize)
     send(json.toString());
 }
 
+Poco::DynamicStruct Network::receiveInit()
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/game/init/" + token,
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    requ.setCookies(cookies);
+    https.sendRequest(requ);
+    return Poco::DynamicAny::parse(toString(https.receiveResponse(resp))).extract<Poco::DynamicStruct>();
+}
+
 Poco::DynamicStruct Network::receive()
 {
     int flags;
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.size())).extract<Poco::DynamicStruct>();
-}
-
-Poco::DynamicStruct Network::receiveInit()
-{
-    Poco::Net::HTTPRequest request1(Poco::Net::HTTPRequest::HTTP_GET, "/game/init/" + token);
-    Poco::Net::HTTPResponse response1;
-    request1.setCookies(cookies);
-    https.sendRequest(request1);
-    std::string body = toString(https.receiveResponse(response1));
-    return Poco::DynamicAny::parse(body).extract<Poco::DynamicStruct>();
 }
 
 void Network::attack(int id)

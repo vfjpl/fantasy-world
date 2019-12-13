@@ -28,10 +28,13 @@ class Network
 public:
     Network();
     void login(const std::string& login, const std::string& password);
-    void sendInit(sf::Vector2u windowSize);
+    std::string getListOfIDs();
+    void selectHero(const std::string& id);
+    std::string getLookType();
 
-    Poco::DynamicStruct receive();
+    void sendInit(sf::Vector2u windowSize);
     Poco::DynamicStruct receiveInit();
+    Poco::DynamicStruct receive();
 
     void attack(int id);
     void message(const std::string& message);
