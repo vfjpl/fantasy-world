@@ -1,39 +1,27 @@
 #include "interface.hpp"
 #include "playerdata.hpp"
-#include <SFGUI/ScrolledWindow.hpp>
+#include <SFGUI/Window.hpp>
+#include <SFGUI/ComboBox.hpp>
+#include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
 #include <SFGUI/Button.hpp>
-#include <SFGUI/Box.hpp>
 
-void Interface::setup(Network* network)
+namespace
+{
+sf::FloatRect getAllocation(sf::Vector2u windowSize)
+{
+    return sf::FloatRect((windowSize.x/2) - 63, (windowSize.y/2) - 63, 126, 0);
+}
+sf::Vector2f getPosition(sf::Vector2u windowSize)
+{
+    return sf::Vector2f((windowSize.x/2) - 63, (windowSize.y/2) - 63);
+}
+}
+
+void Interface::setup()
 {
     chatBoxMessages = sfg::Label::Create();
     chatBoxMessages->SetLineWrap(true);
-
-    auto scrolledWindow = sfg::ScrolledWindow::Create();
-    scrolledWindow->AddWithViewport(chatBoxMessages);
-    scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
-
-    auto chatBoxEntry = sfg::Entry::Create();
-    auto chatBoxButton = sfg::Button::Create("send");
-    chatBoxButton->GetSignal(sfg::Button::OnLeftClick).Connect([=]
-    {
-        network->message(chatBoxEntry->GetText());
-        chatBoxEntry->SetText(sf::String());
-    });
-
-    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL);
-    box->Pack(scrolledWindow);
-    box->Pack(chatBoxEntry);
-    box->Pack(chatBoxButton);
-
-    chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
-    chatBoxWindow->Add(box);
-    chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
-    {
-        desktop.Remove(chatBoxWindow);
-    });
-
     captureEvents = true;
 }
 
@@ -48,11 +36,8 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
         network->login(login_entry->GetText(), password_entry->GetText());
-        network->selectHero(network->getListOfIDs());
-        PlayerData::looktype = network->getLookType();
-        network->sendInit(windowSize);
         desktop.RemoveAll();
-        captureEvents = false;
+        select_screen(network, windowSize);
     });
 
     auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
@@ -65,9 +50,42 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     auto window = sfg::Window::Create();
     window->Add(box);
     window->SetTitle("Fantasy World");
-    window->SetAllocation(sf::FloatRect((windowSize.x/2) - 48, (windowSize.y/2) - 48, 96, 0));
+    window->SetAllocation(getAllocation(windowSize));
 
     desktop.Add(window);
+}
+
+void Interface::select_screen(Network* network, sf::Vector2u windowSize)
+{
+    auto label = sfg::Label::Create("Select Character:");
+    auto combobox = sfg::ComboBox::Create();
+    combobox->AppendItem(network->getListOfIDs());
+    auto select_button = sfg::Button::Create("select");
+    select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
+    {
+        network->selectHero(combobox->GetSelectedText());
+        desktop.RemoveAll();
+        game_screen(network, windowSize);
+    });
+
+    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+    box->Pack(label);
+    box->Pack(combobox);
+    box->Pack(select_button);
+
+    auto window = sfg::Window::Create();
+    window->Add(box);
+    window->SetTitle("Fantasy World");
+    window->SetPosition(getPosition(windowSize));
+
+    desktop.Add(window);
+}
+
+void Interface::game_screen(Network* network, sf::Vector2u windowSize)
+{
+    PlayerData::looktype = network->getLookType();
+    network->sendInit(windowSize);
+    captureEvents = false;
 }
 
 bool Interface::handleEvent(const sf::Event& event)

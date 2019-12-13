@@ -17,7 +17,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    interface.setup(&network);
+    interface.setup();
     setup_window(false);
     interface.login_screen(&network, window.getSize());
 }

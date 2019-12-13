@@ -31,8 +31,8 @@ public:
     std::string getListOfIDs();
     void selectHero(const std::string& id);
     std::string getLookType();
-
     void sendInit(sf::Vector2u windowSize);
+
     Poco::DynamicStruct receiveInit();
     Poco::DynamicStruct receive();
 
