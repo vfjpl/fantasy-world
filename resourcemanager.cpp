@@ -115,29 +115,5 @@ void ResourceManager::loadGraphic(const std::string& name)
     sf::MemoryInputStream data;
     data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
 
-    if(!storage[name].loadFromStream(data))
-    {
-        //RESIZING
-        sf::Image orginal;
-        sf::Image resized;
-        orginal.loadFromStream(data);
-
-        float scale = sf::Texture::getMaximumSize();
-        sf::Vector2u orginal_size = orginal.getSize();
-        sf::Vector2f scale_xy(orginal_size);
-        scale_xy /= scale;
-        if(scale_xy.x > scale_xy.y)
-            scale = scale_xy.x;
-        else
-            scale = scale_xy.y;
-
-        resized.create(orginal_size.x / scale, orginal_size.y / scale);
-        sf::Vector2u resized_size = resized.getSize();
-
-        for(unsigned int y = 0; y < resized_size.y; ++y)
-            for(unsigned int x = 0; x < resized_size.x; ++x)
-                resized.setPixel(x, y, orginal.getPixel(x * scale, y * scale));
-
-        storage[name].loadFromImage(resized);
-    }
+    storage[name].loadFromStream(data);
 }
