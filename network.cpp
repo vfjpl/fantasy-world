@@ -148,7 +148,7 @@ void Network::attack(int id)
     send(json.toString());
 }
 
-void Network::message(const std::string& message)
+void Network::message(const char* message)
 {
     Poco::DynamicStruct data;
     data.insert("message", message);

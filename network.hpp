@@ -37,7 +37,7 @@ public:
     Poco::DynamicStruct receive();
 
     void attack(int id);
-    void message(const std::string& message);
+    void message(const char* message);
     void move(int dir);
 
 private:

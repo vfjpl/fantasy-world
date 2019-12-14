@@ -21,10 +21,6 @@ const char* str2char(const sf::String& str)
 {
     return (const char*)str.toUtf8().data();
 }
-std::string str2str(const sf::String& str)
-{
-    return str2char(str);
-}
 }
 
 void Interface::setup()
@@ -132,7 +128,7 @@ void Interface::showChatBox(Network* network)
     auto button = sfg::Button::Create("send");
     button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        network->message(str2str(entry->GetText()));
+        network->message(str2char(entry->GetText()));
         entry->SetText(sf::String());
     });
 
