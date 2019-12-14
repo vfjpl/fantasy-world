@@ -1,8 +1,10 @@
 #include "monster.hpp"
 #include "helperfunctions.hpp"
+#include <SFML/Graphics/Texture.hpp>
 
 void Monster::setTexture(const sf::Texture& texture, int width, int height)
 {
+    anim = texture.getSize().x/width;
     rect.width = width;
     rect.height = height;
     sprite.setTexture(texture);
@@ -12,7 +14,7 @@ void Monster::setTexture(const sf::Texture& texture, int width, int height)
 void Monster::set_dir(int dir)
 {
     rect.top = (dir%4) * rect.height;
-    rect.left = ((++steps)%3) * rect.width;
+    rect.left = ((++steps)%anim) * rect.width;
     sprite.setTextureRect(rect);
 }
 

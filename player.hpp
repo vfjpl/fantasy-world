@@ -13,8 +13,9 @@ class Player
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
-    //2
-    sf::Uint16 steps;
+    //1
+    sf::Uint8 steps;
+    sf::Uint8 anim;
 
 public:
     void setTexture(const sf::Texture& texture);

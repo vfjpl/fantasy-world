@@ -1,8 +1,10 @@
 #include "npc.hpp"
 #include "helperfunctions.hpp"
+#include <SFML/Graphics/Texture.hpp>
 
 void Npc::setTexture(const sf::Texture& texture)
 {
+    anim = texture.getSize().x/32;
     rect.width = 32;
     rect.height = 48;
     sprite.setTexture(texture);
@@ -12,7 +14,7 @@ void Npc::setTexture(const sf::Texture& texture)
 void Npc::set_dir(int dir)
 {
     rect.top = (dir%4) * rect.height;
-    rect.left = ((++steps)%4) * rect.width;
+    rect.left = ((++steps)%anim) * rect.width;
     sprite.setTextureRect(rect);
 }
 
