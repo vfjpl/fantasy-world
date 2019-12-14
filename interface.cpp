@@ -17,6 +17,14 @@ sf::Vector2f getPosition(sf::Vector2u windowSize)
 {
     return sf::Vector2f((windowSize.x/2) - 63, (windowSize.y/2) - 63);
 }
+const char* str2char(const sf::String& str)
+{
+    return (const char*)str.toUtf8().data();
+}
+std::string str2str(const sf::String& str)
+{
+    return str2char(str);
+}
 }
 
 void Interface::setup()
@@ -124,7 +132,7 @@ void Interface::showChatBox(Network* network)
     auto button = sfg::Button::Create("send");
     button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        network->message(entry->GetText());
+        network->message(str2str(entry->GetText()));
         entry->SetText(sf::String());
     });
 
