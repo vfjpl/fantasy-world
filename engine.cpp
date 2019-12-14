@@ -18,7 +18,7 @@ int var2int(const Poco::DynamicAny& var)
 void Engine::setup()
 {
     interface.setup();
-    setup_window(false);
+    setup_window(true);
     interface.login_screen(&network, window.getSize());
 }
 
@@ -172,9 +172,9 @@ void Engine::process_network(const Poco::DynamicStruct& json)
 {
     switch(var2int(json["code"]))
     {
-    case 1://chat message
+    case 1://global chat message
     {
-        //interface.chatMessage(json);
+        interface.chatMessage(json);
         break;
     }
     case 5://show damage
@@ -199,6 +199,11 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case 71://other player join
     {
         map.addPlayer(json);
+        break;
+    }
+    case 99://message from server
+    {
+        std::cout << json["message"].toString() << '\n';
         break;
     }
     case 100:
@@ -237,7 +242,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1504://other player yell
     {
-        interface.chatMessage(json);
         break;
     }
     case char2int("loot"):

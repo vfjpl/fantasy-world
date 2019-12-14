@@ -31,6 +31,7 @@ public:
 
 private:
     void addChatMessage(const std::string& message);
+    void showChatBox();
 };
 
 #endif // INTERFACE_HPP_INCLUDED

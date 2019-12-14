@@ -1,6 +1,7 @@
 #include "interface.hpp"
 #include "playerdata.hpp"
 #include <SFGUI/Window.hpp>
+#include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Box.hpp>
 #include <SFGUI/Entry.hpp>
@@ -86,6 +87,7 @@ void Interface::game_screen(Network* network, sf::Vector2u windowSize)
     PlayerData::looktype = network->getLookType();
     network->sendInit(windowSize);
     captureEvents = false;
+    showChatBox();
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -110,4 +112,16 @@ void Interface::draw(sf::RenderWindow& window)
 void Interface::addChatMessage(const std::string& message)
 {
     chatBoxMessages->SetText(chatBoxMessages->GetText() + message + '\n');
+}
+
+void Interface::showChatBox()
+{
+    //auto scrolledWindow = sfg::ScrolledWindow::Create();
+    //scrolledWindow->AddWithViewport(chatBoxMessages);
+    //scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
+
+    auto window = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
+    window->Add(chatBoxMessages);
+
+    desktop.Add(window);
 }
