@@ -31,7 +31,7 @@ public:
 
 private:
     void addChatMessage(const std::string& message);
-    void showChatBox();
+    void showChatBox(Network* network);
 };
 
 #endif // INTERFACE_HPP_INCLUDED

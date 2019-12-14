@@ -87,7 +87,7 @@ void Interface::game_screen(Network* network, sf::Vector2u windowSize)
     PlayerData::looktype = network->getLookType();
     network->sendInit(windowSize);
     captureEvents = false;
-    showChatBox();
+    showChatBox(network);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -114,14 +114,31 @@ void Interface::addChatMessage(const std::string& message)
     chatBoxMessages->SetText(chatBoxMessages->GetText() + message + '\n');
 }
 
-void Interface::showChatBox()
+void Interface::showChatBox(Network* network)
 {
-    //auto scrolledWindow = sfg::ScrolledWindow::Create();
-    //scrolledWindow->AddWithViewport(chatBoxMessages);
-    //scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
+    auto scrolledWindow = sfg::ScrolledWindow::Create();
+    scrolledWindow->AddWithViewport(chatBoxMessages);
+    scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
+
+    auto entry = sfg::Entry::Create();
+    auto button = sfg::Button::Create("send");
+    button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
+    {
+        network->message(entry->GetText());
+        entry->SetText(sf::String());
+    });
+
+    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+    box->Pack(scrolledWindow);
+    box->Pack(entry, false);
+    box->Pack(button, false);
 
     auto window = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
-    window->Add(chatBoxMessages);
+    window->Add(box);
+    window->GetSignal(sfg::Window::OnCloseButton).Connect([=]
+    {
+        desktop.RemoveAll();
+    });
 
     desktop.Add(window);
 }
