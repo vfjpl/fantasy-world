@@ -12,6 +12,7 @@ void Monster::setTexture(const sf::Texture& texture, int width, int height)
 void Monster::set_dir(int dir)
 {
     rect.top = (dir%4) * rect.height;
+    rect.left = ((++steps)%3) * rect.width;
     sprite.setTextureRect(rect);
 }
 

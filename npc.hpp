@@ -13,12 +13,15 @@ class Npc
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
+    //2
+    sf::Uint16 steps;
 
 public:
     void setTexture(const sf::Texture& texture);
     void set_dir(int dir);
     void move(int x, int y);
     void set_position(int x, int y);
+
     void draw(sf::RenderWindow& window);
 };
 

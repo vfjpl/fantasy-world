@@ -13,6 +13,8 @@ class Monster
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
+    //2
+    sf::Uint16 steps;
 
 public:
     void setTexture(const sf::Texture& texture, int width, int height);
