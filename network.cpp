@@ -4,24 +4,28 @@
 
 namespace
 {
-std::string toString(std::istream& stream)
-{
-    std::string body;
-    std::getline(stream, body, '\0');
-    return body;
-}
-std::string getID(std::istream& stream)
+std::vector<std::string> getIDs(std::istream& stream)
 {
     std::string line;
-    std::size_t pos;
+    std::vector<std::string> IDs;
+    size_t pos;
+
     do
     {
         std::getline(stream, line);
         pos = line.find("value");
     }
     while(pos == std::string::npos);
-    pos += 7;
-    return line.substr(pos, line.find('"', pos) - pos);
+
+    do
+    {
+        pos += 7;
+        IDs.emplace_back(line.substr(pos, line.find('"', pos) - pos));
+        pos = line.find("value", pos);
+    }
+    while(pos != std::string::npos);
+
+    return IDs;
 }
 std::string getTOKEN(const std::string& body)
 {
@@ -32,6 +36,12 @@ std::string getLOOKTYPE(const std::string& body)
 {
     size_t pos = body.find("url") + 5;
     return body.substr(pos, body.find('\'', pos) - pos);
+}
+std::string toString(std::istream& stream)
+{
+    std::string body;
+    std::getline(stream, body, '\0');
+    return body;
 }
 }
 
@@ -67,13 +77,13 @@ void Network::login(const std::string& login, const std::string& password)
         cookies.add(i.getName(), i.getValue());
 }
 
-std::string Network::getListOfIDs()
+std::vector<std::string> Network::getListOfIDs()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return getID(https.receiveResponse(resp));
+    return getIDs(https.receiveResponse(resp));
 }
 
 void Network::selectHero(const std::string& id)

@@ -64,7 +64,9 @@ void Interface::select_screen(Network* network, sf::Vector2u windowSize)
 {
     auto label = sfg::Label::Create("Select Character:");
     auto combobox = sfg::ComboBox::Create();
-    combobox->AppendItem(network->getListOfIDs());
+    auto IDs = network->getListOfIDs();
+    for(auto &i: IDs)
+        combobox->AppendItem(i);
     auto select_button = sfg::Button::Create("select");
     select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
