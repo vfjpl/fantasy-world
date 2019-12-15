@@ -103,15 +103,15 @@ void Network::selectHero(const std::string& id)
 std::string Network::getLookType()
 {
     sf::Http sfhttp("fantasy-world.pl");
-    sf::Http::Request requ("/game");
-    requ.setField(Poco::Net::HTTPRequest::COOKIE,
-                  cookies.begin()->first + '=' +
-                  cookies.begin()->second + ';' +
-                  (--cookies.end())->first + '=' +
-                  (--cookies.end())->second);
-    sf::Http::Response resp = sfhttp.sendRequest(requ);
-    token = getTOKEN(resp.getBody());
-    return getLOOKTYPE(resp.getBody());
+    sf::Http::Request request("/game");
+    request.setField(Poco::Net::HTTPRequest::COOKIE,
+                     cookies.begin()->first + '=' +
+                     cookies.begin()->second + ';' +
+                     (--cookies.end())->first + '=' +
+                     (--cookies.end())->second);
+    sf::Http::Response response = sfhttp.sendRequest(request);
+    token = getTOKEN(response.getBody());
+    return getLOOKTYPE(response.getBody());
 }
 
 void Network::sendInit(sf::Vector2u windowSize)
@@ -143,7 +143,11 @@ Poco::DynamicStruct Network::receive()
     int flags;
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
-    return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.size())).extract<Poco::DynamicStruct>();
+    return Poco::DynamicAny::parse(
+               Poco::UTF8::unescape(
+                   std::string::const_iterator(buffer.begin()),
+                   std::string::const_iterator(buffer.end())))
+           .extract<Poco::DynamicStruct>();
 }
 
 void Network::attack(int id)

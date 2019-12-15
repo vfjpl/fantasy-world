@@ -17,10 +17,6 @@ sf::Vector2f getPosition(sf::Vector2u windowSize)
 {
     return sf::Vector2f((windowSize.x/2) - 63, (windowSize.y/2) - 63);
 }
-const char* str2char(const sf::String& str)
-{
-    return (const char*)str.toUtf8().data();
-}
 }
 
 void Interface::setup()
@@ -64,8 +60,7 @@ void Interface::select_screen(Network* network, sf::Vector2u windowSize)
 {
     auto label = sfg::Label::Create("Select Character:");
     auto combobox = sfg::ComboBox::Create();
-    auto IDs = network->getListOfIDs();
-    for(auto &i: IDs)
+    for(auto &i: network->getListOfIDs())
         combobox->AppendItem(i);
     auto select_button = sfg::Button::Create("select");
     select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
@@ -104,7 +99,7 @@ bool Interface::handleEvent(const sf::Event& event)
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)
 {
-    addChatMessage(data["message"]);
+    addChatMessage(data["player"] + ": " + data["message"]);
 }
 
 void Interface::draw(sf::RenderWindow& window)
@@ -130,7 +125,7 @@ void Interface::showChatBox(Network* network)
     auto button = sfg::Button::Create("send");
     button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        network->message(str2char(entry->GetText()));
+        network->message((const char*)entry->GetText().toUtf8().data());
         entry->SetText(sf::String());
     });
 
