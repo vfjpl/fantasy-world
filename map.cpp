@@ -107,8 +107,8 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
 void Map::movePlayer(const Poco::DynamicStruct& data)
 {
     int id = data["player"];
-    players[id].set_dir(data["dir"]);
     players[id].move(data["x"], data["y"]);
+    players[id].set_dir(data["dir"]);
 }
 
 void Map::moveMe(const Poco::DynamicStruct& data)
@@ -116,8 +116,8 @@ void Map::moveMe(const Poco::DynamicStruct& data)
     int x = data["x"];
     int y = data["y"];
     moveCamera(x, y);
-    players[PlayerData::id].set_dir(data["dir"]);
     players[PlayerData::id].move(x, y);
+    players[PlayerData::id].set_dir(data["dir"]);
 }
 
 void Map::addMapItem(const Poco::DynamicStruct& data)
@@ -215,15 +215,15 @@ void Map::setCamera(int x, int y)
 void Map::moveMonster(const Poco::DynamicStruct& data)
 {
     int id = data["monster"];
-    monsters[id].set_dir(data["dir"]);
     monsters[id].move(data["x"], data["y"]);
+    monsters[id].set_dir(data["dir"]);
 }
 
 void Map::moveNpc(const Poco::DynamicStruct& data)
 {
     int id = data["npc"];
-    npcs[id].set_dir(data["dir"]);
     npcs[id].move(data["x"], data["y"]);
+    npcs[id].set_dir(data["dir"]);
 }
 
 void Map::addMap(const Poco::DynamicStruct& data)

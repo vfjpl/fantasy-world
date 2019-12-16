@@ -112,7 +112,7 @@ void Interface::draw(sf::RenderWindow& window)
 
 void Interface::addChatMessage(const std::string& message)
 {
-    chatBoxMessages->SetText(chatBoxMessages->GetText() + message + '\n');
+    chatBoxMessages->SetText(chatBoxMessages->GetText() + (message + '\n'));
 }
 
 void Interface::showChatBox(Network* network)
