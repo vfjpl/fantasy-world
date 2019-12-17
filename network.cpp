@@ -20,8 +20,9 @@ std::vector<std::string> getIDs(std::istream& stream)
     do
     {
         pos += 7;
-        IDs.emplace_back(line.substr(pos, line.find('"', pos) - pos));
-        pos = line.find("value", pos);
+        size_t temp = line.find('"', pos);
+        IDs.emplace_back(line.substr(pos, temp - pos));
+        pos = line.find("value", temp + 1);
     }
     while(pos != std::string::npos);
 
