@@ -99,7 +99,7 @@ bool Interface::handleEvent(const sf::Event& event)
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)
 {
-    addChatMessage(data["player"] + ": " + data["message"]);
+    addChatLine(data["player"] + ": " + data["message"] + "\n");
 }
 
 void Interface::draw(sf::RenderWindow& window)
@@ -110,9 +110,9 @@ void Interface::draw(sf::RenderWindow& window)
 
 // private
 
-void Interface::addChatMessage(const std::string& message)
+void Interface::addChatLine(const std::string& line)
 {
-    chatBoxMessages->SetText(chatBoxMessages->GetText() + (message + '\n'));
+    chatBoxMessages->SetText(chatBoxMessages->GetText() + sf::String::fromUtf8(line.cbegin(), line.cend()));
 }
 
 void Interface::showChatBox(Network* network)

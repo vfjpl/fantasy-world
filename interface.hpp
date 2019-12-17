@@ -30,7 +30,7 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
-    void addChatMessage(const std::string& message);
+    void addChatLine(const std::string& line);
     void showChatBox(Network* network);
 };
 
