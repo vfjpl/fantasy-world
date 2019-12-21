@@ -36,9 +36,11 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     auto login_button = sfg::Button::Create("login");
     login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        network->login(login_entry->GetText(), password_entry->GetText());
-        desktop.RemoveAll();
-        select_screen(network, windowSize);
+        if(network->login(login_entry->GetText(), password_entry->GetText()))
+        {
+            desktop.RemoveAll();
+            select_screen(network, windowSize);
+        }
     });
 
     auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);

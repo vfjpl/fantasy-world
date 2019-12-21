@@ -59,23 +59,27 @@ Network::Network():
     buffer(0),
     socket(http, request, response) {}
 
-void Network::login(const std::string& login, const std::string& password)
+bool Network::login(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/ajax/login",
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     Poco::Net::HTMLForm html;
+    requ.setCookies(cookies);
     html.add("login", login);
     html.add("password", password);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
-    https.receiveResponse(resp);
+    bool ok = Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
+              .extract<Poco::DynamicStruct>()["code"] == 200;
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
     resp.getCookies(cookies_vector);
     for(auto &i: cookies_vector)
         cookies.add(i.getName(), i.getValue());
+
+    return ok;
 }
 
 std::vector<std::string> Network::getListOfIDs()

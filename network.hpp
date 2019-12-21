@@ -27,7 +27,7 @@ class Network
 
 public:
     Network();
-    void login(const std::string& login, const std::string& password);
+    bool login(const std::string& login, const std::string& password);
     std::vector<std::string> getListOfIDs();
     void selectHero(const std::string& id);
     std::string getLookType();
