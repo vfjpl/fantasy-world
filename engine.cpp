@@ -19,7 +19,7 @@ void Engine::setup()
 {
     interface.setup(&network);
     setup_window(true);
-    interface.login_screen(&network, window.getSize());
+    interface.login_screen(this, window.getSize());
 }
 
 bool Engine::run_game()
@@ -204,10 +204,9 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         std::cout << json["message"].toString() << '\n';
         break;
     }
-    case 100:
-    case char2int("teleport"):
+    case 100://first load data
     {
-        map.loadMapData(json["data"].extract<Poco::DynamicStruct>());
+        interface.loadGameData(json["data"].extract<Poco::DynamicStruct>(), map);
         break;
     }
     case 101://my movement
@@ -245,6 +244,11 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
+        break;
+    }
+    case char2int("teleport"):
+    {
+        map.loadMapData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case char2int("load_game"):

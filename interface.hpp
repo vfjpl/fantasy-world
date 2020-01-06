@@ -9,6 +9,8 @@
 #include <SFGUI/SFGUI.hpp>
 #include <SFML/System/Clock.hpp>
 
+class Engine;
+
 class Interface
 {
     //136
@@ -26,13 +28,14 @@ class Interface
 
 public:
     void setup(Network* network);
-    void login_screen(Network* network, sf::Vector2u windowSize);
-    void select_screen(Network* network, sf::Vector2u windowSize);
-    void game_screen(Network* network, sf::Vector2u windowSize);
+    void login_screen(Engine* engine, sf::Vector2u windowSize);
+    void select_screen(Engine* engine, sf::Vector2u windowSize);
+    void game_screen(Engine* engine, sf::Vector2u windowSize);
 
-    bool handleEvent(const sf::Event& event);
+    void loadGameData(const Poco::DynamicStruct& data, Map& map);
     void healthChange(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);
+    bool handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window);
 
 private:

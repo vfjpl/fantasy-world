@@ -11,12 +11,12 @@ class Engine
     //528
     sf::RenderWindow window;
 
+public:
     Network network;
     Map map;
     Interface interface;
     Timer timer;
 
-public:
     void setup();
     bool run_game();
     bool run_network();

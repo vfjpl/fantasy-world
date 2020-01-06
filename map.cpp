@@ -1,6 +1,5 @@
 #include "map.hpp"
 #include "resourcemanager.hpp"
-#include "playerdata.hpp"
 #include "helperfunctions.hpp"
 #include <SFML/System/Lock.hpp>
 #include <iostream>
@@ -12,13 +11,21 @@ void Map::initDefaultCamera(const sf::View& view)
     camera = view;
 }
 
+void Map::setPlayerLooktype(const std::string& looktype)
+{
+    player_looktype = looktype;
+}
+
+void Map::setPlayerId(int id)
+{
+    player_id = id;
+}
+
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
     //ResourceManager::loadParallel(data);
     clear();
 
-    if(data.contains("player"))
-        loadPlayerData(data["player"].extract<Poco::DynamicStruct>());
     loadMapPositions(data["map_positions"].extract<Poco::DynamicStruct>());
 
     if(data.contains("map_data"))
@@ -116,8 +123,8 @@ void Map::moveMe(const Poco::DynamicStruct& data)
     int x = data["x"];
     int y = data["y"];
     moveCamera(x, y);
-    players[PlayerData::id].move(x, y);
-    players[PlayerData::id].set_dir(data["dir"]);
+    players[player_id].move(x, y);
+    players[player_id].set_dir(data["dir"]);
 }
 
 void Map::addMapItem(const Poco::DynamicStruct& data)
@@ -152,14 +159,6 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
     players.erase(id);
 }
 
-int Map::getMonsterId(sf::Vector2f coords)
-{
-    for(auto &i: monsters)
-        if(i.second.contains(coords))
-            return i.first;
-    return 0;
-}
-
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
@@ -186,20 +185,6 @@ void Map::draw(sf::RenderWindow& window)
 
 // private
 
-void Map::loadPlayerData(const Poco::DynamicStruct& data)
-{
-    PlayerData::id = data["id"];
-}
-
-void Map::loadMapPositions(const Poco::DynamicStruct& data)
-{
-    int x = data["PLAYER_X"];
-    int y = data["PLAYER_Y"];
-    setCamera(x, y);
-    players[PlayerData::id].setTexture(ResourceManager::getTexture(PlayerData::looktype, DIRECT));
-    players[PlayerData::id].set_position(x, y);
-}
-
 void Map::moveCamera(int x, int y)
 {
     desired_camera.x = (32 * x) - 16;
@@ -210,6 +195,15 @@ void Map::setCamera(int x, int y)
 {
     moveCamera(x, y);
     current_camera = desired_camera;
+}
+
+void Map::loadMapPositions(const Poco::DynamicStruct& data)
+{
+    int x = data["PLAYER_X"];
+    int y = data["PLAYER_Y"];
+    setCamera(x, y);
+    players[player_id].setTexture(ResourceManager::getTexture(player_looktype, DIRECT));
+    players[player_id].set_position(x, y);
 }
 
 void Map::moveMonster(const Poco::DynamicStruct& data)

@@ -1,5 +1,4 @@
-#include "interface.hpp"
-#include "playerdata.hpp"
+#include "engine.hpp"
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Box.hpp>
@@ -56,7 +55,7 @@ void Interface::setup(Network* network)
     captureEvents = true;
 }
 
-void Interface::login_screen(Network* network, sf::Vector2u windowSize)
+void Interface::login_screen(Engine* engine, sf::Vector2u windowSize)
 {
     auto login_label = sfg::Label::Create("Login:");
     auto login_entry = sfg::Entry::Create();
@@ -66,10 +65,10 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     auto login_button = sfg::Button::Create("login");
     login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        if(network->login(login_entry->GetText(), password_entry->GetText()))
+        if(engine->network.login(login_entry->GetText(), password_entry->GetText()))
         {
             desktop.RemoveAll();
-            select_screen(network, windowSize);
+            select_screen(engine, windowSize);
         }
     });
 
@@ -88,18 +87,18 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::select_screen(Network* network, sf::Vector2u windowSize)
+void Interface::select_screen(Engine* engine, sf::Vector2u windowSize)
 {
     auto label = sfg::Label::Create("Select Character:");
     auto combobox = sfg::ComboBox::Create();
-    for(auto &i: network->getListOfIDs())
+    for(auto &i: engine->network.getListOfIDs())
         combobox->AppendItem(i);
     auto select_button = sfg::Button::Create("select");
     select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        network->selectHero(combobox->GetSelectedText());
+        engine->network.selectHero(combobox->GetSelectedText());
         desktop.RemoveAll();
-        game_screen(network, windowSize);
+        game_screen(engine, windowSize);
     });
 
     auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
@@ -115,10 +114,10 @@ void Interface::select_screen(Network* network, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::game_screen(Network* network, sf::Vector2u windowSize)
+void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
 {
-    PlayerData::looktype = network->getLookType();
-    network->sendInit(windowSize);
+    engine->map.setPlayerLooktype(engine->network.getLookType());
+    engine->network.sendInit(windowSize);
     captureEvents = false;
 
     auto chat_button = sfg::Button::Create("chat");
@@ -143,14 +142,14 @@ void Interface::game_screen(Network* network, sf::Vector2u windowSize)
     window->Add(h_box1);
     window->SetAllocation(GameScreenAllocation(windowSize));
 
-    desktop.Add(window);
     desktop.Add(chatBoxWindow);
+    desktop.Add(window);
 }
 
-bool Interface::handleEvent(const sf::Event& event)
+void Interface::loadGameData(const Poco::DynamicStruct& data, Map& map)
 {
-    desktop.HandleEvent(event);
-    return captureEvents;
+    map.setPlayerId(data["player"]["id"]);
+    map.loadMapData(data);
 }
 
 void Interface::healthChange(const Poco::DynamicStruct& data)
@@ -161,6 +160,12 @@ void Interface::healthChange(const Poco::DynamicStruct& data)
 void Interface::chatMessage(const Poco::DynamicStruct& data)
 {
     addChatLine(data["player"] + ": " + data["message"] + "\n");
+}
+
+bool Interface::handleEvent(const sf::Event& event)
+{
+    desktop.HandleEvent(event);
+    return captureEvents;
 }
 
 void Interface::draw(sf::RenderWindow& window)
