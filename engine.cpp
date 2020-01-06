@@ -52,6 +52,7 @@ void Engine::setup_window(bool fullscreen)
         mode.width = (mode.width*3)/4;
         mode.height = (mode.height*3)/4;
         window.create(mode, "Fantasy World", sf::Style::Close);
+        window.setVerticalSyncEnabled(true);
     }
     window.setKeyRepeatEnabled(false);
     window.resetGLStates();//?
@@ -88,9 +89,6 @@ void Engine::process_input()
                 break;
             case sf::Keyboard::W:
                 timer.startEvent(MOVE_UP);
-                break;
-            case sf::Keyboard::Escape:
-                window.close();
                 break;
             default:
                 break;
@@ -246,7 +244,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
-        timer.stopEvent(ATTACK);
         break;
     }
     case char2int("load_game"):

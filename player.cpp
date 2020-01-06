@@ -4,7 +4,7 @@
 
 void Player::setTexture(const sf::Texture& texture)
 {
-    anim = texture.getSize().x/32;
+    frames = texture.getSize().x/32;
     rect.width = 32;
     rect.height = 48;
     sprite.setTexture(texture);
@@ -13,7 +13,7 @@ void Player::setTexture(const sf::Texture& texture)
 
 void Player::set_dir(int dir)
 {
-    rect.left = ((++steps)%anim) * rect.width;
+    rect.left = ((++steps)%frames) * rect.width;
     rect.top = (dir%4) * rect.height;
     sprite.setTextureRect(rect);
 }
