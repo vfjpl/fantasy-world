@@ -1,6 +1,5 @@
 #include "interface.hpp"
 #include "playerdata.hpp"
-#include <SFGUI/Window.hpp>
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Box.hpp>
@@ -23,10 +22,37 @@ sf::FloatRect GameScreenAllocation(sf::Vector2u windowSize)
 }
 }
 
-void Interface::setup()
+void Interface::setup(Network* network)
 {
     chatBoxMessages = sfg::Label::Create();
     chatBoxMessages->SetLineWrap(true);
+
+    auto scrolledWindow = sfg::ScrolledWindow::Create();
+    scrolledWindow->AddWithViewport(chatBoxMessages);
+    scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
+
+    auto entry = sfg::Entry::Create();
+    auto button = sfg::Button::Create("send");
+    button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
+    {
+        network->message((const char*)entry->GetText().toUtf8().data());
+        entry->SetText(sf::String());
+    });
+
+    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+    box->Pack(scrolledWindow);
+    box->Pack(entry, false);
+    box->Pack(button, false);
+
+    chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
+    chatBoxWindow->Add(box);
+    chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
+    {
+        chatBoxWindow->Show(false);
+    });
+
+    healthBar = sfg::ProgressBar::Create();
+    expBar = sfg::ProgressBar::Create();
     captureEvents = true;
 }
 
@@ -95,22 +121,41 @@ void Interface::game_screen(Network* network, sf::Vector2u windowSize)
     network->sendInit(windowSize);
     captureEvents = false;
 
+    auto chat_button = sfg::Button::Create("chat");
+    chat_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
+    {
+        chatBoxWindow->Show(true);
+    });
+
     auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+    v_box1->Pack(healthBar);
+    auto v_box2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+    v_box2->Pack(chat_button);
+    v_box2->Pack(expBar);
+    auto v_box3 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
 
     auto h_box1 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
     h_box1->Pack(v_box1);
+    h_box1->Pack(v_box2);
+    h_box1->Pack(v_box3);
 
     auto window = sfg::Window::Create(sfg::Window::BACKGROUND);
     window->Add(h_box1);
     window->SetAllocation(GameScreenAllocation(windowSize));
 
     desktop.Add(window);
+    desktop.Add(chatBoxWindow);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
 {
     desktop.HandleEvent(event);
     return captureEvents;
+}
+
+void Interface::healthChange(const Poco::DynamicStruct& data)
+{
+    healthBar->SetFraction(data["max_health"]/data["health"]);
 }
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)
@@ -129,33 +174,4 @@ void Interface::draw(sf::RenderWindow& window)
 void Interface::addChatLine(const std::string& line)
 {
     chatBoxMessages->SetText(chatBoxMessages->GetText() + sf::String::fromUtf8(line.cbegin(), line.cend()));
-}
-
-void Interface::showChatBox(Network* network)
-{
-    auto scrolledWindow = sfg::ScrolledWindow::Create();
-    scrolledWindow->AddWithViewport(chatBoxMessages);
-    scrolledWindow->SetScrollbarPolicy(sfg::ScrolledWindow::HORIZONTAL_NEVER | sfg::ScrolledWindow::VERTICAL_ALWAYS);
-
-    auto entry = sfg::Entry::Create();
-    auto button = sfg::Button::Create("send");
-    button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
-    {
-        network->message((const char*)entry->GetText().toUtf8().data());
-        entry->SetText(sf::String());
-    });
-
-    auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
-    box->Pack(scrolledWindow);
-    box->Pack(entry, false);
-    box->Pack(button, false);
-
-    auto window = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
-    window->Add(box);
-    window->GetSignal(sfg::Window::OnCloseButton).Connect([=]
-    {
-        desktop.RemoveAll();
-    });
-
-    desktop.Add(window);
 }

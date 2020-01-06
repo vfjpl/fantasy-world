@@ -17,7 +17,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    interface.setup();
+    interface.setup(&network);
     setup_window(true);
     interface.login_screen(&network, window.getSize());
 }
@@ -231,6 +231,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1030://my health
     {
+        interface.healthChange(json);
         break;
     }
     case 1051://other player left

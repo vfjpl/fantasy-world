@@ -4,6 +4,8 @@
 #include "network.hpp"
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Label.hpp>
+#include <SFGUI/Window.hpp>
+#include <SFGUI/ProgressBar.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include <SFML/System/Clock.hpp>
 
@@ -13,6 +15,9 @@ class Interface
     sfg::Desktop desktop;
     //16
     sfg::Label::Ptr chatBoxMessages;
+    sfg::Window::Ptr chatBoxWindow;
+    sfg::ProgressBar::Ptr healthBar;
+    sfg::ProgressBar::Ptr expBar;
     //8
     sf::Clock clock;
     //1
@@ -20,18 +25,18 @@ class Interface
     bool captureEvents;
 
 public:
-    void setup();
+    void setup(Network* network);
     void login_screen(Network* network, sf::Vector2u windowSize);
     void select_screen(Network* network, sf::Vector2u windowSize);
     void game_screen(Network* network, sf::Vector2u windowSize);
 
     bool handleEvent(const sf::Event& event);
+    void healthChange(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);
     void draw(sf::RenderWindow& window);
 
 private:
     void addChatLine(const std::string& line);
-    void showChatBox(Network* network);
 };
 
 #endif // INTERFACE_HPP_INCLUDED
