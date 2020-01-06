@@ -9,13 +9,17 @@
 
 namespace
 {
-sf::FloatRect getAllocation(sf::Vector2u windowSize)
+sf::FloatRect LoginScreenAllocation(sf::Vector2u windowSize)
 {
     return sf::FloatRect((windowSize.x/2) - 63, (windowSize.y/2) - 63, 126, 0);
 }
-sf::Vector2f getPosition(sf::Vector2u windowSize)
+sf::Vector2f SelectScreenPosition(sf::Vector2u windowSize)
 {
     return sf::Vector2f((windowSize.x/2) - 63, (windowSize.y/2) - 63);
+}
+sf::FloatRect GameScreenAllocation(sf::Vector2u windowSize)
+{
+    return sf::FloatRect(0, windowSize.y - 90, windowSize.x, 90);
 }
 }
 
@@ -53,7 +57,7 @@ void Interface::login_screen(Network* network, sf::Vector2u windowSize)
     auto window = sfg::Window::Create();
     window->Add(box);
     window->SetTitle("Fantasy World");
-    window->SetAllocation(getAllocation(windowSize));
+    window->SetAllocation(LoginScreenAllocation(windowSize));
 
     desktop.Add(window);
 }
@@ -80,7 +84,7 @@ void Interface::select_screen(Network* network, sf::Vector2u windowSize)
     auto window = sfg::Window::Create();
     window->Add(box);
     window->SetTitle("Fantasy World");
-    window->SetPosition(getPosition(windowSize));
+    window->SetPosition(SelectScreenPosition(windowSize));
 
     desktop.Add(window);
 }
@@ -90,7 +94,17 @@ void Interface::game_screen(Network* network, sf::Vector2u windowSize)
     PlayerData::looktype = network->getLookType();
     network->sendInit(windowSize);
     captureEvents = false;
-    showChatBox(network);
+
+    auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
+
+    auto h_box1 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
+    h_box1->Pack(v_box1);
+
+    auto window = sfg::Window::Create(sfg::Window::BACKGROUND);
+    window->Add(h_box1);
+    window->SetAllocation(GameScreenAllocation(windowSize));
+
+    desktop.Add(window);
 }
 
 bool Interface::handleEvent(const sf::Event& event)

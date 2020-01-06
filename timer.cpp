@@ -19,6 +19,7 @@ Event Timer::getEvent()
 
 void Timer::startEvent(Event code)
 {
+    table[code] = 0;
     events.emplace_front(code);
 }
 
