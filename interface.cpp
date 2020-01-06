@@ -125,21 +125,25 @@ void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
     {
         chatBoxWindow->Show(true);
     });
+    auto logout_button = sfg::Button::Create("logout");
 
     auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box1->Pack(healthBar);
+    auto h_box2 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
+    h_box2->Pack(chat_button);
+    h_box2->Pack(logout_button);
     auto v_box2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
-    v_box2->Pack(chat_button);
+    v_box2->Pack(h_box2);
     v_box2->Pack(expBar);
     auto v_box3 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
 
-    auto h_box1 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
-    h_box1->Pack(v_box1);
-    h_box1->Pack(v_box2);
-    h_box1->Pack(v_box3);
+    auto main_box = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
+    main_box->Pack(v_box1);
+    main_box->Pack(v_box2);
+    main_box->Pack(v_box3);
 
     auto window = sfg::Window::Create(sfg::Window::BACKGROUND);
-    window->Add(h_box1);
+    window->Add(main_box);
     window->SetAllocation(GameScreenAllocation(windowSize));
 
     desktop.Add(chatBoxWindow);
@@ -148,13 +152,15 @@ void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
 
 void Interface::loadGameData(const Poco::DynamicStruct& data, Map& map)
 {
-    map.setPlayerId(data["player"]["id"]);
+    loadPlayerData(data["player"].extract<Poco::DynamicStruct>(), map);
     map.loadMapData(data);
 }
 
 void Interface::healthChange(const Poco::DynamicStruct& data)
 {
-    healthBar->SetFraction(data["max_health"]/data["health"]);
+    float health = data["health"];
+    float health_max = data["health_max"];
+    healthBar->SetFraction(health/health_max);
 }
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)
@@ -179,4 +185,13 @@ void Interface::draw(sf::RenderWindow& window)
 void Interface::addChatLine(const std::string& line)
 {
     chatBoxMessages->SetText(chatBoxMessages->GetText() + sf::String::fromUtf8(line.cbegin(), line.cend()));
+}
+
+void Interface::loadPlayerData(const Poco::DynamicStruct& data, Map& map)
+{
+    healthChange(data);
+    float experience = data["experience"];
+    float to_level = data["to_level"];
+    expBar->SetFraction(experience/to_level);
+    map.setPlayerId(data["id"]);
 }

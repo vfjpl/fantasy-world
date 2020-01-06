@@ -40,6 +40,7 @@ public:
 
 private:
     void addChatLine(const std::string& line);
+    void loadPlayerData(const Poco::DynamicStruct& data, Map& map);
 };
 
 #endif // INTERFACE_HPP_INCLUDED
