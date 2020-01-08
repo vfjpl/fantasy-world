@@ -31,7 +31,7 @@ public:
     void select_screen(Engine* engine, sf::Vector2u windowSize);
     void game_screen(Engine* engine, sf::Vector2u windowSize);
 
-    void loadPlayerData(const Poco::DynamicStruct& data);
+    void initPlayerData(const Poco::DynamicStruct& data);
     void healthChange(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);
     bool handleEvent(const sf::Event& event);

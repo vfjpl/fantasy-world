@@ -206,6 +206,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 100://init data
     {
+        interface.initPlayerData(json["data"]["player"].extract<Poco::DynamicStruct>());
         map.initMapData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }

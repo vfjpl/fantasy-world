@@ -150,7 +150,7 @@ void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::loadPlayerData(const Poco::DynamicStruct& data)
+void Interface::initPlayerData(const Poco::DynamicStruct& data)
 {
     healthChange(data);
     float experience = data["experience"];
