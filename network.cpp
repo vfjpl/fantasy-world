@@ -44,6 +44,12 @@ std::string toString(std::istream& stream)
     std::getline(stream, body, '\0');
     return body;
 }
+bool isLoginSucessfull(const Poco::DynamicStruct& data)
+{
+    bool check1 = data["code"] == 200;
+    bool check2 = data["status"] == 200;
+    return check1 && check2;
+}
 }
 
 Network::Network():
@@ -59,6 +65,7 @@ Network::Network():
     buffer(0),
     socket(http, request, response) {}
 
+
 bool Network::login(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
@@ -71,8 +78,8 @@ bool Network::login(const std::string& login, const std::string& password)
     html.add("password", password);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
-    bool ok = Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
-              .extract<Poco::DynamicStruct>()["code"] == 200;
+    bool ok = isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
+                                .extract<Poco::DynamicStruct>());
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
     resp.getCookies(cookies_vector);

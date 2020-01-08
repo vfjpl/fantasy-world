@@ -1,8 +1,8 @@
 #ifndef RESOURCEMANAGER_HPP_INCLUDED
 #define RESOURCEMANAGER_HPP_INCLUDED
 
-#include <Poco/DynamicStruct.h>
 #include <SFML/Graphics/Texture.hpp>
+#include <map>
 
 enum Graphic
 {

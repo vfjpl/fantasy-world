@@ -13,6 +13,7 @@ Event Timer::getEvent()
         }
         --table[code];
     }
+
     table.front() = 0;
     return NONE;
 }

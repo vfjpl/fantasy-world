@@ -30,7 +30,7 @@ void Map::loadMapData(const Poco::DynamicStruct& data)
 
     if(data.contains("map_data"))
     {
-        auto& map_data = data["map_data"];
+        const auto& map_data = data["map_data"];
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
             addMapData(map_data[i].extract<Poco::DynamicStruct>());
     }
@@ -39,30 +39,30 @@ void Map::loadMapData(const Poco::DynamicStruct& data)
         addMap(data["map"].extract<Poco::DynamicStruct>());
     }
 
-    auto& tiles = data["tiles"];
+    const auto& tiles = data["tiles"];
     for(sf::Uint8 i = 0; i < tiles.size(); ++i)
         addTile(tiles[i].extract<Poco::DynamicStruct>());
 
-    auto& chests = data["chests"];
+    const auto& chests = data["chests"];
     for(sf::Uint8 i = 0; i < chests.size(); ++i)
         addChest(chests[i].extract<Poco::DynamicStruct>());
 
     if(data.contains("map_items"))
     {
-        auto& map_items = data["map_items"];
+        const auto& map_items = data["map_items"];
         for(sf::Uint8 i = 0; i < map_items.size(); ++i)
             addMapItem(map_items[i].extract<Poco::DynamicStruct>());
     }
 
-    auto& monsters = data["monsters"];
+    const auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
         addMonster(monsters[i].extract<Poco::DynamicStruct>());
 
-    auto& npcs = data["npcs"];
+    const auto& npcs = data["npcs"];
     for(sf::Uint8 i = 0; i < npcs.size(); ++i)
         addNpc(npcs[i].extract<Poco::DynamicStruct>());
 
-    auto& players = data["players"];
+    const auto& players = data["players"];
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         addPlayer(players[i].extract<Poco::DynamicStruct>());
 }
@@ -75,21 +75,21 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
         {
         case char2int("moves"):
         {
-            auto& monsters = i.second;
+            const auto& monsters = i.second;
             for(sf::Uint8 i = 0; i < monsters.size(); ++i)
                 moveMonster(monsters[i].extract<Poco::DynamicStruct>());
             break;
         }
         case char2int("npc_moves"):
         {
-            auto& npcs = i.second;
+            const auto& npcs = i.second;
             for(sf::Uint8 i = 0; i < npcs.size(); ++i)
                 moveNpc(npcs[i].extract<Poco::DynamicStruct>());
             break;
         }
         case char2int("respawns"):
         {
-            auto& monsters = i.second;
+            const auto& monsters = i.second;
             for(sf::Uint8 i = 0; i < monsters.size(); ++i)
                 addMonster(monsters[i].extract<Poco::DynamicStruct>());
             break;
@@ -141,8 +141,10 @@ void Map::addMapItem(const Poco::DynamicStruct& data)
 void Map::addPlayer(const Poco::DynamicStruct& data)
 {
     int id = data["id"];
+    int x = data["x"];
+    int y = data["y"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], PLAYER));
-    players[id].set_position_server_bug(data["x"], data["y"]);
+    players[id].set_position(x + 1, y + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)

@@ -30,13 +30,6 @@ void Player::set_position(int x, int y)
     current_px = desired_px;
 }
 
-void Player::set_position_server_bug(int x, int y)
-{
-    desired_px.x = (32 * x);
-    desired_px.y = (32 * y) - 16;
-    current_px = desired_px;
-}
-
 void Player::draw(sf::RenderWindow& window)
 {
     current_px += clamp(desired_px - current_px);
