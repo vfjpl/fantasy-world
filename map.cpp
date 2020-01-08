@@ -25,7 +25,6 @@ void Map::initMapData(const Poco::DynamicStruct& data)
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
     clear();
-
     parseMapPositionsData(data["map_positions"].extract<Poco::DynamicStruct>());
 
     if(data.contains("map_data"))
@@ -141,10 +140,8 @@ void Map::addMapItem(const Poco::DynamicStruct& data)
 void Map::addPlayer(const Poco::DynamicStruct& data)
 {
     int id = data["id"];
-    int x = data["x"];
-    int y = data["y"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], PLAYER));
-    players[id].set_position(x + 1, y + 1);//server bug
+    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)
