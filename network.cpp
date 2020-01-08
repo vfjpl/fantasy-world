@@ -76,7 +76,7 @@ bool Network::login(const std::string& login, const std::string& password)
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
     resp.getCookies(cookies_vector);
-    for(auto &i: cookies_vector)
+    for(auto& i: cookies_vector)
         cookies.add(i.getName(), i.getValue());
 
     return ok;

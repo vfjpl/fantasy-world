@@ -35,8 +35,8 @@ class Map
 public:
     void initDefaultCamera(const sf::View& view);
     void setPlayerLooktype(const std::string& looktype);
-    void setPlayerId(int id);
 
+    void initMapData(const Poco::DynamicStruct& data);
     void loadMapData(const Poco::DynamicStruct& data);
     void updateMapData(const Poco::DynamicStruct& data);
 
@@ -53,7 +53,9 @@ public:
 private:
     void moveCamera(int x, int y);
     void setCamera(int x, int y);
-    void loadMapPositions(const Poco::DynamicStruct& data);
+
+    void parsePlayerData(const Poco::DynamicStruct& data);
+    void parseMapPositionsData(const Poco::DynamicStruct& data);
 
     void moveMonster(const Poco::DynamicStruct& data);
     void moveNpc(const Poco::DynamicStruct& data);

@@ -16,17 +16,17 @@ void Map::setPlayerLooktype(const std::string& looktype)
     player_looktype = looktype;
 }
 
-void Map::setPlayerId(int id)
+void Map::initMapData(const Poco::DynamicStruct& data)
 {
-    player_id = id;
+    parsePlayerData(data["player"].extract<Poco::DynamicStruct>());
+    loadMapData(data);
 }
 
 void Map::loadMapData(const Poco::DynamicStruct& data)
 {
-    //ResourceManager::loadParallel(data);
     clear();
 
-    loadMapPositions(data["map_positions"].extract<Poco::DynamicStruct>());
+    parseMapPositionsData(data["map_positions"].extract<Poco::DynamicStruct>());
 
     if(data.contains("map_data"))
     {
@@ -69,7 +69,7 @@ void Map::loadMapData(const Poco::DynamicStruct& data)
 
 void Map::updateMapData(const Poco::DynamicStruct& data)
 {
-    for(auto &i: data)
+    for(auto& i: data)
     {
         switch(str2int(i.first))
         {
@@ -171,19 +171,19 @@ void Map::draw(sf::RenderWindow& window)
     camera.setCenter(current_camera.x, current_camera.y);
     window.setView(camera);
 
-    for(auto &i: map_data)
+    for(auto& i: map_data)
         window.draw(i);
-    for(auto &i: doors)
+    for(auto& i: doors)
         i.draw(window);
-    for(auto &i: chests)
+    for(auto& i: chests)
         i.second.draw(window);
-    for(auto &i: map_items)
+    for(auto& i: map_items)
         i.second.draw(window);
-    for(auto &i: monsters)
+    for(auto& i: monsters)
         i.second.draw(window);
-    for(auto &i: npcs)
+    for(auto& i: npcs)
         i.second.draw(window);
-    for(auto &i: players)
+    for(auto& i: players)
         i.second.draw(window);
 }
 
@@ -201,7 +201,12 @@ void Map::setCamera(int x, int y)
     current_camera = desired_camera;
 }
 
-void Map::loadMapPositions(const Poco::DynamicStruct& data)
+void Map::parsePlayerData(const Poco::DynamicStruct& data)
+{
+    player_id = data["id"];
+}
+
+void Map::parseMapPositionsData(const Poco::DynamicStruct& data)
 {
     int x = data["PLAYER_X"];
     int y = data["PLAYER_Y"];

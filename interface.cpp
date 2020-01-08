@@ -91,7 +91,7 @@ void Interface::select_screen(Engine* engine, sf::Vector2u windowSize)
 {
     auto label = sfg::Label::Create("Select Character:");
     auto combobox = sfg::ComboBox::Create();
-    for(auto &i: engine->network.getListOfIDs())
+    for(auto& i: engine->network.getListOfIDs())
         combobox->AppendItem(i);
     auto select_button = sfg::Button::Create("select");
     select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
@@ -150,10 +150,12 @@ void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::loadGameData(const Poco::DynamicStruct& data, Map& map)
+void Interface::loadPlayerData(const Poco::DynamicStruct& data)
 {
-    loadPlayerData(data["player"].extract<Poco::DynamicStruct>(), map);
-    map.loadMapData(data);
+    healthChange(data);
+    float experience = data["experience"];
+    float to_level = data["to_level"];
+    expBar->SetFraction(experience/to_level);
 }
 
 void Interface::healthChange(const Poco::DynamicStruct& data)
@@ -185,13 +187,4 @@ void Interface::draw(sf::RenderWindow& window)
 void Interface::addChatLine(const std::string& line)
 {
     chatBoxMessages->SetText(chatBoxMessages->GetText() + sf::String::fromUtf8(line.cbegin(), line.cend()));
-}
-
-void Interface::loadPlayerData(const Poco::DynamicStruct& data, Map& map)
-{
-    healthChange(data);
-    float experience = data["experience"];
-    float to_level = data["to_level"];
-    expBar->SetFraction(experience/to_level);
-    map.setPlayerId(data["id"]);
 }

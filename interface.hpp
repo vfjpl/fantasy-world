@@ -1,7 +1,6 @@
 #ifndef INTERFACE_HPP_INCLUDED
 #define INTERFACE_HPP_INCLUDED
 
-#include "network.hpp"
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Window.hpp>
@@ -32,7 +31,7 @@ public:
     void select_screen(Engine* engine, sf::Vector2u windowSize);
     void game_screen(Engine* engine, sf::Vector2u windowSize);
 
-    void loadGameData(const Poco::DynamicStruct& data, Map& map);
+    void loadPlayerData(const Poco::DynamicStruct& data);
     void healthChange(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);
     bool handleEvent(const sf::Event& event);
@@ -40,7 +39,6 @@ public:
 
 private:
     void addChatLine(const std::string& line);
-    void loadPlayerData(const Poco::DynamicStruct& data, Map& map);
 };
 
 #endif // INTERFACE_HPP_INCLUDED

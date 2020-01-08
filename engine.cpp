@@ -204,9 +204,9 @@ void Engine::process_network(const Poco::DynamicStruct& json)
         std::cout << json["message"].toString() << '\n';
         break;
     }
-    case 100://first load data
+    case 100://init data
     {
-        interface.loadGameData(json["data"].extract<Poco::DynamicStruct>(), map);
+        map.initMapData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 101://my movement
