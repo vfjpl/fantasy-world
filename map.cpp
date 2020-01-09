@@ -101,10 +101,6 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
         {
             break;
         }
-        case char2int("deaths"):
-        {
-            break;
-        }
         default:
         {
             std::cout << i.first << '\n';
