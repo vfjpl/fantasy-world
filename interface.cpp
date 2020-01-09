@@ -130,12 +130,14 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
 
     auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box1->Pack(healthBar);
+
     auto h_box2 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
     h_box2->Pack(chat_button);
     h_box2->Pack(logout_button);
     auto v_box2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box2->Pack(h_box2);
     v_box2->Pack(expBar);
+
     auto v_box3 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
 
     auto main_box = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);

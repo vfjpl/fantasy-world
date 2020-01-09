@@ -43,7 +43,6 @@ const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic 
 const sf::Texture& ResourceManager::getTexture(const std::string& name)
 {
     loadGraphic(name);
-
     return storage[name];
 }
 

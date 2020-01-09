@@ -68,7 +68,7 @@ void Map::loadMapData(const Poco::DynamicStruct& data)
 
 void Map::updateMapData(const Poco::DynamicStruct& data)
 {
-    for(auto& i: data)
+    for(const auto& i: data)
     {
         switch(str2int(i.first))
         {
