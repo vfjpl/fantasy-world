@@ -40,6 +40,7 @@ public:
     void attack(int id);
     void message(const char* message);
     void move(int dir);
+    void takeLoot();
 
 private:
     void send(const std::string& json);

@@ -196,6 +196,17 @@ void Network::move(int dir)
     send(json.toString());
 }
 
+void Network::takeLoot()
+{
+    Poco::DynamicStruct data;
+    data.insert("action", 0);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 18);
+    json.insert("data", data);
+    send(json.toString());
+}
+
 // private
 
 void Network::send(const std::string& json)

@@ -13,6 +13,7 @@ class Engine
     Map map;
     Interface interface;
     Timer timer;
+    int attack_id;
 
 public:
     void setup();

@@ -158,6 +158,15 @@ void Map::deletePlayer(const Poco::DynamicStruct& data)
     players.erase(id);
 }
 
+int Map::getMonsterID(sf::RenderWindow& window, sf::Vector2i point)
+{
+    sf::Vector2f coords = window.mapPixelToCoords(point, camera);
+    for(auto &i: monsters)
+        if(i.second.contains(coords))
+            return i.first;
+    return 0;
+}
+
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);

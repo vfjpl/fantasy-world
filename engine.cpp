@@ -17,6 +17,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
+    attack_id = 0;
     interface.setup(&network);
     setup_window(true);
     interface.login_screen(&network, &map, window.getSize());
@@ -116,6 +117,31 @@ void Engine::process_input()
             }//end switch
             break;
         }
+        case sf::Event::MouseButtonPressed:
+        {
+            int id = map.getMonsterID(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            if(id == 0)
+                break;
+
+            if(attack_id == id)
+            {
+                timer.stopEvent(ATTACK);
+                attack_id = 0;
+                break;
+            }
+
+            if(attack_id != 0)
+            {
+                timer.stopEvent(ATTACK);
+                attack_id = id;
+                timer.startEvent(ATTACK);
+                break;
+            }
+
+            attack_id = id;
+            timer.startEvent(ATTACK);
+            break;
+        }
         default:
         {
             break;
@@ -148,6 +174,11 @@ void Engine::game_logic()
         case MOVE_DOWN:
         {
             network.move(4);
+            break;
+        }
+        case ATTACK:
+        {
+            network.attack(attack_id);
             break;
         }
         default:
@@ -246,6 +277,8 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
+        timer.stopEvent(ATTACK);
+        attack_id = 0;
         break;
     }
     case char2int("teleport"):
