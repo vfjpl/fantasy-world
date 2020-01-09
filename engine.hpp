@@ -1,8 +1,6 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include "network.hpp"
-#include "map.hpp"
 #include "interface.hpp"
 #include "timer.hpp"
 
@@ -11,12 +9,12 @@ class Engine
     //528
     sf::RenderWindow window;
 
-public:
     Network network;
     Map map;
     Interface interface;
     Timer timer;
 
+public:
     void setup();
     bool run_game();
     bool run_network();

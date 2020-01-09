@@ -1,14 +1,14 @@
 #ifndef INTERFACE_HPP_INCLUDED
 #define INTERFACE_HPP_INCLUDED
 
+#include "network.hpp"
+#include "map.hpp"
 #include <SFGUI/Desktop.hpp>
 #include <SFGUI/Label.hpp>
 #include <SFGUI/Window.hpp>
 #include <SFGUI/ProgressBar.hpp>
 #include <SFGUI/SFGUI.hpp>
 #include <SFML/System/Clock.hpp>
-
-class Engine;
 
 class Interface
 {
@@ -27,9 +27,9 @@ class Interface
 
 public:
     void setup(Network* network);
-    void login_screen(Engine* engine, sf::Vector2u windowSize);
-    void select_screen(Engine* engine, sf::Vector2u windowSize);
-    void game_screen(Engine* engine, sf::Vector2u windowSize);
+    void login_screen(Network* network, Map* map, sf::Vector2u windowSize);
+    void select_screen(Network* network, Map* map, sf::Vector2u windowSize);
+    void game_screen(Network* network, Map* map, sf::Vector2u windowSize);
 
     void initPlayerData(const Poco::DynamicStruct& data);
     void healthChange(const Poco::DynamicStruct& data);

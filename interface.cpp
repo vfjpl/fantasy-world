@@ -1,4 +1,4 @@
-#include "engine.hpp"
+#include "interface.hpp"
 #include <SFGUI/ScrolledWindow.hpp>
 #include <SFGUI/ComboBox.hpp>
 #include <SFGUI/Box.hpp>
@@ -45,6 +45,7 @@ void Interface::setup(Network* network)
 
     chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
     chatBoxWindow->Add(box);
+    chatBoxWindow->Show(false);
     chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
     {
         chatBoxWindow->Show(false);
@@ -55,7 +56,7 @@ void Interface::setup(Network* network)
     captureEvents = true;
 }
 
-void Interface::login_screen(Engine* engine, sf::Vector2u windowSize)
+void Interface::login_screen(Network* network, Map* map, sf::Vector2u windowSize)
 {
     auto login_label = sfg::Label::Create("Login:");
     auto login_entry = sfg::Entry::Create();
@@ -65,10 +66,10 @@ void Interface::login_screen(Engine* engine, sf::Vector2u windowSize)
     auto login_button = sfg::Button::Create("login");
     login_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        if(engine->network.login(login_entry->GetText(), password_entry->GetText()))
+        if(network->login(login_entry->GetText(), password_entry->GetText()))
         {
             desktop.RemoveAll();
-            select_screen(engine, windowSize);
+            select_screen(network, map, windowSize);
         }
     });
 
@@ -87,18 +88,18 @@ void Interface::login_screen(Engine* engine, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::select_screen(Engine* engine, sf::Vector2u windowSize)
+void Interface::select_screen(Network* network, Map* map, sf::Vector2u windowSize)
 {
     auto label = sfg::Label::Create("Select Character:");
     auto combobox = sfg::ComboBox::Create();
-    for(auto& i: engine->network.getListOfIDs())
+    for(auto& i: network->getListOfIDs())
         combobox->AppendItem(i);
     auto select_button = sfg::Button::Create("select");
     select_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        engine->network.selectHero(combobox->GetSelectedText());
+        network->selectHero(combobox->GetSelectedText());
         desktop.RemoveAll();
-        game_screen(engine, windowSize);
+        game_screen(network, map, windowSize);
     });
 
     auto box = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
@@ -114,10 +115,10 @@ void Interface::select_screen(Engine* engine, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::game_screen(Engine* engine, sf::Vector2u windowSize)
+void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
 {
-    engine->map.setPlayerLooktype(engine->network.getLookType());
-    engine->network.sendInit(windowSize);
+    map->setPlayerLooktype(network->getLookType());
+    network->sendInit(windowSize);
     captureEvents = false;
 
     auto chat_button = sfg::Button::Create("chat");

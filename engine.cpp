@@ -19,7 +19,7 @@ void Engine::setup()
 {
     interface.setup(&network);
     setup_window(true);
-    interface.login_screen(this, window.getSize());
+    interface.login_screen(&network, &map, window.getSize());
 }
 
 bool Engine::run_game()
