@@ -37,10 +37,11 @@ public:
     Poco::DynamicStruct receiveInit();
     Poco::DynamicStruct receive();
 
-    void attack(int id);
+    void attackMonster(int id);
     void message(const char* message);
     void move(int dir);
     void takeLoot();
+    void attackPlayer(int id);
 
 private:
     void send(const std::string& json);

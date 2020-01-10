@@ -17,7 +17,6 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    attack_id = 0;
     interface.setup(&network);
     setup_window(true);
     interface.login_screen(&network, &map, window.getSize());
@@ -77,69 +76,17 @@ void Engine::process_input()
         }
         case sf::Event::KeyPressed:
         {
-            switch(event.key.code)
-            {
-            case sf::Keyboard::A:
-                timer.startEvent(MOVE_LEFT);
-                break;
-            case sf::Keyboard::D:
-                timer.startEvent(MOVE_RIGHT);
-                break;
-            case sf::Keyboard::S:
-                timer.startEvent(MOVE_DOWN);
-                break;
-            case sf::Keyboard::W:
-                timer.startEvent(MOVE_UP);
-                break;
-            default:
-                break;
-            }//end switch
+            eventHandler.keyPress(event.key.code);
             break;
         }
         case sf::Event::KeyReleased:
         {
-            switch(event.key.code)
-            {
-            case sf::Keyboard::A:
-                timer.stopEvent(MOVE_LEFT);
-                break;
-            case sf::Keyboard::D:
-                timer.stopEvent(MOVE_RIGHT);
-                break;
-            case sf::Keyboard::S:
-                timer.stopEvent(MOVE_DOWN);
-                break;
-            case sf::Keyboard::W:
-                timer.stopEvent(MOVE_UP);
-                break;
-            default:
-                break;
-            }//end switch
+            eventHandler.keyRelease(event.key.code);
             break;
         }
         case sf::Event::MouseButtonPressed:
         {
-            int id = map.getMonsterID(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            if(id == 0)
-                break;
-
-            if(attack_id == id)
-            {
-                timer.stopEvent(ATTACK);
-                attack_id = 0;
-                break;
-            }
-
-            if(attack_id != 0)
-            {
-                timer.stopEvent(ATTACK);
-                attack_id = id;
-                timer.startEvent(ATTACK);
-                break;
-            }
-
-            attack_id = id;
-            timer.startEvent(ATTACK);
+            map.getMonsterID(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
             break;
         }
         default:
@@ -152,7 +99,7 @@ void Engine::process_input()
 
 void Engine::game_logic()
 {
-    for(Event code = timer.getEvent(); code != NONE; code = timer.getEvent())
+    for(Event code = eventHandler.getEvent(); code != NONE; code = eventHandler.getEvent())
     {
         switch(code)
         {
@@ -176,9 +123,14 @@ void Engine::game_logic()
             network.move(4);
             break;
         }
-        case ATTACK:
+        case ATTACK_MONSTER:
         {
-            network.attack(attack_id);
+            network.attackMonster(eventHandler.getTargetID());
+            break;
+        }
+        case ATTACK_PLAYER:
+        {
+            network.attackPlayer(eventHandler.getTargetID());
             break;
         }
         default:
@@ -263,7 +215,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1030://my health
     {
-        interface.healthChange(json);
+        interface.health(json);
         break;
     }
     case 1051://other player left
@@ -277,8 +229,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
-        timer.stopEvent(ATTACK);
-        attack_id = 0;
         break;
     }
     case char2int("teleport"):

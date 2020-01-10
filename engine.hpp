@@ -2,7 +2,7 @@
 #define ENGINE_HPP_INCLUDED
 
 #include "interface.hpp"
-#include "timer.hpp"
+#include "eventhandler.hpp"
 
 class Engine
 {
@@ -12,8 +12,7 @@ class Engine
     Network network;
     Map map;
     Interface interface;
-    Timer timer;
-    int attack_id;
+    EventHandler eventHandler;
 
 public:
     void setup();

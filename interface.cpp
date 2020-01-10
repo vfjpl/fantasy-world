@@ -155,17 +155,22 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
 
 void Interface::initPlayerData(const Poco::DynamicStruct& data)
 {
-    healthChange(data);
-    float experience = data["experience"];
-    float to_level = data["to_level"];
-    expBar->SetFraction(experience/to_level);
+    health(data);
+    experience(data);
 }
 
-void Interface::healthChange(const Poco::DynamicStruct& data)
+void Interface::health(const Poco::DynamicStruct& data)
 {
     float health = data["health"];
     float health_max = data["health_max"];
     healthBar->SetFraction(health/health_max);
+}
+
+void Interface::experience(const Poco::DynamicStruct& data)
+{
+    float experience = data["experience"];
+    float to_level = data["to_level"];
+    expBar->SetFraction(experience/to_level);
 }
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)

@@ -162,7 +162,7 @@ Poco::DynamicStruct Network::receive()
            .extract<Poco::DynamicStruct>();
 }
 
-void Network::attack(int id)
+void Network::attackMonster(int id)
 {
     Poco::DynamicStruct data;
     data.insert("monster", id);
@@ -203,6 +203,18 @@ void Network::takeLoot()
 
     Poco::DynamicStruct json;
     json.insert("code", 18);
+    json.insert("data", data);
+    send(json.toString());
+}
+
+void Network::attackPlayer(int id)
+{
+    Poco::DynamicStruct data;
+    data.insert("target", id);
+    data.insert("skill", 0);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 1042);
     json.insert("data", data);
     send(json.toString());
 }

@@ -47,6 +47,8 @@
 		<Unit filename="door.hpp" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.hpp" />
+		<Unit filename="eventhandler.cpp" />
+		<Unit filename="eventhandler.hpp" />
 		<Unit filename="helperfunctions.cpp" />
 		<Unit filename="helperfunctions.hpp" />
 		<Unit filename="interface.cpp" />
@@ -66,8 +68,6 @@
 		<Unit filename="player.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
-		<Unit filename="timer.cpp" />
-		<Unit filename="timer.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
