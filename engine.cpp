@@ -86,7 +86,7 @@ void Engine::process_input()
         }
         case sf::Event::MouseButtonPressed:
         {
-            map.getMonsterID(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            eventHandler.mousePress(map.getIDs(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y)));
             break;
         }
         default:

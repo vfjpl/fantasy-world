@@ -48,7 +48,7 @@ public:
     void deleteMonster(const Poco::DynamicStruct& data);
     void deletePlayer(const Poco::DynamicStruct& data);
 
-    int getMonsterID(sf::RenderWindow& window, sf::Vector2i point);
+    int getIDs(sf::RenderWindow& window, sf::Vector2i point);
 
     void draw(sf::RenderWindow& window);
 
@@ -68,6 +68,12 @@ private:
     void addChest(const Poco::DynamicStruct& data);
     void addMonster(const Poco::DynamicStruct& data);
     void addNpc(const Poco::DynamicStruct& data);
+
+    int getChestID(sf::Vector2f coords);
+    int getItemID(sf::Vector2f coords);
+    int getMonsterID(sf::Vector2f coords);
+    int getNpcID(sf::Vector2f coords);
+    int getPlayerID(sf::Vector2f coords);
 
     void clear();
 };

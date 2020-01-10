@@ -30,6 +30,11 @@ void Npc::set_position(int x, int y)
     current_px = desired_px;
 }
 
+bool Npc::contains(sf::Vector2f coords)
+{
+    return sprite.getGlobalBounds().contains(coords);
+}
+
 void Npc::draw(sf::RenderWindow& window)
 {
     current_px += clamp(desired_px - current_px);

@@ -30,6 +30,11 @@ void Player::set_position(int x, int y)
     current_px = desired_px;
 }
 
+bool Player::contains(sf::Vector2f coords)
+{
+    return sprite.getGlobalBounds().contains(coords);
+}
+
 void Player::draw(sf::RenderWindow& window)
 {
     current_px += clamp(desired_px - current_px);

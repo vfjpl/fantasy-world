@@ -12,6 +12,8 @@ class Item
 public:
     void setTexture(const sf::Texture& texture);
     void set_position(int x, int y);
+
+    bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };
 

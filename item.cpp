@@ -10,6 +10,11 @@ void Item::set_position(int x, int y)
     sprite.setPosition((32 * x) - 32, (32 * y) - 32);
 }
 
+bool Item::contains(sf::Vector2f coords)
+{
+    return sprite.getGlobalBounds().contains(coords);
+}
+
 void Item::draw(sf::RenderWindow& window)
 {
     window.draw(sprite);

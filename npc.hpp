@@ -23,6 +23,7 @@ public:
     void move(int x, int y);
     void set_position(int x, int y);
 
+    bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };
 

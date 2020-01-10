@@ -65,17 +65,23 @@ void EventHandler::keyRelease(sf::Keyboard::Key code)
     }//end switch
 }
 
+void EventHandler::mousePress(int id)
+{
+    if(id)
+        attackMonster(id);
+}
+
 // private
 
 void EventHandler::startEvent(Event code)
 {
-    table[code] = 0;
     events.emplace_front(code);
 }
 
 void EventHandler::stopEvent(Event code)
 {
     events.erase(std::find(events.cbegin(), events.cend(), code));
+    table[code] = 0;
 }
 
 void EventHandler::addDelay(Event code)
@@ -95,4 +101,24 @@ void EventHandler::addDelay(Event code)
     default:
         break;
     }//end switch
+}
+
+void EventHandler::attackMonster(int id)
+{
+    if(target == id)
+    {
+        stopEvent(ATTACK_MONSTER);
+        target = 0;
+        return;
+    }
+
+    if(target != 0)
+    {
+        target = id;
+        table[ATTACK_MONSTER] = 0;
+        return;
+    }
+
+    target = id;
+    startEvent(ATTACK_MONSTER);
 }
