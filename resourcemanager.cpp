@@ -11,21 +11,21 @@ std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
-    case MAP_DATA:
+    case Graphic::MAP_DATA:
         return "/assets/" + name + ".png";
-    case MAP:
+    case Graphic::MAP:
         return "/assets/maps/files/" + name + ".png";
-    case CHEST_OPEN:
+    case Graphic::CHEST_OPEN:
         return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
-    case CHEST:
+    case Graphic::CHEST:
         return "/templates/client/default/images/tiles/chest_" + name + ".png";
-    case ITEM:
+    case Graphic::ITEM:
         return "/templates/client/default/images/items/" + name + ".png";
-    case MONSTER:
+    case Graphic::MONSTER:
         return "/templates/client/default/images/monsters/" + name + ".gif";
-    case NPC:
+    case Graphic::NPC:
         return "/assets/avatars/" + name + ".gif";
-    case PLAYER:
+    case Graphic::PLAYER:
         return "/assets/looktypes/" + name + ".gif";
     default:
         return name;

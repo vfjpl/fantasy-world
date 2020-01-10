@@ -33,10 +33,10 @@ class Map
     int player_id;
 
 public:
-    void initDefaultCamera(const sf::View& view);
+    void setDefaultCamera(const sf::View& view);
     void setPlayerLooktype(const std::string& looktype);
 
-    void initMapData(const Poco::DynamicStruct& data);
+    void initData(const Poco::DynamicStruct& data);
     void loadMapData(const Poco::DynamicStruct& data);
     void updateMapData(const Poco::DynamicStruct& data);
 
@@ -49,7 +49,6 @@ public:
     void deletePlayer(const Poco::DynamicStruct& data);
 
     int getIDs(sf::RenderWindow& window, sf::Vector2i point);
-
     void draw(sf::RenderWindow& window);
 
 private:

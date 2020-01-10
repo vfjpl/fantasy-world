@@ -153,10 +153,9 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
     desktop.Add(window);
 }
 
-void Interface::initPlayerData(const Poco::DynamicStruct& data)
+void Interface::initData(const Poco::DynamicStruct& data)
 {
-    health(data);
-    experience(data);
+
 }
 
 void Interface::health(const Poco::DynamicStruct& data)

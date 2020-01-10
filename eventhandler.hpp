@@ -34,6 +34,8 @@ public:
     void keyRelease(sf::Keyboard::Key code);
     void mousePress(int id);
 
+    void stopMonsterAttackEvent();
+
 private:
     void startEvent(Event code);
     void stopEvent(Event code);

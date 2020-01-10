@@ -31,7 +31,7 @@ public:
     void select_screen(Network* network, Map* map, sf::Vector2u windowSize);
     void game_screen(Network* network, Map* map, sf::Vector2u windowSize);
 
-    void initPlayerData(const Poco::DynamicStruct& data);
+    void initData(const Poco::DynamicStruct& data);
     void health(const Poco::DynamicStruct& data);
     void experience(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);

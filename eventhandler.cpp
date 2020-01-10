@@ -71,6 +71,12 @@ void EventHandler::mousePress(int id)
         attackMonster(id);
 }
 
+void EventHandler::stopMonsterAttackEvent()
+{
+    stopEvent(ATTACK_MONSTER);
+    target = 0;
+}
+
 // private
 
 void EventHandler::startEvent(Event code)
@@ -109,16 +115,15 @@ void EventHandler::attackMonster(int id)
     {
         stopEvent(ATTACK_MONSTER);
         target = 0;
-        return;
     }
-
-    if(target != 0)
+    else if(target != 0)
     {
         target = id;
         table[ATTACK_MONSTER] = 0;
-        return;
     }
-
-    target = id;
-    startEvent(ATTACK_MONSTER);
+    else
+    {
+        target = id;
+        startEvent(ATTACK_MONSTER);
+    }
 }

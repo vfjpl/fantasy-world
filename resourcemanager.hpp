@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <map>
 
-enum Graphic
+enum class Graphic
 {
     DIRECT,
     MAP_DATA,

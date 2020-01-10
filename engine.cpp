@@ -56,7 +56,7 @@ void Engine::setup_window(bool fullscreen)
     }
     window.setKeyRepeatEnabled(false);
     window.resetGLStates();//?
-    map.initDefaultCamera(window.getDefaultView());
+    map.setDefaultCamera(window.getDefaultView());
 }
 
 void Engine::process_input()
@@ -189,9 +189,8 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 100://init data
     {
-        const auto& data = json["data"].extract<Poco::DynamicStruct>();
-        interface.initPlayerData(data["player"].extract<Poco::DynamicStruct>());
-        map.initMapData(data);
+        interface.initData(json["data"].extract<Poco::DynamicStruct>());
+        map.initData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 101://my movement
@@ -229,6 +228,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("loot"):
     {
+        eventHandler.stopMonsterAttackEvent();
         break;
     }
     case char2int("teleport"):
