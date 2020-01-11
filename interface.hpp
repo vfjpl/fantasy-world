@@ -40,6 +40,7 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
+    void addChatLine(const std::string& nick, const std::string& message);
     void addChatLine(const std::string& line);
 };
 

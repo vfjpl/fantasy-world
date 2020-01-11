@@ -140,8 +140,10 @@ void Map::addMapItem(const Poco::DynamicStruct& data)
 void Map::addPlayer(const Poco::DynamicStruct& data)
 {
     int id = data["id"];
+    int x = data["x"];
+    int y = data["y"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
+    players[id].set_position(x + 1, y + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)
@@ -248,7 +250,8 @@ void Map::addMap(const Poco::DynamicStruct& data)
 
 void Map::addMapData(const Poco::DynamicStruct& data)
 {
-    addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA), data["x"], data["y"]);
+    addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA),
+               data["x"], data["y"]);
 }
 
 void Map::addMapData(const sf::Texture& texture, int x, int y)

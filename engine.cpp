@@ -229,6 +229,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case char2int("loot"):
     {
         eventHandler.stopMonsterAttackEvent();
+        interface.experience(json);
         break;
     }
     case char2int("teleport"):

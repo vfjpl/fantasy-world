@@ -48,12 +48,11 @@ void Interface::setup(Network* network)
     chatBoxWindow->Show(false);
     chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
     {
-        chatBoxWindow->Show(false);
+        chatBoxWindow->Show(!chatBoxWindow->IsLocallyVisible());
     });
 
     healthBar = sfg::ProgressBar::Create();
     expBar = sfg::ProgressBar::Create();
-    captureEvents = true;
 }
 
 void Interface::login_screen(Network* network, Map* map, sf::Vector2u windowSize)
@@ -124,9 +123,13 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
     auto chat_button = sfg::Button::Create("chat");
     chat_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
     {
-        chatBoxWindow->Show(true);
+        chatBoxWindow->Show(!chatBoxWindow->IsLocallyVisible());
     });
     auto logout_button = sfg::Button::Create("logout");
+    logout_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
+    {
+
+    });
 
     auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box1->Pack(healthBar);
@@ -174,7 +177,7 @@ void Interface::experience(const Poco::DynamicStruct& data)
 
 void Interface::chatMessage(const Poco::DynamicStruct& data)
 {
-    addChatLine(data["player"] + ": " + data["message"] + "\n");
+    addChatLine(data["player"], data["message"]);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -190,6 +193,11 @@ void Interface::draw(sf::RenderWindow& window)
 }
 
 // private
+
+void Interface::addChatLine(const std::string& nick, const std::string& message)
+{
+    addChatLine(nick + ": " + message + '\n');
+}
 
 void Interface::addChatLine(const std::string& line)
 {

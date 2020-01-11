@@ -24,7 +24,7 @@ class EventHandler
     //EVENT_COUNT
     std::array<sf::Uint8, EVENT_COUNT> table;
     //4
-    int target;
+    int target{};
 
 public:
     Event getEvent();
