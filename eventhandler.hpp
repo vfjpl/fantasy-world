@@ -21,10 +21,10 @@ class EventHandler
 {
     //80
     std::deque<Event> events;
-    //EVENT_COUNT
-    std::array<sf::Uint8, EVENT_COUNT> table;
     //4
     int target{};
+    //1
+    std::array<sf::Uint8, EVENT_COUNT> table{};
 
 public:
     Event getEvent();

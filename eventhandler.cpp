@@ -81,13 +81,13 @@ void EventHandler::stopMonsterAttackEvent()
 
 void EventHandler::startEvent(Event code)
 {
-    table[code] = 0;
     events.emplace_front(code);
 }
 
 void EventHandler::stopEvent(Event code)
 {
     events.erase(std::find(events.cbegin(), events.cend(), code));
+    table[code] = 0;
 }
 
 void EventHandler::addDelay(Event code)

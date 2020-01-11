@@ -45,7 +45,7 @@ void Interface::setup(Network* network)
 
     chatBoxWindow = sfg::Window::Create(sfg::Window::TOPLEVEL | sfg::Window::CLOSE);
     chatBoxWindow->Add(box);
-    chatBoxWindow->Show(false);
+    chatBoxWindow->Show(!chatBoxWindow->IsLocallyVisible());
     chatBoxWindow->GetSignal(sfg::Window::OnCloseButton).Connect([=]
     {
         chatBoxWindow->Show(!chatBoxWindow->IsLocallyVisible());
