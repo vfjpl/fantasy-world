@@ -168,16 +168,14 @@ void Interface::health(const Poco::DynamicStruct& data)
     healthBar->SetFraction(health/health_max);
 }
 
-void Interface::experience(const Poco::DynamicStruct& data)
-{
-    float experience = data["experience"];
-    float to_level = data["to_level"];
-    expBar->SetFraction(experience/to_level);
-}
-
 void Interface::chatMessage(const Poco::DynamicStruct& data)
 {
     addChatLine(data["player"], data["message"]);
+}
+
+void Interface::loot(const Poco::DynamicStruct& data)
+{
+    experience(data);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -193,6 +191,13 @@ void Interface::draw(sf::RenderWindow& window)
 }
 
 // private
+
+void Interface::experience(const Poco::DynamicStruct& data)
+{
+    float experience = data["experience"];
+    float to_level = data["to_level"];
+    expBar->SetFraction(experience/to_level);
+}
 
 void Interface::addChatLine(const std::string& nick, const std::string& message)
 {

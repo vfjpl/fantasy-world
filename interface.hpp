@@ -33,13 +33,14 @@ public:
 
     void initData(const Poco::DynamicStruct& data);
     void health(const Poco::DynamicStruct& data);
-    void experience(const Poco::DynamicStruct& data);
     void chatMessage(const Poco::DynamicStruct& data);
+    void loot(const Poco::DynamicStruct& data);
 
     bool handleEvent(const sf::Event& event);
     void draw(sf::RenderWindow& window);
 
 private:
+    void experience(const Poco::DynamicStruct& data);
     void addChatLine(const std::string& nick, const std::string& message);
     void addChatLine(const std::string& line);
 };
