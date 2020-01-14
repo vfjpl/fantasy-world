@@ -167,44 +167,36 @@ void Network::attackMonster(int id)
     Poco::DynamicStruct data;
     data.insert("monster", id);
     data.insert("skill", 0);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 3);
-    json.insert("data", data);
-    send(json.toString());
+    send(data, 3);
 }
 
 void Network::message(const char* message)
 {
     Poco::DynamicStruct data;
     data.insert("message", message);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 4);
-    json.insert("data", data);
-    send(json.toString());
+    send(data, 4);
 }
 
 void Network::move(int dir)
 {
     Poco::DynamicStruct data;
     data.insert("dir", dir);
+    send(data, 5);
+}
 
-    Poco::DynamicStruct json;
-    json.insert("code", 5);
-    json.insert("data", data);
-    send(json.toString());
+void Network::shortcut(int nr)
+{
+    Poco::DynamicStruct data;
+    data.insert("slot", nr);
+    data.insert("type", "shortcut");
+    send(data, 9);
 }
 
 void Network::takeLoot()
 {
     Poco::DynamicStruct data;
     data.insert("action", 0);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 18);
-    json.insert("data", data);
-    send(json.toString());
+    send(data, 18);
 }
 
 void Network::attackPlayer(int id)
@@ -212,14 +204,44 @@ void Network::attackPlayer(int id)
     Poco::DynamicStruct data;
     data.insert("target", id);
     data.insert("skill", 0);
+    send(data, 1042);
+}
+
+void Network::spell(int nr)
+{
+    Poco::DynamicStruct data;
+    data.insert("spell", nr);
+    data.insert("type", 0);
+    data.insert("fight_type", 0);
 
     Poco::DynamicStruct json;
-    json.insert("code", 1042);
+    json.insert("code", "spell");
+    json.insert("data", data);
+    send(json.toString());
+}
+
+void Network::spell(int nr, int id)
+{
+    Poco::DynamicStruct data;
+    data.insert("spell", nr);
+    data.insert("target", id);
+    data.insert("fight_type", "monster");
+
+    Poco::DynamicStruct json;
+    json.insert("code", "spell");
     json.insert("data", data);
     send(json.toString());
 }
 
 // private
+
+void Network::send(const Poco::DynamicStruct& data, int nr)
+{
+    Poco::DynamicStruct json;
+    json.insert("code", nr);
+    json.insert("data", data);
+    send(json.toString());
+}
 
 void Network::send(const std::string& json)
 {

@@ -40,10 +40,15 @@ public:
     void attackMonster(int id);
     void message(const char* message);
     void move(int dir);
+    void shortcut(int nr);
     void takeLoot();
     void attackPlayer(int id);
 
+    void spell(int nr);
+    void spell(int nr, int id);
+
 private:
+    void send(const Poco::DynamicStruct& data, int nr);
     void send(const std::string& json);
 };
 
