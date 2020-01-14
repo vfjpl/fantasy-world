@@ -15,6 +15,7 @@ class Interface
     //136
     sfg::Desktop desktop;
     //16
+    std::array<sfg::Label::Ptr, 9> hotkey;
     sfg::Label::Ptr chatBoxMessages;
     sfg::Window::Ptr chatBoxWindow;
     sfg::ProgressBar::Ptr healthBar;
@@ -40,6 +41,9 @@ public:
     void draw(sf::RenderWindow& window);
 
 private:
+    void parsePlayerData(const Poco::DynamicStruct& data);
+    void addShortcut(const Poco::DynamicStruct& data);
+
     void experience(const Poco::DynamicStruct& data);
     void addChatLine(const std::string& nick, const std::string& message);
     void addChatLine(const std::string& line);

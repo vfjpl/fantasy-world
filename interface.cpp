@@ -23,6 +23,9 @@ sf::FloatRect GameScreenAllocation(sf::Vector2u windowSize)
 
 void Interface::setup(Network* network)
 {
+    for(auto& i: hotkey)
+        i = sfg::Label::Create();
+
     chatBoxMessages = sfg::Label::Create();
     chatBoxMessages->SetLineWrap(true);
 
@@ -125,18 +128,14 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
     {
         chatBoxWindow->Show(!chatBoxWindow->IsLocallyVisible());
     });
-    auto logout_button = sfg::Button::Create("logout");
-    logout_button->GetSignal(sfg::Button::OnLeftClick).Connect([=]
-    {
-
-    });
 
     auto v_box1 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box1->Pack(healthBar);
 
     auto h_box2 = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 1);
     h_box2->Pack(chat_button);
-    h_box2->Pack(logout_button);
+    for(auto& i: hotkey)
+        h_box2->Pack(i);
     auto v_box2 = sfg::Box::Create(sfg::Box::Orientation::VERTICAL, 1);
     v_box2->Pack(h_box2);
     v_box2->Pack(expBar);
@@ -158,7 +157,7 @@ void Interface::game_screen(Network* network, Map* map, sf::Vector2u windowSize)
 
 void Interface::initData(const Poco::DynamicStruct& data)
 {
-
+    parsePlayerData(data["player"].extract<Poco::DynamicStruct>());
 }
 
 void Interface::health(const Poco::DynamicStruct& data)
@@ -191,6 +190,23 @@ void Interface::draw(sf::RenderWindow& window)
 }
 
 // private
+
+void Interface::parsePlayerData(const Poco::DynamicStruct& data)
+{
+    health(data);
+    experience(data);
+
+    const auto& shortcuts = data["shortcut"];
+    for(sf::Uint8 i = 0; i < shortcuts.size(); ++i)
+        addShortcut(shortcuts[i].extract<Poco::DynamicStruct>());
+}
+
+void Interface::addShortcut(const Poco::DynamicStruct& data)
+{
+    const std::string& slot = data["slot"];
+    const std::string& name = data["name"];
+    hotkey[data["slot"]]->SetText(slot + '\n' + name);
+}
 
 void Interface::experience(const Poco::DynamicStruct& data)
 {
