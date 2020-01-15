@@ -201,18 +201,21 @@ void Interface::parsePlayerData(const Poco::DynamicStruct& data)
         addShortcut(shortcuts[i].extract<Poco::DynamicStruct>());
 }
 
-void Interface::addShortcut(const Poco::DynamicStruct& data)
-{
-    const std::string& slot = data["slot"];
-    const std::string& name = data["name"];
-    hotkey[data["slot"]]->SetText(slot + '\n' + name);
-}
-
 void Interface::experience(const Poco::DynamicStruct& data)
 {
     float experience = data["experience"];
     float to_level = data["to_level"];
     expBar->SetFraction(experience/to_level);
+}
+
+void Interface::addShortcut(const Poco::DynamicStruct& data)
+{
+    addShortcut(data["name"], data["slot"], data["slot"]);
+}
+
+void Interface::addShortcut(const std::string& name, const std::string& slot, int nr)
+{
+    hotkey[nr]->SetText(slot + '\n' + name);
 }
 
 void Interface::addChatLine(const std::string& nick, const std::string& message)

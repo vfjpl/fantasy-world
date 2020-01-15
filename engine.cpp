@@ -77,6 +77,30 @@ void Engine::process_input()
         case sf::Event::KeyPressed:
         {
             eventHandler.keyPress(event.key.code);
+
+            switch(event.key.code)
+            {
+            case sf::Keyboard::Num1:
+                break;
+            case sf::Keyboard::Num2:
+                break;
+            case sf::Keyboard::Num3:
+                break;
+            case sf::Keyboard::Num4:
+                break;
+            case sf::Keyboard::Num5:
+                break;
+            case sf::Keyboard::Num6:
+                break;
+            case sf::Keyboard::Num7:
+                break;
+            case sf::Keyboard::Num8:
+                break;
+            case sf::Keyboard::Num9:
+                break;
+            default:
+                break;
+            }//end switch
             break;
         }
         case sf::Event::KeyReleased:

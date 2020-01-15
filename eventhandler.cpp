@@ -102,7 +102,7 @@ void EventHandler::addDelay(Event code)
         break;
     case ATTACK_MONSTER:
     case ATTACK_PLAYER:
-        table[code] = 119;
+        table[code] = 59;
         break;
     default:
         break;

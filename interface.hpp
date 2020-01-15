@@ -42,9 +42,9 @@ public:
 
 private:
     void parsePlayerData(const Poco::DynamicStruct& data);
-    void addShortcut(const Poco::DynamicStruct& data);
-
     void experience(const Poco::DynamicStruct& data);
+    void addShortcut(const Poco::DynamicStruct& data);
+    void addShortcut(const std::string& name, const std::string& slot, int nr);
     void addChatLine(const std::string& nick, const std::string& message);
     void addChatLine(const std::string& line);
 };
