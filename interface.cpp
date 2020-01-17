@@ -210,7 +210,8 @@ void Interface::experience(const Poco::DynamicStruct& data)
 
 void Interface::addShortcut(const Poco::DynamicStruct& data)
 {
-    addShortcut(data["name"], data["slot"], data["slot"]);
+    if(data.contains("name"))
+        addShortcut(data["name"], data["slot"], data["slot"]);
 }
 
 void Interface::addShortcut(const std::string& name, const std::string& slot, int nr)
