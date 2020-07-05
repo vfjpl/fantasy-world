@@ -53,7 +53,7 @@ bool isLoginSucessfull(const Poco::DynamicStruct& data)
 }
 
 Network::Network():
-    https("fantasy-world.pl",
+    https("alkatria.pl",
           Poco::Net::HTTPSClientSession::HTTPS_PORT,
           new Poco::Net::Context(Poco::Net::Context::CLIENT_USE,
                                  std::string(),
@@ -114,7 +114,7 @@ void Network::selectHero(const std::string& id)
 
 std::string Network::getLookType()
 {
-    sf::Http sfhttp("fantasy-world.pl");
+    sf::Http sfhttp("alkatria.pl");
     sf::Http::Request request("/game");
     request.setField(Poco::Net::HTTPRequest::COOKIE,
                      cookies.begin()->first + '=' +

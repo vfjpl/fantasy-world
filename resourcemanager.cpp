@@ -51,7 +51,7 @@ void ResourceManager::loadGraphic(const std::string& name)
     if(storage.count(name))
         return;
 
-    sf::Http http("fantasy-world.pl");
+    sf::Http http("alkatria.pl");
     sf::Http::Request req(name);
     sf::Http::Response resp = http.sendRequest(req);
 

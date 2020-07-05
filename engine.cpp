@@ -17,9 +17,11 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    interface.setup(&network);
-    setup_window(true);
-    interface.login_screen(&network, &map, window.getSize());
+    setup_window(false);
+    network.login(login, password);
+    network.selectHero(network.getListOfIDs()[0]);
+    map.setPlayerLooktype(network.getLookType());
+    network.sendInit(window.getSize());
 }
 
 bool Engine::run_game()
@@ -42,20 +44,18 @@ bool Engine::run_network()
 
 void Engine::setup_window(bool fullscreen)
 {
+    sf::VideoMode mode = sf::VideoMode::getDesktopMode();
     if(fullscreen)
     {
-        window.create(sf::VideoMode::getDesktopMode(), "Fantasy World", sf::Style::Fullscreen);
+        window.create(mode, "Fantasy World", sf::Style::Fullscreen);
     }
     else
     {
-        sf::VideoMode mode = sf::VideoMode::getDesktopMode();
         mode.width = (mode.width*3)/4;
         mode.height = (mode.height*3)/4;
         window.create(mode, "Fantasy World", sf::Style::Close);
-        window.setVerticalSyncEnabled(true);
     }
     window.setKeyRepeatEnabled(false);
-    window.resetGLStates();//?
     map.setDefaultCamera(window.getDefaultView());
 }
 
@@ -64,9 +64,6 @@ void Engine::process_input()
     sf::Event event;
     while(window.pollEvent(event))
     {
-        if(interface.handleEvent(event))
-            continue;
-
         switch(event.type)
         {
         case sf::Event::Closed:
@@ -77,30 +74,6 @@ void Engine::process_input()
         case sf::Event::KeyPressed:
         {
             eventHandler.keyPress(event.key.code);
-
-            switch(event.key.code)
-            {
-            case sf::Keyboard::Num1:
-                break;
-            case sf::Keyboard::Num2:
-                break;
-            case sf::Keyboard::Num3:
-                break;
-            case sf::Keyboard::Num4:
-                break;
-            case sf::Keyboard::Num5:
-                break;
-            case sf::Keyboard::Num6:
-                break;
-            case sf::Keyboard::Num7:
-                break;
-            case sf::Keyboard::Num8:
-                break;
-            case sf::Keyboard::Num9:
-                break;
-            default:
-                break;
-            }//end switch
             break;
         }
         case sf::Event::KeyReleased:
@@ -169,7 +142,6 @@ void Engine::draw_frame()
 {
     window.clear();
     map.draw(window);
-    interface.draw(window);
     window.display();
 }
 
@@ -179,7 +151,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     {
     case 1://global chat message
     {
-        interface.chatMessage(json);
         break;
     }
     case 5://show damage
@@ -213,7 +184,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 100://init data
     {
-        interface.initData(json["data"].extract<Poco::DynamicStruct>());
         map.initData(json["data"].extract<Poco::DynamicStruct>());
         break;
     }
@@ -238,7 +208,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1030://my health
     {
-        interface.health(json);
         break;
     }
     case 1051://other player left
@@ -253,7 +222,6 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     case char2int("loot"):
     {
         eventHandler.stopMonsterAttackEvent();
-        interface.loot(json);
         break;
     }
     case char2int("teleport"):

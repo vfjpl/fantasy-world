@@ -1,7 +1,8 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include "interface.hpp"
+#include "network.hpp"
+#include "map.hpp"
 #include "eventhandler.hpp"
 
 class Engine
@@ -11,7 +12,6 @@ class Engine
 
     Network network;
     Map map;
-    Interface interface;
     EventHandler eventHandler;
 
 public:

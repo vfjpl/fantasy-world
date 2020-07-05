@@ -35,7 +35,6 @@
 			<Add library="PocoNetSSL" />
 			<Add library="PocoNet" />
 			<Add library="PocoFoundation" />
-			<Add library="sfgui" />
 			<Add library="sfml-network" />
 			<Add library="sfml-graphics" />
 			<Add library="sfml-window" />
