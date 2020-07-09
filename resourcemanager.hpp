@@ -6,7 +6,6 @@
 
 enum class Graphic
 {
-    DIRECT,
     MAP_DATA,
     MAP,
     CHEST_OPEN,
@@ -15,6 +14,7 @@ enum class Graphic
     MONSTER,
     NPC,
     PLAYER,
+    DIRECT,
 };
 
 class ResourceManager
