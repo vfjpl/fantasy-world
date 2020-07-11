@@ -4,6 +4,19 @@
 
 namespace
 {
+bool isLoginSucessfull(const Poco::DynamicStruct& data)
+{
+    bool check1 = data["code"] == 200;
+    bool check2 = data["status"] == 200;
+    return check1 && check2;
+}
+std::string toString(std::istream& stream)
+{
+    std::string body;
+    std::getline(stream, body, '\0');
+    return body;
+}
+
 std::vector<std::string> getIDs(std::istream& stream)
 {
     std::string line;
@@ -38,26 +51,10 @@ std::string getLOOKTYPE(const std::string& body)
     size_t pos = body.find("url") + 5;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
-std::string toString(std::istream& stream)
-{
-    std::string body;
-    std::getline(stream, body, '\0');
-    return body;
-}
-bool isLoginSucessfull(const Poco::DynamicStruct& data)
-{
-    bool check1 = data["code"] == 200;
-    bool check2 = data["status"] == 200;
-    return check1 && check2;
-}
 }
 
 Network::Network():
-    https("alkatria.pl",
-          Poco::Net::HTTPSClientSession::HTTPS_PORT,
-          new Poco::Net::Context(Poco::Net::Context::CLIENT_USE,
-                                 std::string(),
-                                 Poco::Net::Context::VERIFY_NONE)),
+    https("alkatria.pl"),
     http("54.37.227.73", 9001),
     request(Poco::Net::HTTPRequest::HTTP_GET,
             "/echobot",
@@ -66,30 +63,29 @@ Network::Network():
     socket(http, request, response) {}
 
 
-bool Network::login(const std::string& login, const std::string& password)
+bool Network::login1_credentials(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/ajax/login",
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     Poco::Net::HTMLForm html;
-    requ.setCookies(cookies);
     html.add("login", login);
     html.add("password", password);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
-    bool ok = isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
-                                .extract<Poco::DynamicStruct>());
+    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp))).extract<Poco::DynamicStruct>()))
+        return false;
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
     resp.getCookies(cookies_vector);
     for(auto& i: cookies_vector)
         cookies.add(i.getName(), i.getValue());
 
-    return ok;
+    return true;
 }
 
-std::vector<std::string> Network::getListOfIDs()
+std::vector<std::string> Network::login2_getListOfIDs()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
@@ -98,7 +94,7 @@ std::vector<std::string> Network::getListOfIDs()
     return getIDs(https.receiveResponse(resp));
 }
 
-void Network::selectHero(const std::string& id)
+void Network::login3_selectHero(const std::string& id)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/game/login",
@@ -112,21 +108,21 @@ void Network::selectHero(const std::string& id)
     https.receiveResponse(resp);
 }
 
-std::string Network::getLookType()
+std::string Network::login4_getLookType()
 {
     sf::Http sfhttp("alkatria.pl");
-    sf::Http::Request request("/game");
-    request.setField(Poco::Net::HTTPRequest::COOKIE,
-                     cookies.begin()->first + '=' +
-                     cookies.begin()->second + ';' +
-                     (--cookies.end())->first + '=' +
-                     (--cookies.end())->second);
-    sf::Http::Response response = sfhttp.sendRequest(request);
-    token = getTOKEN(response.getBody());
-    return getLOOKTYPE(response.getBody());
+    sf::Http::Request sfrequest("/game");
+    sfrequest.setField(Poco::Net::HTTPRequest::COOKIE,
+                       cookies.begin()->first + '=' +
+                       cookies.begin()->second + ';' +
+                       (--cookies.end())->first + '=' +
+                       (--cookies.end())->second);
+    sf::Http::Response sfresponse = sfhttp.sendRequest(sfrequest);
+    token = getTOKEN(sfresponse.getBody());
+    return getLOOKTYPE(sfresponse.getBody());
 }
 
-void Network::sendInit(sf::Vector2u windowSize)
+void Network::login5_sendInit(sf::Vector2u windowSize)
 {
     std::vector<Poco::DynamicAny> jsonArray;
     jsonArray.emplace_back(windowSize.x);

@@ -28,11 +28,11 @@ class Network
 public:
     Network();
 
-    bool login(const std::string& login, const std::string& password);
-    std::vector<std::string> getListOfIDs();
-    void selectHero(const std::string& id);
-    std::string getLookType();
-    void sendInit(sf::Vector2u windowSize);
+    bool login1_credentials(const std::string& login, const std::string& password);
+    std::vector<std::string> login2_getListOfIDs();
+    void login3_selectHero(const std::string& id);
+    std::string login4_getLookType();
+    void login5_sendInit(sf::Vector2u windowSize);
 
     Poco::DynamicStruct receiveInit();
     Poco::DynamicStruct receive();

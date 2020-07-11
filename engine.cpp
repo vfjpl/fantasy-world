@@ -18,10 +18,10 @@ int var2int(const Poco::DynamicAny& var)
 void Engine::setup()
 {
     setup_window(false);
-    network.login(login, password);
-    network.selectHero(network.getListOfIDs()[0]);
-    map.setPlayerLooktype(network.getLookType());
-    network.sendInit(window.getSize());
+    network.login1_credentials(login, password);
+    network.login3_selectHero(network.login2_getListOfIDs()[0]);
+    map.setPlayerLooktype(network.login4_getLookType());
+    network.login5_sendInit(window.getSize());
 }
 
 bool Engine::run_game()
