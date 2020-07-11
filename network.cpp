@@ -4,41 +4,30 @@
 
 namespace
 {
-bool isLoginSucessfull(const Poco::DynamicStruct& data)
-{
-    bool check1 = data["code"] == 200;
-    bool check2 = data["status"] == 200;
-    return check1 && check2;
-}
 std::string toString(std::istream& stream)
 {
     std::string body;
     std::getline(stream, body, '\0');
     return body;
 }
-
-std::vector<std::string> getIDs(std::istream& stream)
+bool isLoginSucessfull(const Poco::DynamicStruct& data)
 {
-    std::string line;
+    bool check1 = data["code"] == 200;
+    bool check2 = data["status"] == 200;
+    return check1 && check2;
+}
+std::vector<std::string> getIDs(const std::string& body)
+{
     std::vector<std::string> IDs;
-    size_t pos;
-
-    do
+    for(size_t start_pos = body.find("value");;)
     {
-        std::getline(stream, line);
-        pos = line.find("value");
+        start_pos += 7;
+        size_t end_pos = body.find('"', start_pos);
+        IDs.emplace_back(body.substr(start_pos, end_pos - start_pos));
+        start_pos = body.find("value", end_pos + 1);
+        if(start_pos == std::string::npos)
+            break;
     }
-    while(pos == std::string::npos);
-
-    do
-    {
-        pos += 7;
-        size_t temp = line.find('"', pos);
-        IDs.emplace_back(line.substr(pos, temp - pos));
-        pos = line.find("value", temp + 1);
-    }
-    while(pos != std::string::npos);
-
     return IDs;
 }
 std::string getTOKEN(const std::string& body)
@@ -74,7 +63,8 @@ bool Network::login1_credentials(const std::string& login, const std::string& pa
     html.add("password", password);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
-    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp))).extract<Poco::DynamicStruct>()))
+    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
+                          .extract<Poco::DynamicStruct>()))
         return false;
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
@@ -91,7 +81,7 @@ std::vector<std::string> Network::login2_getListOfIDs()
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return getIDs(https.receiveResponse(resp));
+    return getIDs(toString(https.receiveResponse(resp)));
 }
 
 void Network::login3_selectHero(const std::string& id)
@@ -111,15 +101,15 @@ void Network::login3_selectHero(const std::string& id)
 std::string Network::login4_getLookType()
 {
     sf::Http sfhttp("alkatria.pl");
-    sf::Http::Request sfrequest("/game");
-    sfrequest.setField(Poco::Net::HTTPRequest::COOKIE,
-                       cookies.begin()->first + '=' +
-                       cookies.begin()->second + ';' +
-                       (--cookies.end())->first + '=' +
-                       (--cookies.end())->second);
-    sf::Http::Response sfresponse = sfhttp.sendRequest(sfrequest);
-    token = getTOKEN(sfresponse.getBody());
-    return getLOOKTYPE(sfresponse.getBody());
+    sf::Http::Request sfrequ("/game");
+    sfrequ.setField(Poco::Net::HTTPRequest::COOKIE,
+                    cookies.begin()->first + '=' +
+                    cookies.begin()->second + ';' +
+                    (--cookies.end())->first + '=' +
+                    (--cookies.end())->second);
+    sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
+    token = getTOKEN(sfresp.getBody());
+    return getLOOKTYPE(sfresp.getBody());
 }
 
 void Network::login5_sendInit(sf::Vector2u windowSize)
