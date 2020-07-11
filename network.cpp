@@ -30,6 +30,18 @@ std::vector<std::string> getIDs(const std::string& body)
     }
     return IDs;
 }
+std::string cookiesToString(const Poco::Net::NameValueCollection& collection)
+{
+    std::string cookies;
+    for(auto& i: collection)
+    {
+        cookies.append(i.first);
+        cookies.push_back('=');
+        cookies.append(i.second);
+        cookies.push_back(';');
+    }
+    return cookies;
+}
 std::string getTOKEN(const std::string& body)
 {
     size_t pos = body.find("token") + 9;
@@ -45,9 +57,7 @@ std::string getLOOKTYPE(const std::string& body)
 Network::Network():
     https("alkatria.pl"),
     http("54.37.227.73", 9001),
-    request(Poco::Net::HTTPRequest::HTTP_GET,
-            "/echobot",
-            Poco::Net::HTTPRequest::HTTP_1_1),
+    request(Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
     socket(http, request, response) {}
 
@@ -84,7 +94,7 @@ std::vector<std::string> Network::login2_getListOfIDs()
     return getIDs(toString(https.receiveResponse(resp)));
 }
 
-void Network::login3_selectHero(const std::string& id)
+void Network::login3_selectHero(const std::string& hero_id)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/game/login",
@@ -92,7 +102,7 @@ void Network::login3_selectHero(const std::string& id)
     Poco::Net::HTTPResponse resp;
     Poco::Net::HTMLForm html;
     requ.setCookies(cookies);
-    html.add("id", id);
+    html.add("id", hero_id);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
     https.receiveResponse(resp);
@@ -102,11 +112,7 @@ std::string Network::login4_getLookType()
 {
     sf::Http sfhttp("alkatria.pl");
     sf::Http::Request sfrequ("/game");
-    sfrequ.setField(Poco::Net::HTTPRequest::COOKIE,
-                    cookies.begin()->first + '=' +
-                    cookies.begin()->second + ';' +
-                    (--cookies.end())->first + '=' +
-                    (--cookies.end())->second);
+    sfrequ.setField(Poco::Net::HTTPRequest::COOKIE, cookiesToString(cookies));
     sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
     token = getTOKEN(sfresp.getBody());
     return getLOOKTYPE(sfresp.getBody());

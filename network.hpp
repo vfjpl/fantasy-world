@@ -30,7 +30,7 @@ public:
 
     bool login1_credentials(const std::string& login, const std::string& password);
     std::vector<std::string> login2_getListOfIDs();
-    void login3_selectHero(const std::string& id);
+    void login3_selectHero(const std::string& hero_id);
     std::string login4_getLookType();
     void login5_sendInit(sf::Vector2u windowSize);
 
