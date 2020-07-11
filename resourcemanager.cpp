@@ -52,8 +52,8 @@ void ResourceManager::loadGraphic(const std::string& name)
         return;
 
     sf::Http http("alkatria.pl");
-    sf::Http::Request req(name);
-    sf::Http::Response resp = http.sendRequest(req);
+    sf::Http::Request requ(name);
+    sf::Http::Response resp = http.sendRequest(requ);
 
     sf::MemoryInputStream data;
     data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
