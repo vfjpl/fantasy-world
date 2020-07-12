@@ -26,7 +26,7 @@ private:
     void game_logic();
     void draw_frame();
 
-    void process_network(const Poco::DynamicStruct& json);
+    void process_network(const Poco::DynamicAny& networkData);
 };
 
 #endif // ENGINE_HPP_INCLUDED

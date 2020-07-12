@@ -145,9 +145,9 @@ void Engine::draw_frame()
     window.display();
 }
 
-void Engine::process_network(const Poco::DynamicStruct& json)
+void Engine::process_network(const Poco::DynamicAny& networkData)
 {
-    switch(var2int(json["code"]))
+    switch(var2int(networkData["code"]))
     {
     case 1://global chat message
     {
@@ -159,37 +159,37 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 10://other player movement
     {
-        map.movePlayer(json);
+        map.movePlayer(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 54://remove monster
     {
-        map.deleteMonster(json);
+        map.deleteMonster(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 55://update map data
     {
-        map.updateMapData(json["data"].extract<Poco::DynamicStruct>());
+        map.updateMapData(networkData["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 71://other player join
     {
-        map.addPlayer(json);
+        map.addPlayer(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 99://message from server
     {
-        std::cout << json["message"].toString() << '\n';
+        std::cout << networkData["message"].toString() << '\n';
         break;
     }
     case 100://init data
     {
-        map.initData(json["data"].extract<Poco::DynamicStruct>());
+        map.initData(networkData["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case 101://my movement
     {
-        map.moveMe(json);
+        map.moveMe(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 102://my back movement
@@ -198,12 +198,12 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 877://remove map item
     {
-        map.deleteMapItem(json);
+        map.deleteMapItem(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 878://new map item
     {
-        map.addMapItem(json["item"].extract<Poco::DynamicStruct>());
+        map.addMapItem(networkData["item"].extract<Poco::DynamicStruct>());
         break;
     }
     case 1030://my health
@@ -212,7 +212,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case 1051://other player left
     {
-        map.deletePlayer(json["player"].extract<Poco::DynamicStruct>());
+        map.deletePlayer(networkData["player"].extract<Poco::DynamicStruct>());
         break;
     }
     case 1504://other player yell
@@ -226,7 +226,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     case char2int("teleport"):
     {
-        map.loadMapData(json["data"].extract<Poco::DynamicStruct>());
+        map.loadMapData(networkData["data"].extract<Poco::DynamicStruct>());
         break;
     }
     case char2int("load_game"):
@@ -236,7 +236,7 @@ void Engine::process_network(const Poco::DynamicStruct& json)
     }
     default:
     {
-        std::cout << json["code"].toString() << '\n';
+        std::cout << networkData["code"].toString() << '\n';
         break;
     }
     }//end switch

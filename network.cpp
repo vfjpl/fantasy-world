@@ -10,7 +10,7 @@ std::string toString(std::istream& stream)
     std::getline(stream, body, '\0');
     return body;
 }
-bool isLoginSucessfull(const Poco::DynamicStruct& data)
+bool isLoginSucessfull(const Poco::DynamicAny& data)
 {
     bool check1 = data["code"] == 200;
     bool check2 = data["status"] == 200;
@@ -73,8 +73,7 @@ bool Network::login1_credentials(const std::string& login, const std::string& pa
     html.add("password", password);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
-    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))
-                          .extract<Poco::DynamicStruct>()))
+    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))))
         return false;
 
     std::vector<Poco::Net::HTTPCookie> cookies_vector;
@@ -131,7 +130,7 @@ void Network::login5_sendInit(sf::Vector2u windowSize)
     send(json.toString());
 }
 
-Poco::DynamicStruct Network::receiveInit()
+Poco::DynamicAny Network::receiveInit()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/game/init/" + token,
@@ -139,25 +138,21 @@ Poco::DynamicStruct Network::receiveInit()
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return Poco::DynamicAny::parse(toString(https.receiveResponse(resp))).extract<Poco::DynamicStruct>();
+    return Poco::DynamicAny::parse(toString(https.receiveResponse(resp)));
 }
 
-Poco::DynamicStruct Network::receive()
+Poco::DynamicAny Network::receive()
 {
     int flags;
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
-    return Poco::DynamicAny::parse(
-               Poco::UTF8::unescape(
-                   std::string::const_iterator(buffer.begin()),
-                   std::string::const_iterator(buffer.end())))
-           .extract<Poco::DynamicStruct>();
+    return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.end()));
 }
 
-void Network::attackMonster(int id)
+void Network::attackMonster(int target_id)
 {
     Poco::DynamicStruct data;
-    data.insert("monster", id);
+    data.insert("monster", target_id);
     data.insert("skill", 0);
     send(data, 3);
 }
@@ -176,10 +171,10 @@ void Network::move(int dir)
     send(data, 5);
 }
 
-void Network::shortcut(int nr)
+void Network::shortcut(int number)
 {
     Poco::DynamicStruct data;
-    data.insert("slot", nr);
+    data.insert("slot", number);
     data.insert("type", "shortcut");
     send(data, 9);
 }
@@ -191,46 +186,46 @@ void Network::takeLoot()
     send(data, 18);
 }
 
-void Network::attackPlayer(int id)
+void Network::attackPlayer(int target_id)
 {
     Poco::DynamicStruct data;
-    data.insert("target", id);
+    data.insert("target", target_id);
     data.insert("skill", 0);
     send(data, 1042);
 }
 
-void Network::spell(int nr)
+void Network::spell(int number)
 {
     Poco::DynamicStruct data;
-    data.insert("spell", nr);
+    data.insert("spell", number);
     data.insert("type", 0);
     data.insert("fight_type", 0);
-
-    Poco::DynamicStruct json;
-    json.insert("code", "spell");
-    json.insert("data", data);
-    send(json.toString());
+    send(data, "spell");
 }
 
-void Network::spell(int nr, int id)
+void Network::spell(int number, int target_id)
 {
     Poco::DynamicStruct data;
-    data.insert("spell", nr);
-    data.insert("target", id);
+    data.insert("spell", number);
+    data.insert("target", target_id);
     data.insert("fight_type", "monster");
-
-    Poco::DynamicStruct json;
-    json.insert("code", "spell");
-    json.insert("data", data);
-    send(json.toString());
+    send(data, "spell");
 }
 
 // private
 
-void Network::send(const Poco::DynamicStruct& data, int nr)
+void Network::send(const Poco::DynamicStruct& data, int code)
 {
     Poco::DynamicStruct json;
-    json.insert("code", nr);
+    json.insert("code", code);
+    json.insert("data", data);
+    send(json.toString());
+}
+
+void Network::send(const Poco::DynamicStruct& data, const char* code)
+{
+    Poco::DynamicStruct json;
+    json.insert("code", code);
     json.insert("data", data);
     send(json.toString());
 }

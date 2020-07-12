@@ -34,21 +34,21 @@ public:
     std::string login4_getLookType();
     void login5_sendInit(sf::Vector2u windowSize);
 
-    Poco::DynamicStruct receiveInit();
-    Poco::DynamicStruct receive();
+    Poco::DynamicAny receiveInit();
+    Poco::DynamicAny receive();
 
-    void attackMonster(int id);
+    void attackMonster(int target_id);
     void message(const char* message);
     void move(int dir);
-    void shortcut(int nr);
+    void shortcut(int number);
     void takeLoot();
-    void attackPlayer(int id);
-
-    void spell(int nr);
-    void spell(int nr, int id);
+    void attackPlayer(int target_id);
+    void spell(int number);
+    void spell(int number, int target_id);
 
 private:
-    void send(const Poco::DynamicStruct& data, int nr);
+    void send(const Poco::DynamicStruct& data, int code);
+    void send(const Poco::DynamicStruct& data, const char* code);
     void send(const std::string& json);
 };
 
