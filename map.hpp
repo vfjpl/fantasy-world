@@ -35,17 +35,17 @@ public:
     void setDefaultCamera(const sf::View& view);
     void setPlayerLooktype(const std::string& looktype);
 
-    void initData(const Poco::DynamicStruct& data);
-    void loadMapData(const Poco::DynamicStruct& data);
-    void updateMapData(const Poco::DynamicStruct& data);
+    void initData(const Poco::DynamicAny& data);
+    void loadMapData(const Poco::DynamicAny& data);
+    void updateMapData(const Poco::DynamicAny& data);
 
-    void movePlayer(const Poco::DynamicStruct& data);
-    void moveMe(const Poco::DynamicStruct& data);
-    void addMapItem(const Poco::DynamicStruct& data);
-    void addPlayer(const Poco::DynamicStruct& data);
-    void deleteMapItem(const Poco::DynamicStruct& data);
-    void deleteMonster(const Poco::DynamicStruct& data);
-    void deletePlayer(const Poco::DynamicStruct& data);
+    void movePlayer(const Poco::DynamicAny& data);
+    void moveMe(const Poco::DynamicAny& data);
+    void addMapItem(const Poco::DynamicAny& data);
+    void addPlayer(const Poco::DynamicAny& data);
+    void deleteMapItem(const Poco::DynamicAny& data);
+    void deleteMonster(const Poco::DynamicAny& data);
+    void deletePlayer(const Poco::DynamicAny& data);
 
     unsigned long getIDs(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
@@ -54,18 +54,18 @@ private:
     void moveCamera(unsigned long x, unsigned long y);
     void setCamera(unsigned long x, unsigned long y);
 
-    void parsePlayerData(const Poco::DynamicStruct& data);
-    void parseMapPositionsData(const Poco::DynamicStruct& data);
+    void parsePlayerData(const Poco::DynamicAny& data);
+    void parseMapPositionsData(const Poco::DynamicAny& data);
 
-    void moveMonster(const Poco::DynamicStruct& data);
-    void moveNpc(const Poco::DynamicStruct& data);
-    void addMap(const Poco::DynamicStruct& data);
-    void addMapData(const Poco::DynamicStruct& data);
+    void moveMonster(const Poco::DynamicAny& data);
+    void moveNpc(const Poco::DynamicAny& data);
+    void addMap(const Poco::DynamicAny& data);
+    void addMapData(const Poco::DynamicAny& data);
     void addMapData(const sf::Texture& texture, unsigned long x, unsigned long y);
-    void addTile(const Poco::DynamicStruct& data);
-    void addChest(const Poco::DynamicStruct& data);
-    void addMonster(const Poco::DynamicStruct& data);
-    void addNpc(const Poco::DynamicStruct& data);
+    void addTile(const Poco::DynamicAny& data);
+    void addChest(const Poco::DynamicAny& data);
+    void addMonster(const Poco::DynamicAny& data);
+    void addNpc(const Poco::DynamicAny& data);
 
     unsigned long getChestID(sf::Vector2f coords);
     unsigned long getItemID(sf::Vector2f coords);

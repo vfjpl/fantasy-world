@@ -16,81 +16,81 @@ void Map::setPlayerLooktype(const std::string& looktype)
     player_looktype = looktype;
 }
 
-void Map::initData(const Poco::DynamicStruct& data)
+void Map::initData(const Poco::DynamicAny& data)
 {
-    parsePlayerData(data["player"].extract<Poco::DynamicStruct>());
+    parsePlayerData(data["player"]);
     loadMapData(data);
 }
 
-void Map::loadMapData(const Poco::DynamicStruct& data)
+void Map::loadMapData(const Poco::DynamicAny& data)
 {
     clear();
-    parseMapPositionsData(data["map_positions"].extract<Poco::DynamicStruct>());
+    parseMapPositionsData(data["map_positions"]);
 
-    if(data.contains("map_data"))
+    if(true)
     {
         const auto& map_data = data["map_data"];
         for(sf::Uint8 i = 0; i < map_data.size(); ++i)
-            addMapData(map_data[i].extract<Poco::DynamicStruct>());
+            addMapData(map_data[i]);
     }
     else
     {
-        addMap(data["map"].extract<Poco::DynamicStruct>());
+        addMap(data["map"]);
     }
 
     const auto& tiles = data["tiles"];
     for(sf::Uint8 i = 0; i < tiles.size(); ++i)
-        addTile(tiles[i].extract<Poco::DynamicStruct>());
+        addTile(tiles[i]);
 
     const auto& chests = data["chests"];
     for(sf::Uint8 i = 0; i < chests.size(); ++i)
-        addChest(chests[i].extract<Poco::DynamicStruct>());
+        addChest(chests[i]);
 
-    if(data.contains("map_items"))
+    if(true)
     {
         const auto& map_items = data["map_items"];
         for(sf::Uint8 i = 0; i < map_items.size(); ++i)
-            addMapItem(map_items[i].extract<Poco::DynamicStruct>());
+            addMapItem(map_items[i]);
     }
 
     const auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-        addMonster(monsters[i].extract<Poco::DynamicStruct>());
+        addMonster(monsters[i]);
 
     const auto& npcs = data["npcs"];
     for(sf::Uint8 i = 0; i < npcs.size(); ++i)
-        addNpc(npcs[i].extract<Poco::DynamicStruct>());
+        addNpc(npcs[i]);
 
     const auto& players = data["players"];
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-        addPlayer(players[i].extract<Poco::DynamicStruct>());
+        addPlayer(players[i]);
 }
 
-void Map::updateMapData(const Poco::DynamicStruct& data)
+void Map::updateMapData(const Poco::DynamicAny& data)
 {
     for(const auto& i: data)
     {
-        switch(str2int(i.first))
+        switch(str2int(i))
         {
         case char2int("moves"):
         {
-            const auto& monsters = i.second;
+            const auto& monsters = i;
             for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-                moveMonster(monsters[i].extract<Poco::DynamicStruct>());
+                moveMonster(monsters[i]);
             break;
         }
         case char2int("npc_moves"):
         {
-            const auto& npcs = i.second;
+            const auto& npcs = i;
             for(sf::Uint8 i = 0; i < npcs.size(); ++i)
-                moveNpc(npcs[i].extract<Poco::DynamicStruct>());
+                moveNpc(npcs[i]);
             break;
         }
         case char2int("respawns"):
         {
-            const auto& monsters = i.second;
+            const auto& monsters = i;
             for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-                addMonster(monsters[i].extract<Poco::DynamicStruct>());
+                addMonster(monsters[i]);
             break;
         }
         case char2int("damages"):
@@ -107,21 +107,21 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
         }
         default:
         {
-            std::cout << i.first << '\n';
+            std::cout << i.toString() << '\n';
             break;
         }
         }//end switch
     }//end for
 }
 
-void Map::movePlayer(const Poco::DynamicStruct& data)
+void Map::movePlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["player"];
     players[id].move(data["x"], data["y"]);
     players[id].set_dir(data["dir"]);
 }
 
-void Map::moveMe(const Poco::DynamicStruct& data)
+void Map::moveMe(const Poco::DynamicAny& data)
 {
     unsigned long x = data["x"];
     unsigned long y = data["y"];
@@ -130,14 +130,14 @@ void Map::moveMe(const Poco::DynamicStruct& data)
     players[player_id].set_dir(data["dir"]);
 }
 
-void Map::addMapItem(const Poco::DynamicStruct& data)
+void Map::addMapItem(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     map_items[id].setTexture(ResourceManager::getTexture(data["item_id"], Graphic::ITEM));
     map_items[id].set_position(data["x"], data["y"]);
 }
 
-void Map::addPlayer(const Poco::DynamicStruct& data)
+void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     unsigned long x = data["x"];
@@ -146,19 +146,19 @@ void Map::addPlayer(const Poco::DynamicStruct& data)
     players[id].set_position(x + 1, y + 1);//server bug
 }
 
-void Map::deleteMapItem(const Poco::DynamicStruct& data)
+void Map::deleteMapItem(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     map_items.erase(id);
 }
 
-void Map::deleteMonster(const Poco::DynamicStruct& data)
+void Map::deleteMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     monsters.erase(id);
 }
 
-void Map::deletePlayer(const Poco::DynamicStruct& data)
+void Map::deletePlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players.erase(id);
@@ -215,12 +215,12 @@ void Map::setCamera(unsigned long x, unsigned long y)
     current_camera = desired_camera;
 }
 
-void Map::parsePlayerData(const Poco::DynamicStruct& data)
+void Map::parsePlayerData(const Poco::DynamicAny& data)
 {
     player_id = data["id"];
 }
 
-void Map::parseMapPositionsData(const Poco::DynamicStruct& data)
+void Map::parseMapPositionsData(const Poco::DynamicAny& data)
 {
     unsigned long x = data["PLAYER_X"];
     unsigned long y = data["PLAYER_Y"];
@@ -229,26 +229,26 @@ void Map::parseMapPositionsData(const Poco::DynamicStruct& data)
     players[player_id].set_position(x, y);
 }
 
-void Map::moveMonster(const Poco::DynamicStruct& data)
+void Map::moveMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["monster"];
     monsters[id].move(data["x"], data["y"]);
     monsters[id].set_dir(data["dir"]);
 }
 
-void Map::moveNpc(const Poco::DynamicStruct& data)
+void Map::moveNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["npc"];
     npcs[id].move(data["x"], data["y"]);
     npcs[id].set_dir(data["dir"]);
 }
 
-void Map::addMap(const Poco::DynamicStruct& data)
+void Map::addMap(const Poco::DynamicAny& data)
 {
     map_data.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP));
 }
 
-void Map::addMapData(const Poco::DynamicStruct& data)
+void Map::addMapData(const Poco::DynamicAny& data)
 {
     addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA),
                data["x"], data["y"]);
@@ -261,7 +261,7 @@ void Map::addMapData(const sf::Texture& texture, unsigned long x, unsigned long 
     map_data.back().setPosition(texture_size.x * x, texture_size.y * y);
 }
 
-void Map::addTile(const Poco::DynamicStruct& data)
+void Map::addTile(const Poco::DynamicAny& data)
 {
     if(data["type"] == 2)
     {
@@ -270,7 +270,7 @@ void Map::addTile(const Poco::DynamicStruct& data)
     }
 }
 
-void Map::addChest(const Poco::DynamicStruct& data)
+void Map::addChest(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     if(data["open"])
@@ -280,7 +280,7 @@ void Map::addChest(const Poco::DynamicStruct& data)
     chests[id].set_position(data["x"], data["y"]);
 }
 
-void Map::addMonster(const Poco::DynamicStruct& data)
+void Map::addMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER),
@@ -288,7 +288,7 @@ void Map::addMonster(const Poco::DynamicStruct& data)
     monsters[id].set_position(data["x"], data["y"]);
 }
 
-void Map::addNpc(const Poco::DynamicStruct& data)
+void Map::addNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::NPC));
