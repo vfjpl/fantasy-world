@@ -15,11 +15,11 @@ class Map
     //168
     sf::View camera;
     //48
-    std::map<int, Chest> chests;
-    std::map<int, Item> map_items;
-    std::map<int, Monster> monsters;
-    std::map<int, Npc> npcs;
-    std::map<int, Player> players;
+    std::map<unsigned long, Chest> chests;
+    std::map<unsigned long, Item> map_items;
+    std::map<unsigned long, Monster> monsters;
+    std::map<unsigned long, Npc> npcs;
+    std::map<unsigned long, Player> players;
     //32
     std::string player_looktype;
     //24
@@ -29,8 +29,7 @@ class Map
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
     sf::Mutex mutex;
-    //4
-    int player_id;
+    unsigned long player_id;
 
 public:
     void setDefaultCamera(const sf::View& view);
@@ -48,12 +47,12 @@ public:
     void deleteMonster(const Poco::DynamicStruct& data);
     void deletePlayer(const Poco::DynamicStruct& data);
 
-    int getIDs(sf::RenderWindow& window, sf::Vector2i point);
+    unsigned long getIDs(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
 
 private:
-    void moveCamera(int x, int y);
-    void setCamera(int x, int y);
+    void moveCamera(unsigned long x, unsigned long y);
+    void setCamera(unsigned long x, unsigned long y);
 
     void parsePlayerData(const Poco::DynamicStruct& data);
     void parseMapPositionsData(const Poco::DynamicStruct& data);
@@ -62,17 +61,17 @@ private:
     void moveNpc(const Poco::DynamicStruct& data);
     void addMap(const Poco::DynamicStruct& data);
     void addMapData(const Poco::DynamicStruct& data);
-    void addMapData(const sf::Texture& texture, int x, int y);
+    void addMapData(const sf::Texture& texture, unsigned long x, unsigned long y);
     void addTile(const Poco::DynamicStruct& data);
     void addChest(const Poco::DynamicStruct& data);
     void addMonster(const Poco::DynamicStruct& data);
     void addNpc(const Poco::DynamicStruct& data);
 
-    int getChestID(sf::Vector2f coords);
-    int getItemID(sf::Vector2f coords);
-    int getMonsterID(sf::Vector2f coords);
-    int getNpcID(sf::Vector2f coords);
-    int getPlayerID(sf::Vector2f coords);
+    unsigned long getChestID(sf::Vector2f coords);
+    unsigned long getItemID(sf::Vector2f coords);
+    unsigned long getMonsterID(sf::Vector2f coords);
+    unsigned long getNpcID(sf::Vector2f coords);
+    unsigned long getPlayerID(sf::Vector2f coords);
 
     void clear();
 };

@@ -19,9 +19,9 @@ class Player
 
 public:
     void setTexture(const sf::Texture& texture);
-    void set_dir(int dir);
-    void move(int x, int y);
-    void set_position(int x, int y);
+    void set_dir(unsigned long dir);
+    void move(unsigned long x, unsigned long y);
+    void set_position(unsigned long x, unsigned long y);
 
     bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);

@@ -21,18 +21,18 @@ class EventHandler
 {
     //80
     std::deque<Event> events;
-    //4
-    int target{};
+    //8
+    unsigned long target;
     //1
-    std::array<sf::Uint8, EVENT_COUNT> table{};
+    std::array<sf::Uint8, EVENT_COUNT> table;
 
 public:
     Event getEvent();
-    int getTargetID();
+    unsigned long getTargetID();
 
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
-    void mousePress(int id);
+    void mousePress(unsigned long id);
 
     void stopMonsterAttackEvent();
 
@@ -40,7 +40,6 @@ private:
     void startEvent(Event code);
     void stopEvent(Event code);
     void addDelay(Event code);
-    void attackMonster(int id);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED

@@ -11,20 +11,21 @@ void Player::setTexture(const sf::Texture& texture)
     sprite.setTextureRect(rect);
 }
 
-void Player::set_dir(int dir)
+void Player::set_dir(unsigned long dir)
 {
-    rect.left = ((++steps)%frames) * rect.width;
+    ++steps;
+    rect.left = (steps%frames) * rect.width;
     rect.top = (dir%4) * rect.height;
     sprite.setTextureRect(rect);
 }
 
-void Player::move(int x, int y)
+void Player::move(unsigned long x, unsigned long y)
 {
     desired_px.x = (32 * x) - 32;
     desired_px.y = (32 * y) - 48;
 }
 
-void Player::set_position(int x, int y)
+void Player::set_position(unsigned long x, unsigned long y)
 {
     move(x, y);
     current_px = desired_px;

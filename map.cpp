@@ -116,15 +116,15 @@ void Map::updateMapData(const Poco::DynamicStruct& data)
 
 void Map::movePlayer(const Poco::DynamicStruct& data)
 {
-    int id = data["player"];
+    unsigned long id = data["player"];
     players[id].move(data["x"], data["y"]);
     players[id].set_dir(data["dir"]);
 }
 
 void Map::moveMe(const Poco::DynamicStruct& data)
 {
-    int x = data["x"];
-    int y = data["y"];
+    unsigned long x = data["x"];
+    unsigned long y = data["y"];
     moveCamera(x, y);
     players[player_id].move(x, y);
     players[player_id].set_dir(data["dir"]);
@@ -132,49 +132,49 @@ void Map::moveMe(const Poco::DynamicStruct& data)
 
 void Map::addMapItem(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     map_items[id].setTexture(ResourceManager::getTexture(data["item_id"], Graphic::ITEM));
     map_items[id].set_position(data["x"], data["y"]);
 }
 
 void Map::addPlayer(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
-    int x = data["x"];
-    int y = data["y"];
+    unsigned long id = data["id"];
+    unsigned long x = data["x"];
+    unsigned long y = data["y"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
     players[id].set_position(x + 1, y + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     map_items.erase(id);
 }
 
 void Map::deleteMonster(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     monsters.erase(id);
 }
 
 void Map::deletePlayer(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     players.erase(id);
 }
 
-int Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
+unsigned long Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
 
-    int chestID = getChestID(coords);
-    int itemID = getItemID(coords);
-    int monsterID = getMonsterID(coords);
-    int npcID = getNpcID(coords);
-    int playerID = getPlayerID(coords);
+    unsigned long chestID = getChestID(coords);
+    unsigned long itemID = getItemID(coords);
+    unsigned long monsterID = getMonsterID(coords);
+    unsigned long npcID = getNpcID(coords);
+    unsigned long playerID = getPlayerID(coords);
 
-    return monsterID;
+    return 0;
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -203,13 +203,13 @@ void Map::draw(sf::RenderWindow& window)
 
 // private
 
-void Map::moveCamera(int x, int y)
+void Map::moveCamera(unsigned long x, unsigned long y)
 {
     desired_camera.x = (32 * x) - 16;
     desired_camera.y = (32 * y);
 }
 
-void Map::setCamera(int x, int y)
+void Map::setCamera(unsigned long x, unsigned long y)
 {
     moveCamera(x, y);
     current_camera = desired_camera;
@@ -222,8 +222,8 @@ void Map::parsePlayerData(const Poco::DynamicStruct& data)
 
 void Map::parseMapPositionsData(const Poco::DynamicStruct& data)
 {
-    int x = data["PLAYER_X"];
-    int y = data["PLAYER_Y"];
+    unsigned long x = data["PLAYER_X"];
+    unsigned long y = data["PLAYER_Y"];
     setCamera(x, y);
     players[player_id].setTexture(ResourceManager::getTexture(player_looktype, Graphic::DIRECT));
     players[player_id].set_position(x, y);
@@ -231,14 +231,14 @@ void Map::parseMapPositionsData(const Poco::DynamicStruct& data)
 
 void Map::moveMonster(const Poco::DynamicStruct& data)
 {
-    int id = data["monster"];
+    unsigned long id = data["monster"];
     monsters[id].move(data["x"], data["y"]);
     monsters[id].set_dir(data["dir"]);
 }
 
 void Map::moveNpc(const Poco::DynamicStruct& data)
 {
-    int id = data["npc"];
+    unsigned long id = data["npc"];
     npcs[id].move(data["x"], data["y"]);
     npcs[id].set_dir(data["dir"]);
 }
@@ -254,7 +254,7 @@ void Map::addMapData(const Poco::DynamicStruct& data)
                data["x"], data["y"]);
 }
 
-void Map::addMapData(const sf::Texture& texture, int x, int y)
+void Map::addMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
 {
     sf::Vector2u texture_size = texture.getSize();
     map_data.emplace_back(texture);
@@ -272,7 +272,7 @@ void Map::addTile(const Poco::DynamicStruct& data)
 
 void Map::addChest(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     if(data["open"])
         chests[id].setTexture(ResourceManager::getTexture(data["type"], Graphic::CHEST_OPEN));
     else
@@ -282,7 +282,7 @@ void Map::addChest(const Poco::DynamicStruct& data)
 
 void Map::addMonster(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER),
                             data["width"], data["height"]);
     monsters[id].set_position(data["x"], data["y"]);
@@ -290,12 +290,12 @@ void Map::addMonster(const Poco::DynamicStruct& data)
 
 void Map::addNpc(const Poco::DynamicStruct& data)
 {
-    int id = data["id"];
+    unsigned long id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::NPC));
     npcs[id].set_position(data["x"], data["y"]);
 }
 
-int Map::getChestID(sf::Vector2f coords)
+unsigned long Map::getChestID(sf::Vector2f coords)
 {
     for(auto &i: chests)
         if(i.second.contains(coords))
@@ -303,7 +303,7 @@ int Map::getChestID(sf::Vector2f coords)
     return 0;
 }
 
-int Map::getItemID(sf::Vector2f coords)
+unsigned long Map::getItemID(sf::Vector2f coords)
 {
     for(auto &i: map_items)
         if(i.second.contains(coords))
@@ -311,7 +311,7 @@ int Map::getItemID(sf::Vector2f coords)
     return 0;
 }
 
-int Map::getMonsterID(sf::Vector2f coords)
+unsigned long Map::getMonsterID(sf::Vector2f coords)
 {
     for(auto &i: monsters)
         if(i.second.contains(coords))
@@ -319,7 +319,7 @@ int Map::getMonsterID(sf::Vector2f coords)
     return 0;
 }
 
-int Map::getNpcID(sf::Vector2f coords)
+unsigned long Map::getNpcID(sf::Vector2f coords)
 {
     for(auto &i: npcs)
         if(i.second.contains(coords))
@@ -327,7 +327,7 @@ int Map::getNpcID(sf::Vector2f coords)
     return 0;
 }
 
-int Map::getPlayerID(sf::Vector2f coords)
+unsigned long Map::getPlayerID(sf::Vector2f coords)
 {
     for(auto &i: players)
         if(i.second.contains(coords))

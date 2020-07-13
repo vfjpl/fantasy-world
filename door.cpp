@@ -4,7 +4,7 @@ Door::Door(const sf::Texture& texture):
     sprite(texture) {}
 
 
-void Door::set_position(int x, int y)
+void Door::set_position(unsigned long x, unsigned long y)
 {
     sprite.setPosition((32 * x) - 32, (32 * y) - 32);
 }

@@ -149,7 +149,7 @@ Poco::DynamicAny Network::receive()
     return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.end()));
 }
 
-void Network::attackMonster(int target_id)
+void Network::attackMonster(unsigned long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("monster", target_id);
@@ -164,17 +164,17 @@ void Network::message(const char* message)
     send(data, 4);
 }
 
-void Network::move(int dir)
+void Network::move(unsigned long dir)
 {
     Poco::DynamicStruct data;
     data.insert("dir", dir);
     send(data, 5);
 }
 
-void Network::shortcut(int number)
+void Network::shortcut(unsigned long slot)
 {
     Poco::DynamicStruct data;
-    data.insert("slot", number);
+    data.insert("slot", slot);
     data.insert("type", "shortcut");
     send(data, 9);
 }
@@ -186,7 +186,7 @@ void Network::takeLoot()
     send(data, 18);
 }
 
-void Network::attackPlayer(int target_id)
+void Network::attackPlayer(unsigned long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("target", target_id);
@@ -194,19 +194,19 @@ void Network::attackPlayer(int target_id)
     send(data, 1042);
 }
 
-void Network::spell(int number)
+void Network::spell(unsigned long spell_id)
 {
     Poco::DynamicStruct data;
-    data.insert("spell", number);
+    data.insert("spell", spell_id);
     data.insert("type", 0);
     data.insert("fight_type", 0);
     send(data, "spell");
 }
 
-void Network::spell(int number, int target_id)
+void Network::spell_monster(unsigned long spell_id, unsigned long target_id)
 {
     Poco::DynamicStruct data;
-    data.insert("spell", number);
+    data.insert("spell", spell_id);
     data.insert("target", target_id);
     data.insert("fight_type", "monster");
     send(data, "spell");
@@ -214,7 +214,7 @@ void Network::spell(int number, int target_id)
 
 // private
 
-void Network::send(const Poco::DynamicStruct& data, int code)
+void Network::send(const Poco::DynamicStruct& data, unsigned long code)
 {
     Poco::DynamicStruct json;
     json.insert("code", code);

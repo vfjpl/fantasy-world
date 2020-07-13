@@ -11,7 +11,7 @@ class Door
 
 public:
     Door(const sf::Texture& texture);
-    void set_position(int x, int y);
+    void set_position(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
 };
 

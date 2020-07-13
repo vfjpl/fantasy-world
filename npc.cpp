@@ -11,20 +11,21 @@ void Npc::setTexture(const sf::Texture& texture)
     sprite.setTextureRect(rect);
 }
 
-void Npc::set_dir(int dir)
+void Npc::set_dir(unsigned long dir)
 {
-    rect.left = ((++steps)%frames) * rect.width;
+    ++steps;
+    rect.left = (steps%frames) * rect.width;
     rect.top = (dir%4) * rect.height;
     sprite.setTextureRect(rect);
 }
 
-void Npc::move(int x, int y)
+void Npc::move(unsigned long x, unsigned long y)
 {
     desired_px.x = (32 * x) - 32;
     desired_px.y = (32 * y) - 48;
 }
 
-void Npc::set_position(int x, int y)
+void Npc::set_position(unsigned long x, unsigned long y)
 {
     move(x, y);
     current_px = desired_px;

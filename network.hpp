@@ -37,17 +37,17 @@ public:
     Poco::DynamicAny receiveInit();
     Poco::DynamicAny receive();
 
-    void attackMonster(int target_id);
+    void attackMonster(unsigned long target_id);
     void message(const char* message);
-    void move(int dir);
-    void shortcut(int number);
+    void move(unsigned long dir);
+    void shortcut(unsigned long slot);
     void takeLoot();
-    void attackPlayer(int target_id);
-    void spell(int number);
-    void spell(int number, int target_id);
+    void attackPlayer(unsigned long target_id);
+    void spell(unsigned long spell_id);
+    void spell_monster(unsigned long spell_id, unsigned long target_id);
 
 private:
-    void send(const Poco::DynamicStruct& data, int code);
+    void send(const Poco::DynamicStruct& data, unsigned long code);
     void send(const Poco::DynamicStruct& data, const char* code);
     void send(const std::string& json);
 };

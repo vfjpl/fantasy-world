@@ -18,7 +18,7 @@ Event EventHandler::getEvent()
     return NONE;
 }
 
-int EventHandler::getTargetID()
+unsigned long EventHandler::getTargetID()
 {
     return target;
 }
@@ -65,10 +65,9 @@ void EventHandler::keyRelease(sf::Keyboard::Key code)
     }//end switch
 }
 
-void EventHandler::mousePress(int id)
+void EventHandler::mousePress(unsigned long id)
 {
-    if(id)
-        attackMonster(id);
+
 }
 
 void EventHandler::stopMonsterAttackEvent()
@@ -107,23 +106,4 @@ void EventHandler::addDelay(Event code)
     default:
         break;
     }//end switch
-}
-
-void EventHandler::attackMonster(int id)
-{
-    if(target == id)
-    {
-        stopEvent(ATTACK_MONSTER);
-        target = 0;
-    }
-    else if(target != 0)
-    {
-        target = id;
-        table[ATTACK_MONSTER] = 0;
-    }
-    else
-    {
-        target = id;
-        startEvent(ATTACK_MONSTER);
-    }
 }
