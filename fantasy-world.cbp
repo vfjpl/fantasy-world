@@ -32,13 +32,14 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Linker>
-			<Add library="PocoNetSSL" />
-			<Add library="PocoNet" />
-			<Add library="PocoFoundation" />
+			<Add library="tgui" />
 			<Add library="sfml-network" />
 			<Add library="sfml-graphics" />
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />
+			<Add library="PocoNetSSL" />
+			<Add library="PocoNet" />
+			<Add library="PocoFoundation" />
 		</Linker>
 		<Unit filename="chest.cpp" />
 		<Unit filename="chest.hpp" />
@@ -67,10 +68,6 @@
 		<Unit filename="player.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
