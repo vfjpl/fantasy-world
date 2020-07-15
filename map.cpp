@@ -4,7 +4,7 @@
 #include <SFML/System/Lock.hpp>
 #include <iostream>
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/map.js
+//view-source:http://alkatria.pl/templates/client/default/js/map.js
 
 void Map::setDefaultCamera(const sf::View& view)
 {
@@ -16,17 +16,15 @@ void Map::setPlayerLooktype(const std::string& looktype)
     player_looktype = looktype;
 }
 
-void Map::initData(const Poco::DynamicAny& data)
+void Map::initMapData(const Poco::DynamicAny& data)
 {
     parsePlayerData(data["player"]);
+    parseMapPositionsData(data["map_positions"]);
     loadMapData(data);
 }
 
 void Map::loadMapData(const Poco::DynamicAny& data)
 {
-    clear();
-    parseMapPositionsData(data["map_positions"]);
-
     if(true)
     {
         const auto& map_data = data["map_data"];
@@ -46,12 +44,9 @@ void Map::loadMapData(const Poco::DynamicAny& data)
     for(sf::Uint8 i = 0; i < chests.size(); ++i)
         addChest(chests[i]);
 
-    if(true)
-    {
-        const auto& map_items = data["map_items"];
-        for(sf::Uint8 i = 0; i < map_items.size(); ++i)
-            addMapItem(map_items[i]);
-    }
+    const auto& map_items = data["map_items"];
+    for(sf::Uint8 i = 0; i < map_items.size(); ++i)
+        addMapItem(map_items[i]);
 
     const auto& monsters = data["monsters"];
     for(sf::Uint8 i = 0; i < monsters.size(); ++i)
@@ -121,15 +116,6 @@ void Map::movePlayer(const Poco::DynamicAny& data)
     players[id].set_dir(data["dir"]);
 }
 
-void Map::moveMe(const Poco::DynamicAny& data)
-{
-    unsigned long x = data["x"];
-    unsigned long y = data["y"];
-    moveCamera(x, y);
-    players[player_id].move(x, y);
-    players[player_id].set_dir(data["dir"]);
-}
-
 void Map::addMapItem(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
@@ -140,10 +126,8 @@ void Map::addMapItem(const Poco::DynamicAny& data)
 void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
-    unsigned long x = data["x"];
-    unsigned long y = data["y"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].set_position(x + 1, y + 1);//server bug
+    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicAny& data)
@@ -164,7 +148,7 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-unsigned long Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
+void Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
 
@@ -173,8 +157,6 @@ unsigned long Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
     unsigned long monsterID = getMonsterID(coords);
     unsigned long npcID = getNpcID(coords);
     unsigned long playerID = getPlayerID(coords);
-
-    return 0;
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -250,8 +232,7 @@ void Map::addMap(const Poco::DynamicAny& data)
 
 void Map::addMapData(const Poco::DynamicAny& data)
 {
-    addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA),
-               data["x"], data["y"]);
+    addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA), data["x"], data["y"]);
 }
 
 void Map::addMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
@@ -273,18 +254,14 @@ void Map::addTile(const Poco::DynamicAny& data)
 void Map::addChest(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
-    if(data["open"])
-        chests[id].setTexture(ResourceManager::getTexture(data["type"], Graphic::CHEST_OPEN));
-    else
-        chests[id].setTexture(ResourceManager::getTexture(data["type"], Graphic::CHEST));
+    chests[id].setTexture(ResourceManager::getTexture(data["type"], data["open"] ? Graphic::CHEST_OPEN : Graphic::CHEST));
     chests[id].set_position(data["x"], data["y"]);
 }
 
 void Map::addMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
-    monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER),
-                            data["width"], data["height"]);
+    monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER), data["width"], data["height"]);
     monsters[id].set_position(data["x"], data["y"]);
 }
 

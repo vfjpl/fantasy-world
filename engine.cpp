@@ -3,13 +3,13 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
-//view-source:http://fantasy-world.pl/templates/client/default/js/game.js
+//view-source:http://alkatria.pl/templates/client/default/js/game.js
 
 namespace
 {
-int var2int(const Poco::DynamicAny& var)
+unsigned long var2int(const Poco::DynamicAny& var)
 {
-    if(var.isInteger())
+    if(var.isNumeric())
         return var;
     return str2int(var);
 }
@@ -17,11 +17,7 @@ int var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(false);
-    network.login1_credentials("", "");
-    network.login3_selectHero(network.login2_getListOfIDs()[0]);
-    map.setPlayerLooktype(network.login4_getLookType());
-    network.login5_sendInit(window.getSize());
+
 }
 
 bool Engine::run_game()
@@ -83,8 +79,6 @@ void Engine::process_input()
         }
         case sf::Event::MouseButtonPressed:
         {
-            map.getIDs(window, sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            eventHandler.mousePress(0);
             break;
         }
         default:
@@ -97,46 +91,7 @@ void Engine::process_input()
 
 void Engine::game_logic()
 {
-    for(Event code = eventHandler.getEvent(); code != NONE; code = eventHandler.getEvent())
-    {
-        switch(code)
-        {
-        case MOVE_LEFT:
-        {
-            network.move(1);
-            break;
-        }
-        case MOVE_RIGHT:
-        {
-            network.move(2);
-            break;
-        }
-        case MOVE_UP:
-        {
-            network.move(3);
-            break;
-        }
-        case MOVE_DOWN:
-        {
-            network.move(4);
-            break;
-        }
-        case ATTACK_MONSTER:
-        {
-            network.attackMonster(eventHandler.getTargetID());
-            break;
-        }
-        case ATTACK_PLAYER:
-        {
-            network.attackPlayer(eventHandler.getTargetID());
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }//end switch
-    }//end for
+
 }
 
 void Engine::draw_frame()
@@ -160,22 +115,22 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 10://other player movement
     {
-        map.movePlayer(networkData.extract<Poco::DynamicStruct>());
+        map.movePlayer(networkData);
         break;
     }
     case 54://remove monster
     {
-        map.deleteMonster(networkData.extract<Poco::DynamicStruct>());
+        map.deleteMonster(networkData);
         break;
     }
     case 55://update map data
     {
-        map.updateMapData(networkData["data"].extract<Poco::DynamicStruct>());
+        map.updateMapData(networkData["data"]);
         break;
     }
     case 71://other player join
     {
-        map.addPlayer(networkData.extract<Poco::DynamicStruct>());
+        map.addPlayer(networkData);
         break;
     }
     case 99://message from server
@@ -183,14 +138,13 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         std::cout << networkData["message"].toString() << '\n';
         break;
     }
-    case 100://init data
+    case 100://init map data
     {
-        map.initData(networkData["data"].extract<Poco::DynamicStruct>());
+        map.initMapData(networkData["data"]);
         break;
     }
     case 101://my movement
     {
-        map.moveMe(networkData.extract<Poco::DynamicStruct>());
         break;
     }
     case 102://my back movement
@@ -199,12 +153,12 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 877://remove map item
     {
-        map.deleteMapItem(networkData.extract<Poco::DynamicStruct>());
+        map.deleteMapItem(networkData);
         break;
     }
     case 878://new map item
     {
-        map.addMapItem(networkData["item"].extract<Poco::DynamicStruct>());
+        map.addMapItem(networkData["item"]);
         break;
     }
     case 1030://my health
@@ -213,7 +167,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 1051://other player left
     {
-        map.deletePlayer(networkData["player"].extract<Poco::DynamicStruct>());
+        map.deletePlayer(networkData["player"]);
         break;
     }
     case 1504://other player yell
@@ -222,12 +176,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
-        eventHandler.stopMonsterAttackEvent();
         break;
     }
     case char2int("teleport"):
     {
-        map.loadMapData(networkData["data"].extract<Poco::DynamicStruct>());
+        map.loadMapData(networkData["data"]);
         break;
     }
     case char2int("load_game"):

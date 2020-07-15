@@ -7,7 +7,7 @@
 #include "monster.hpp"
 #include "npc.hpp"
 #include "player.hpp"
-#include <Poco/DynamicStruct.h>
+#include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
 class Map
@@ -35,19 +35,18 @@ public:
     void setDefaultCamera(const sf::View& view);
     void setPlayerLooktype(const std::string& looktype);
 
-    void initData(const Poco::DynamicAny& data);
+    void initMapData(const Poco::DynamicAny& data);
     void loadMapData(const Poco::DynamicAny& data);
     void updateMapData(const Poco::DynamicAny& data);
 
     void movePlayer(const Poco::DynamicAny& data);
-    void moveMe(const Poco::DynamicAny& data);
     void addMapItem(const Poco::DynamicAny& data);
     void addPlayer(const Poco::DynamicAny& data);
     void deleteMapItem(const Poco::DynamicAny& data);
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
-    unsigned long getIDs(sf::RenderWindow& window, sf::Vector2i point);
+    void getIDs(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
 
 private:

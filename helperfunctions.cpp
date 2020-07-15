@@ -12,10 +12,10 @@ sf::Vector2i clamp(sf::Vector2i val)
     return sf::Vector2i(clamp(val.x), clamp(val.y));
 }
 
-int str2int(const std::string& str)
+unsigned long str2int(const std::string& str)
 {
-    int res = 0;
+    unsigned long res = 0;
     for(sf::Uint8 i = 0; i < str.size(); ++i)
-        res -= str[i];
+        res += str[i];
     return res;
 }

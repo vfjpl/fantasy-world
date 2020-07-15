@@ -1,7 +1,7 @@
 #include "engine.hpp"
 #include <SFML/System/Thread.hpp>
 
-//view-source:http://fantasy-world.pl/game
+//view-source:http://alkatria.pl/game
 
 int main()
 {
@@ -12,7 +12,6 @@ int main()
     });
 
     thread.launch();
-    engine.setup();
 
     while(engine.run_game());
 

@@ -3,13 +3,14 @@
 
 int clamp(int val);
 sf::Vector2i clamp(sf::Vector2i val);
-int str2int(const std::string& str);
 
-constexpr int char2int(const char* str)
+unsigned long str2int(const std::string& str);
+
+constexpr unsigned long char2int(const char* str)
 {
-    int res = 0;
+    unsigned long res = 0;
     for(sf::Uint8 i = 0; str[i] != '\0'; ++i)
-        res -= str[i];
+        res += str[i];
     return res;
 }
 
