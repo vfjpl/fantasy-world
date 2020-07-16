@@ -3,7 +3,7 @@
 #include <SFML/Window/Event.hpp>
 #include <iostream>
 
-//view-source:http://alkatria.pl/templates/client/default/js/game.js
+// view-source:http://alkatria.pl/templates/client/default/js/game.js
 
 namespace
 {
@@ -52,6 +52,7 @@ void Engine::setup_window(bool fullscreen)
         window.create(mode, "Fantasy World", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
+    window.setFramerateLimit(60);
     map.setDefaultCamera(window.getDefaultView());
 }
 

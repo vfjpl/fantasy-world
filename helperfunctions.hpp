@@ -9,8 +9,8 @@ unsigned long str2int(const std::string& str);
 constexpr unsigned long char2int(const char* str)
 {
     unsigned long res = 0;
-    for(sf::Uint8 i = 0; str[i] != '\0'; ++i)
-        res += str[i];
+    for(; *str != '\0'; ++str)
+        res += *str;
     return res;
 }
 

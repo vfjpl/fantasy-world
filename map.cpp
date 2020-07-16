@@ -1,10 +1,11 @@
 #include "map.hpp"
 #include "resourcemanager.hpp"
 #include "helperfunctions.hpp"
+#include <Poco/DynamicStruct.h>
 #include <SFML/System/Lock.hpp>
 #include <iostream>
 
-//view-source:http://alkatria.pl/templates/client/default/js/map.js
+// view-source:http://alkatria.pl/templates/client/default/js/map.js
 
 void Map::setDefaultCamera(const sf::View& view)
 {
@@ -63,29 +64,26 @@ void Map::loadMapData(const Poco::DynamicAny& data)
 
 void Map::updateMapData(const Poco::DynamicAny& data)
 {
-    for(const auto& i: data)
+    for(const auto& i: data.extract<Poco::DynamicStruct>())
     {
-        switch(str2int(i))
+        switch(str2int(i.first))
         {
         case char2int("moves"):
         {
-            const auto& monsters = i;
-            for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-                moveMonster(monsters[i]);
+            for(const auto& monster: i.second)
+                moveMonster(monster);
             break;
         }
         case char2int("npc_moves"):
         {
-            const auto& npcs = i;
-            for(sf::Uint8 i = 0; i < npcs.size(); ++i)
-                moveNpc(npcs[i]);
+            for(const auto& npc: i.second)
+                moveNpc(npc);
             break;
         }
         case char2int("respawns"):
         {
-            const auto& monsters = i;
-            for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-                addMonster(monsters[i]);
+            for(const auto& monster: i.second)
+                addMonster(monster);
             break;
         }
         case char2int("damages"):
@@ -102,7 +100,7 @@ void Map::updateMapData(const Poco::DynamicAny& data)
         }
         default:
         {
-            std::cout << i.toString() << '\n';
+            std::cout << i.first << '\n';
             break;
         }
         }//end switch
@@ -206,9 +204,9 @@ void Map::parseMapPositionsData(const Poco::DynamicAny& data)
 {
     unsigned long x = data["PLAYER_X"];
     unsigned long y = data["PLAYER_Y"];
-    setCamera(x, y);
     players[player_id].setTexture(ResourceManager::getTexture(player_looktype, Graphic::DIRECT));
     players[player_id].set_position(x, y);
+    setCamera(x, y);
 }
 
 void Map::moveMonster(const Poco::DynamicAny& data)

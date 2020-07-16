@@ -65,15 +65,9 @@ void EventHandler::keyRelease(sf::Keyboard::Key code)
     }//end switch
 }
 
-void EventHandler::mousePress(unsigned long id)
+void EventHandler::mousePress()
 {
 
-}
-
-void EventHandler::stopMonsterAttackEvent()
-{
-    stopEvent(ATTACK_MONSTER);
-    target = 0;
 }
 
 // private
@@ -86,7 +80,6 @@ void EventHandler::startEvent(Event code)
 void EventHandler::stopEvent(Event code)
 {
     events.erase(std::find(events.cbegin(), events.cend(), code));
-    table[code] = 0;
 }
 
 void EventHandler::addDelay(Event code)

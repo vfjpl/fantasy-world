@@ -32,9 +32,7 @@ public:
 
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
-    void mousePress(unsigned long id);
-
-    void stopMonsterAttackEvent();
+    void mousePress();
 
 private:
     void startEvent(Event code);

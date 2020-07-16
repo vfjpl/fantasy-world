@@ -15,7 +15,7 @@ sf::Vector2i clamp(sf::Vector2i val)
 unsigned long str2int(const std::string& str)
 {
     unsigned long res = 0;
-    for(sf::Uint8 i = 0; i < str.size(); ++i)
-        res += str[i];
+    for(auto c: str)
+        res += c;
     return res;
 }
