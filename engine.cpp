@@ -17,8 +17,8 @@ unsigned long var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(false);
-    inteface.loginScreen(&network);
+    setup_window(true);
+    inteface.loginScreen(&network, &map, window.getSize());
 }
 
 bool Engine::run_game()
@@ -53,9 +53,8 @@ void Engine::setup_window(bool fullscreen)
         window.create(mode, "Fantasy World", sf::Style::Close);
     }
     window.setKeyRepeatEnabled(false);
-    window.setFramerateLimit(60);
-    map.setDefaultCamera(window.getDefaultView());
     inteface.setRenderTarget(window);
+    map.setDefaultCamera(window.getDefaultView());
 }
 
 void Engine::process_input()
@@ -103,6 +102,7 @@ void Engine::game_logic()
 
 void Engine::draw_frame()
 {
+    window.clear();
     map.draw(window);
     inteface.draw();
     window.display();

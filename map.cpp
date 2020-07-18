@@ -24,7 +24,18 @@ void Map::firstLoadMapData(const Poco::DynamicAny& data)
 
 void Map::loadMapData(const Poco::DynamicAny& data)
 {
-
+    for(const auto& tile: data["tiles"])
+        addTile(tile);
+    for(const auto& chest: data["chests"])
+        addChest(chest);
+    for(const auto& map_item: data["map_items"])
+        addMapItem(map_item);
+    for(const auto& monster: data["monsters"])
+        addMonster(monster);
+    for(const auto& npc: data["npcs"])
+        addNpc(npc);
+    for(const auto& player: data["players"])
+        addPlayer(player);
 }
 
 void Map::updateMapData(const Poco::DynamicAny& data)
