@@ -17,7 +17,8 @@ unsigned long var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-
+    setup_window(false);
+    inteface.loginScreen(&network);
 }
 
 bool Engine::run_game()
@@ -54,6 +55,7 @@ void Engine::setup_window(bool fullscreen)
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
     map.setDefaultCamera(window.getDefaultView());
+    inteface.setRenderTarget(window);
 }
 
 void Engine::process_input()
@@ -61,6 +63,10 @@ void Engine::process_input()
     sf::Event event;
     while(window.pollEvent(event))
     {
+        //process events only if gui didn't consume them
+        if(inteface.handleEvent(event))
+            continue;
+
         switch(event.type)
         {
         case sf::Event::Closed:
@@ -97,8 +103,8 @@ void Engine::game_logic()
 
 void Engine::draw_frame()
 {
-    window.clear();
     map.draw(window);
+    inteface.draw();
     window.display();
 }
 
@@ -139,9 +145,9 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         std::cout << networkData["message"].toString() << '\n';
         break;
     }
-    case 100://init map data
+    case 100://first load map data
     {
-        map.initMapData(networkData["data"]);
+        map.firstLoadMapData(networkData["data"]);
         break;
     }
     case 101://my movement

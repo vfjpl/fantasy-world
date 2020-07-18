@@ -1,28 +1,6 @@
 #include "eventhandler.hpp"
 #include <algorithm>
 
-Event EventHandler::getEvent()
-{
-    while(table.front() < events.size())
-    {
-        Event code = events[table.front()++];
-        if(!table[code])
-        {
-            addDelay(code);
-            return code;
-        }
-        --table[code];
-    }
-
-    table.front() = 0;
-    return NONE;
-}
-
-unsigned long EventHandler::getTargetID()
-{
-    return target;
-}
-
 void EventHandler::keyPress(sf::Keyboard::Key code)
 {
     switch(code)
@@ -74,29 +52,10 @@ void EventHandler::mousePress()
 
 void EventHandler::startEvent(Event code)
 {
-    events.emplace_front(code);
+    //events.emplace_front(code);
 }
 
 void EventHandler::stopEvent(Event code)
 {
-    events.erase(std::find(events.cbegin(), events.cend(), code));
-}
-
-void EventHandler::addDelay(Event code)
-{
-    switch(code)
-    {
-    case MOVE_LEFT:
-    case MOVE_RIGHT:
-    case MOVE_UP:
-    case MOVE_DOWN:
-        table[code] = 15;
-        break;
-    case ATTACK_MONSTER:
-    case ATTACK_PLAYER:
-        table[code] = 59;
-        break;
-    default:
-        break;
-    }//end switch
+    //events.erase(std::find(events.cbegin(), events.cend(), code));
 }

@@ -17,49 +17,14 @@ void Map::setPlayerLooktype(const std::string& looktype)
     player_looktype = looktype;
 }
 
-void Map::initMapData(const Poco::DynamicAny& data)
+void Map::firstLoadMapData(const Poco::DynamicAny& data)
 {
-    parsePlayerData(data["player"]);
-    parseMapPositionsData(data["map_positions"]);
     loadMapData(data);
 }
 
 void Map::loadMapData(const Poco::DynamicAny& data)
 {
-    if(true)
-    {
-        const auto& map_data = data["map_data"];
-        for(sf::Uint8 i = 0; i < map_data.size(); ++i)
-            addMapData(map_data[i]);
-    }
-    else
-    {
-        addMap(data["map"]);
-    }
 
-    const auto& tiles = data["tiles"];
-    for(sf::Uint8 i = 0; i < tiles.size(); ++i)
-        addTile(tiles[i]);
-
-    const auto& chests = data["chests"];
-    for(sf::Uint8 i = 0; i < chests.size(); ++i)
-        addChest(chests[i]);
-
-    const auto& map_items = data["map_items"];
-    for(sf::Uint8 i = 0; i < map_items.size(); ++i)
-        addMapItem(map_items[i]);
-
-    const auto& monsters = data["monsters"];
-    for(sf::Uint8 i = 0; i < monsters.size(); ++i)
-        addMonster(monsters[i]);
-
-    const auto& npcs = data["npcs"];
-    for(sf::Uint8 i = 0; i < npcs.size(); ++i)
-        addNpc(npcs[i]);
-
-    const auto& players = data["players"];
-    for(sf::Uint8 i = 0; i < players.size(); ++i)
-        addPlayer(players[i]);
 }
 
 void Map::updateMapData(const Poco::DynamicAny& data)
@@ -193,20 +158,6 @@ void Map::setCamera(unsigned long x, unsigned long y)
 {
     moveCamera(x, y);
     current_camera = desired_camera;
-}
-
-void Map::parsePlayerData(const Poco::DynamicAny& data)
-{
-    player_id = data["id"];
-}
-
-void Map::parseMapPositionsData(const Poco::DynamicAny& data)
-{
-    unsigned long x = data["PLAYER_X"];
-    unsigned long y = data["PLAYER_Y"];
-    players[player_id].setTexture(ResourceManager::getTexture(player_looktype, Graphic::DIRECT));
-    players[player_id].set_position(x, y);
-    setCamera(x, y);
 }
 
 void Map::moveMonster(const Poco::DynamicAny& data)
