@@ -56,7 +56,7 @@ std::string getLOOKTYPE(const std::string& body)
 
 Network::Network():
     https("alkatria.pl"),
-    http("54.37.227.73", 9001),
+    http("alkatria.pl", 9001),
     request(Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
     socket(http, request, response) {}

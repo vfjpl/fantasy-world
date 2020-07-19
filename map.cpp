@@ -24,6 +24,8 @@ void Map::firstLoadMapData(const Poco::DynamicAny& data)
 
 void Map::loadMapData(const Poco::DynamicAny& data)
 {
+    for(const auto& map_chunk: data["map_data"])
+        addManyMapData(map_chunk);
     for(const auto& tile: data["tiles"])
         addTile(tile);
     for(const auto& chest: data["chests"])
@@ -34,8 +36,9 @@ void Map::loadMapData(const Poco::DynamicAny& data)
         addMonster(monster);
     for(const auto& npc: data["npcs"])
         addNpc(npc);
-    for(const auto& player: data["players"])
-        addPlayer(player);
+    if(data["players"].size())//poco bug
+        for(const auto& player: data["players"])
+            addPlayer(player);
 }
 
 void Map::updateMapData(const Poco::DynamicAny& data)
@@ -185,17 +188,17 @@ void Map::moveNpc(const Poco::DynamicAny& data)
     npcs[id].set_dir(data["dir"]);
 }
 
-void Map::addMap(const Poco::DynamicAny& data)
+void Map::addSingleMapData(const Poco::DynamicAny& data)
 {
     map_data.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP));
 }
 
-void Map::addMapData(const Poco::DynamicAny& data)
+void Map::addManyMapData(const Poco::DynamicAny& data)
 {
-    addMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA), data["x"], data["y"]);
+    addManyMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA), data["x"], data["y"]);
 }
 
-void Map::addMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
+void Map::addManyMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
 {
     sf::Vector2u texture_size = texture.getSize();
     map_data.emplace_back(texture);
