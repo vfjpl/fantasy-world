@@ -3,6 +3,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include <deque>
+#include <array>
 
 enum Event
 {
@@ -20,8 +21,12 @@ class EventHandler
 {
     //80
     std::deque<Event> events;
+    //1
+    std::array<sf::Uint8, EVENT_COUNT> table;
 
 public:
+    Event pollEvent();
+
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
     void mousePress();

@@ -17,7 +17,7 @@ unsigned long var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(true);
+    setup_window(false);
     inteface.loginScreen(&network, &map, window.getSize());
 }
 
@@ -97,7 +97,36 @@ void Engine::process_input()
 
 void Engine::game_logic()
 {
-
+    for(;;)
+    {
+        switch(eventHandler.pollEvent())
+        {
+        case NONE:
+        {
+            return;
+        }
+        case MOVE_LEFT:
+        {
+            break;
+        }
+        case MOVE_RIGHT:
+        {
+            break;
+        }
+        case MOVE_UP:
+        {
+            break;
+        }
+        case MOVE_DOWN:
+        {
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }//end switch
+    }//end for
 }
 
 void Engine::draw_frame()

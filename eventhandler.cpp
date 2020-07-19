@@ -1,6 +1,15 @@
 #include "eventhandler.hpp"
 #include <algorithm>
 
+Event EventHandler::pollEvent()
+{
+    while(table.front() < events.size())
+        return events[table.front()++];
+
+    table.front() = 0;
+    return NONE;
+}
+
 void EventHandler::keyPress(sf::Keyboard::Key code)
 {
     switch(code)
@@ -52,10 +61,11 @@ void EventHandler::mousePress()
 
 void EventHandler::startEvent(Event code)
 {
-    //events.emplace_front(code);
+    events.emplace_front(code);
 }
 
 void EventHandler::stopEvent(Event code)
 {
-    //events.erase(std::find(events.cbegin(), events.cend(), code));
+    if(!events.empty())
+        events.erase(std::find(events.cbegin(), events.cend(), code));
 }
