@@ -34,6 +34,7 @@ public:
 private:
     void startEvent(Event code);
     void stopEvent(Event code);
+    void resetTable(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED

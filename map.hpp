@@ -20,20 +20,17 @@ class Map
     std::map<unsigned long, Monster> monsters;
     std::map<unsigned long, Npc> npcs;
     std::map<unsigned long, Player> players;
-    //32
-    std::string player_looktype;
     //24
     std::vector<sf::Sprite> map_data;
     std::vector<Door> doors;
     //8
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
+    sf::Vector2i position;
     sf::Mutex mutex;
-    unsigned long player_id;
 
 public:
     void setDefaultCamera(const sf::View& view);
-    void setPlayerLooktype(const std::string& looktype);
 
     void firstLoadMapData(const Poco::DynamicAny& data);
     void loadMapData(const Poco::DynamicAny& data);
@@ -46,6 +43,7 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
+    void moveCameraDir(unsigned long dir);
     void getIDs(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
 

@@ -4,9 +4,21 @@
 Event EventHandler::pollEvent()
 {
     while(table.front() < events.size())
-        return events[table.front()++];
+    {
+        Event code = events[table.front()];
+        ++table.front();
+        if(table[code])
+        {
+            --table[code];
+        }
+        else
+        {
+            resetTable(code);
+            return code;
+        }
+    }
 
-    table.front() = 0;
+    resetTable(NONE);
     return NONE;
 }
 
@@ -68,4 +80,26 @@ void EventHandler::stopEvent(Event code)
 {
     if(!events.empty())
         events.erase(std::find(events.cbegin(), events.cend(), code));
+}
+
+void EventHandler::resetTable(Event code)
+{
+    switch(code)
+    {
+    case NONE:
+        table.front() = 0;
+        break;
+    case MOVE_LEFT:
+    case MOVE_RIGHT:
+    case MOVE_UP:
+    case MOVE_DOWN:
+        table[code] = 15;
+        break;
+    case ATTACK_MONSTER:
+    case ATTACK_PLAYER:
+        table[code] = 59;
+        break;
+    default:
+        break;
+    }//end switch
 }

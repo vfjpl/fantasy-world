@@ -12,11 +12,6 @@ void Map::setDefaultCamera(const sf::View& view)
     camera = view;
 }
 
-void Map::setPlayerLooktype(const std::string& looktype)
-{
-    player_looktype = looktype;
-}
-
 void Map::firstLoadMapData(const Poco::DynamicAny& data)
 {
     loadMapData(data);
@@ -123,6 +118,25 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players.erase(id);
+}
+
+void Map::moveCameraDir(unsigned long dir)
+{
+    switch(dir%4)
+    {
+    case 0:
+        moveCamera(position.x, ++position.y);
+        break;
+    case 1:
+        moveCamera(--position.x, position.y);
+        break;
+    case 2:
+        moveCamera(++position.x, position.y);
+        break;
+    case 3:
+        moveCamera(position.x, --position.y);
+        break;
+    }
 }
 
 void Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)

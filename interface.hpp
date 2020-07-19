@@ -3,7 +3,6 @@
 
 #include <TGUI/Gui.hpp>
 #include "network.hpp"
-#include "map.hpp"
 
 class Interface
 {
@@ -12,14 +11,14 @@ class Interface
 
 public:
     void setRenderTarget(sf::RenderWindow& window);
-    void loginScreen(Network* network, Map* map, sf::Vector2u windowSize);
+    void loginScreen(Network* network, sf::Vector2u windowSize);
 
     bool handleEvent(const sf::Event& event);
     void draw();
 
 private:
-    void selectHeroScreen(Network* network, Map* map, sf::Vector2u windowSize);
-    void gameScreen(Network* network, Map* map, sf::Vector2u windowSize);
+    void selectHeroScreen(Network* network, sf::Vector2u windowSize);
+    void gameScreen(Network* network, sf::Vector2u windowSize);
 };
 
 #endif // INTERFACE_HPP_INCLUDED
