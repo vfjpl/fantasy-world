@@ -19,10 +19,10 @@ bool isLoginSucessfull(const Poco::DynamicAny& data)
 std::vector<std::string> getIDs(const std::string& body)
 {
     std::vector<std::string> IDs;
-    for(size_t start_pos = body.find("value");;)
+    for(unsigned long start_pos = body.find("value");;)
     {
         start_pos += 7;
-        size_t end_pos = body.find('"', start_pos);
+        unsigned long end_pos = body.find('"', start_pos);
         IDs.emplace_back(body.substr(start_pos, end_pos - start_pos));
         start_pos = body.find("value", end_pos + 1);
         if(start_pos == std::string::npos)
@@ -33,7 +33,7 @@ std::vector<std::string> getIDs(const std::string& body)
 std::string cookiesToString(const Poco::Net::NameValueCollection& collection)
 {
     std::string cookies;
-    for(auto& i: collection)
+    for(const auto& i: collection)
     {
         cookies.append(i.first);
         cookies.push_back('=');
@@ -44,12 +44,12 @@ std::string cookiesToString(const Poco::Net::NameValueCollection& collection)
 }
 std::string getTOKEN(const std::string& body)
 {
-    size_t pos = body.find("token") + 9;
+    unsigned long pos = body.find("token") + 9;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
 std::string getLOOKTYPE(const std::string& body)
 {
-    size_t pos = body.find("url") + 5;
+    unsigned long pos = body.find("url") + 5;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
 }
@@ -203,7 +203,7 @@ void Network::spell(unsigned long spell_id)
     send(data, "spell");
 }
 
-void Network::spell_monster(unsigned long spell_id, unsigned long target_id)
+void Network::spellMonster(unsigned long spell_id, unsigned long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("spell", spell_id);

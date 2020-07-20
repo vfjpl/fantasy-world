@@ -86,6 +86,7 @@ void Engine::process_input()
         }
         case sf::Event::MouseButtonPressed:
         {
+            eventHandler.mousePress();
             break;
         }
         default:
@@ -108,26 +109,18 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
-            network.move(1);
-            map.moveCameraDir(1);
             break;
         }
         case MOVE_RIGHT:
         {
-            network.move(2);
-            map.moveCameraDir(2);
             break;
         }
         case MOVE_UP:
         {
-            network.move(3);
-            map.moveCameraDir(3);
             break;
         }
         case MOVE_DOWN:
         {
-            network.move(4);
-            map.moveCameraDir(4);
             break;
         }
         default:

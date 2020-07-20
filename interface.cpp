@@ -51,7 +51,7 @@ void Interface::selectHeroScreen(Network* network, sf::Vector2u windowSize)
 {
     auto listBox = tgui::ListBox::create();
     listBox->setPosition("50% - width/2", "50% - height");
-    for(const auto& i: network->login2_getListOfIDs())
+    for(auto& i: network->login2_getListOfIDs())
         listBox->addItem(i);
 
     auto button = tgui::Button::create("Select");

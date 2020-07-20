@@ -44,7 +44,7 @@ public:
     void takeLoot();
     void attackPlayer(unsigned long target_id);
     void spell(unsigned long spell_id);
-    void spell_monster(unsigned long spell_id, unsigned long target_id);
+    void spellMonster(unsigned long spell_id, unsigned long target_id);
 
 private:
     void send(const Poco::DynamicStruct& data, unsigned long code);

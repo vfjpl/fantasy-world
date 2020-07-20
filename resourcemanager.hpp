@@ -21,9 +21,13 @@ class ResourceManager
 {
     //48
     static std::map<std::string, sf::Texture> storage;
+    //32
+    static std::string player_looktype;
 
 public:
     static const sf::Texture& getTexture(const std::string& name, Graphic type);
+    static const std::string& getPlayerLooktype();
+    static void setPlayerLooktype(const std::string& looktype);
 
 private:
     static const sf::Texture& getTexture(const std::string& name);

@@ -19,6 +19,9 @@ void Map::firstLoadMapData(const Poco::DynamicAny& data)
 
 void Map::loadMapData(const Poco::DynamicAny& data)
 {
+    //todo better
+
+    obstacles = data["obstacles"];
     for(const auto& map_chunk: data["map_data"])
         addManyMapData(map_chunk);
     for(const auto& tile: data["tiles"])
@@ -99,7 +102,7 @@ void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
+    players[id].set_position(data["x"], data["y"]);
 }
 
 void Map::deleteMapItem(const Poco::DynamicAny& data)
@@ -120,26 +123,7 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-void Map::moveCameraDir(unsigned long dir)
-{
-    switch(dir%4)
-    {
-    case 0:
-        moveCamera(position.x, ++position.y);
-        break;
-    case 1:
-        moveCamera(--position.x, position.y);
-        break;
-    case 2:
-        moveCamera(++position.x, position.y);
-        break;
-    case 3:
-        moveCamera(position.x, --position.y);
-        break;
-    }
-}
-
-void Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
+void Map::pointToObjects(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
 
@@ -148,6 +132,13 @@ void Map::getIDs(sf::RenderWindow& window, sf::Vector2i point)
     unsigned long monsterID = getMonsterID(coords);
     unsigned long npcID = getNpcID(coords);
     unsigned long playerID = getPlayerID(coords);
+
+    //todo return
+}
+
+bool Map::isMovementPosible(unsigned long dir)
+{
+    return false;
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -158,7 +149,7 @@ void Map::draw(sf::RenderWindow& window)
     camera.setCenter(current_camera.x, current_camera.y);
     window.setView(camera);
 
-    for(auto& i: map_data)
+    for(auto& i: map_backgrounds)
         window.draw(i);
     for(auto& i: doors)
         i.draw(window);
@@ -204,7 +195,7 @@ void Map::moveNpc(const Poco::DynamicAny& data)
 
 void Map::addSingleMapData(const Poco::DynamicAny& data)
 {
-    map_data.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP));
+    map_backgrounds.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP));
 }
 
 void Map::addManyMapData(const Poco::DynamicAny& data)
@@ -215,12 +206,13 @@ void Map::addManyMapData(const Poco::DynamicAny& data)
 void Map::addManyMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
 {
     sf::Vector2u texture_size = texture.getSize();
-    map_data.emplace_back(texture);
-    map_data.back().setPosition(texture_size.x * x, texture_size.y * y);
+    map_backgrounds.emplace_back(texture);
+    map_backgrounds.back().setPosition(texture_size.x * x, texture_size.y * y);
 }
 
 void Map::addTile(const Poco::DynamicAny& data)
 {
+    //todo better
     if(data["type"] == 2)
     {
         doors.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
@@ -293,7 +285,7 @@ void Map::clear()
 {
     sf::Lock lock(mutex);
 
-    map_data.clear();
+    map_backgrounds.clear();
     doors.clear();
     chests.clear();
     map_items.clear();

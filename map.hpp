@@ -21,12 +21,12 @@ class Map
     std::map<unsigned long, Npc> npcs;
     std::map<unsigned long, Player> players;
     //24
-    std::vector<sf::Sprite> map_data;
+    std::vector<sf::Sprite> map_backgrounds;
     std::vector<Door> doors;
     //8
+    Poco::DynamicAny obstacles;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
-    sf::Vector2i position;
     sf::Mutex mutex;
 
 public:
@@ -43,8 +43,8 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
-    void moveCameraDir(unsigned long dir);
-    void getIDs(sf::RenderWindow& window, sf::Vector2i point);
+    void pointToObjects(sf::RenderWindow& window, sf::Vector2i point);
+    bool isMovementPosible(unsigned long dir);
     void draw(sf::RenderWindow& window);
 
 private:
