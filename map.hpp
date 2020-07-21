@@ -25,6 +25,7 @@ class Map
     std::vector<Door> doors;
     //8
     Poco::DynamicAny obstacles;
+    sf::Vector2i current_position;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
     sf::Mutex mutex;
@@ -43,19 +44,21 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
-    void pointToObjects(sf::RenderWindow& window, sf::Vector2i point);
-    bool isMovementPosible(unsigned long dir);
+    void pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
+    bool moveDirIfPossible(unsigned long dir);
     void draw(sf::RenderWindow& window);
 
 private:
     void moveCamera(unsigned long x, unsigned long y);
     void setCamera(unsigned long x, unsigned long y);
+    bool moveToIfPossible(unsigned long x, unsigned long y);
+    void setPosition(unsigned long x, unsigned long y);
 
     void moveMonster(const Poco::DynamicAny& data);
     void moveNpc(const Poco::DynamicAny& data);
     void addSingleMapData(const Poco::DynamicAny& data);
-    void addManyMapData(const Poco::DynamicAny& data);
-    void addManyMapData(const sf::Texture& texture, unsigned long x, unsigned long y);
+    void addMultiMapData(const Poco::DynamicAny& data);
+    void addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned long y);
     void addTile(const Poco::DynamicAny& data);
     void addChest(const Poco::DynamicAny& data);
     void addMonster(const Poco::DynamicAny& data);

@@ -12,14 +12,14 @@ std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
-    case Graphic::MAP_DATA:
+    case Graphic::MAP_MULTI:
         return "/assets/" + name + ".png";
-    case Graphic::MAP:
+    case Graphic::MAP_SINGLE:
         return "/assets/maps/files/" + name + ".png";
-    case Graphic::CHEST_OPEN:
-        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case Graphic::CHEST:
         return "/templates/client/default/images/tiles/chest_" + name + ".png";
+    case Graphic::CHEST_OPEN:
+        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case Graphic::ITEM:
         return "/templates/client/default/images/items/" + name + ".png";
     case Graphic::MONSTER:

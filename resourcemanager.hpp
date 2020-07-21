@@ -6,10 +6,10 @@
 
 enum class Graphic
 {
-    MAP_DATA,
-    MAP,
-    CHEST_OPEN,
+    MAP_MULTI,
+    MAP_SINGLE,
     CHEST,
+    CHEST_OPEN,
     ITEM,
     MONSTER,
     NPC,

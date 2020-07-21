@@ -23,7 +23,7 @@ void Map::loadMapData(const Poco::DynamicAny& data)
 
     obstacles = data["obstacles"];
     for(const auto& map_chunk: data["map_data"])
-        addManyMapData(map_chunk);
+        addMultiMapData(map_chunk);
     for(const auto& tile: data["tiles"])
         addTile(tile);
     for(const auto& chest: data["chests"])
@@ -123,7 +123,7 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-void Map::pointToObjects(sf::RenderWindow& window, sf::Vector2i point)
+void Map::pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
 
@@ -136,9 +136,25 @@ void Map::pointToObjects(sf::RenderWindow& window, sf::Vector2i point)
     //todo return
 }
 
-bool Map::isMovementPosible(unsigned long dir)
+bool Map::moveDirIfPossible(unsigned long dir)
 {
-    return false;
+    sf::Vector2i posible_position = current_position;
+    switch(dir%4)
+    {
+    case 0:
+        ++posible_position.y;
+        break;
+    case 1:
+        --posible_position.x;
+        break;
+    case 2:
+        ++posible_position.x;
+        break;
+    case 3:
+        --posible_position.y;
+        break;
+    }
+    return moveToIfPossible(posible_position.x, posible_position.y);
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -179,6 +195,24 @@ void Map::setCamera(unsigned long x, unsigned long y)
     current_camera = desired_camera;
 }
 
+bool Map::moveToIfPossible(unsigned long x, unsigned long y)
+{
+    if(obstacles[x][y])
+        return false;
+
+    moveCamera(x, y);
+    current_position.x = x;
+    current_position.y = y;
+    return true;
+}
+
+void Map::setPosition(unsigned long x, unsigned long y)
+{
+    setCamera(x, y);
+    current_position.x = x;
+    current_position.y = y;
+}
+
 void Map::moveMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["monster"];
@@ -195,15 +229,15 @@ void Map::moveNpc(const Poco::DynamicAny& data)
 
 void Map::addSingleMapData(const Poco::DynamicAny& data)
 {
-    map_backgrounds.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP));
+    map_backgrounds.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP_SINGLE));
 }
 
-void Map::addManyMapData(const Poco::DynamicAny& data)
+void Map::addMultiMapData(const Poco::DynamicAny& data)
 {
-    addManyMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_DATA), data["x"], data["y"]);
+    addMultiMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI), data["x"], data["y"]);
 }
 
-void Map::addManyMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
+void Map::addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
 {
     sf::Vector2u texture_size = texture.getSize();
     map_backgrounds.emplace_back(texture);

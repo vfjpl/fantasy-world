@@ -109,18 +109,26 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
+            if(map.moveDirIfPossible(1))
+                network.move(1);
             break;
         }
         case MOVE_RIGHT:
         {
+            if(map.moveDirIfPossible(1))
+                network.move(1);
             break;
         }
         case MOVE_UP:
         {
+            if(map.moveDirIfPossible(1))
+                network.move(1);
             break;
         }
         case MOVE_DOWN:
         {
+            if(map.moveDirIfPossible(1))
+                network.move(1);
             break;
         }
         default:
