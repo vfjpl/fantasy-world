@@ -7,6 +7,29 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
+namespace
+{
+sf::Vector2i dirToPos(sf::Vector2i pos, unsigned long dir)
+{
+    switch(dir%4)
+    {
+    case 0:
+        ++pos.y;
+        break;
+    case 1:
+        --pos.x;
+        break;
+    case 2:
+        ++pos.x;
+        break;
+    case 3:
+        --pos.y;
+        break;
+    }
+    return pos;
+}
+}
+
 void Map::setDefaultCamera(const sf::View& view)
 {
     camera = view;
@@ -138,23 +161,8 @@ void Map::pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
 
 bool Map::moveDirIfPossible(unsigned long dir)
 {
-    sf::Vector2i posible_position = current_position;
-    switch(dir%4)
-    {
-    case 0:
-        ++posible_position.y;
-        break;
-    case 1:
-        --posible_position.x;
-        break;
-    case 2:
-        ++posible_position.x;
-        break;
-    case 3:
-        --posible_position.y;
-        break;
-    }
-    return moveToIfPossible(posible_position.x, posible_position.y);
+    sf::Vector2i new_position = dirToPos(current_position, dir);
+    return moveToIfPossible(new_position.x, new_position.y);
 }
 
 void Map::draw(sf::RenderWindow& window)
