@@ -1,7 +1,6 @@
 #ifndef HELPERFUNCTIONS_HPP_INCLUDED
 #define HELPERFUNCTIONS_HPP_INCLUDED
 
-int clamp(int val);
 sf::Vector2i clamp(sf::Vector2i val);
 
 unsigned long str2int(const std::string& str);
