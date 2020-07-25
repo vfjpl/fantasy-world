@@ -53,6 +53,7 @@ private:
     void setCamera(unsigned long x, unsigned long y);
     bool moveToIfPossible(unsigned long x, unsigned long y);
     void setPosition(unsigned long x, unsigned long y);
+    void loadMapPositionsData(const Poco::DynamicAny& data);
 
     void moveMonster(const Poco::DynamicAny& data);
     void moveNpc(const Poco::DynamicAny& data);

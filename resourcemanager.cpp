@@ -4,7 +4,6 @@
 #include <SFML/System/MemoryInputStream.hpp>
 
 std::map<std::string, sf::Texture> ResourceManager::storage;
-std::string ResourceManager::player_looktype;
 
 namespace
 {
@@ -37,16 +36,6 @@ std::string getURI(const std::string& name, Graphic type)
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)
 {
     return getTexture(getURI(name, type));
-}
-
-const std::string& ResourceManager::getPlayerLooktype()
-{
-    return player_looktype;
-}
-
-void ResourceManager::setPlayerLooktype(const std::string& looktype)
-{
-    player_looktype = looktype;
 }
 
 // private

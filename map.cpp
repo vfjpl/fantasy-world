@@ -45,6 +45,8 @@ void Map::loadMapData(const Poco::DynamicAny& data)
     //todo better
 
     obstacles = data["obstacles"];
+    loadMapPositionsData(data["map_positions"]);
+
     for(const auto& map_chunk: data["map_data"])
         addMultiMapData(map_chunk);
     for(const auto& tile: data["tiles"])
@@ -219,6 +221,11 @@ void Map::setPosition(unsigned long x, unsigned long y)
     setCamera(x, y);
     current_position.x = x;
     current_position.y = y;
+}
+
+void Map::loadMapPositionsData(const Poco::DynamicAny& data)
+{
+    setPosition(data["PLAYER_X"], data["PLAYER_Y"]);
 }
 
 void Map::moveMonster(const Poco::DynamicAny& data)
