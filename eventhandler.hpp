@@ -14,6 +14,7 @@ enum Event
     MOVE_DOWN,
     ATTACK_MONSTER,
     ATTACK_PLAYER,
+
     EVENT_COUNT,
 };
 

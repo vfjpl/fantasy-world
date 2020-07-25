@@ -5,8 +5,7 @@ Event EventHandler::pollEvent()
 {
     while(table.front() < events.size())
     {
-        Event code = events[table.front()];
-        ++table.front();
+        Event code = events[table.front()++];
         if(table[code])
         {
             --table[code];
@@ -18,7 +17,7 @@ Event EventHandler::pollEvent()
         }
     }
 
-    resetTable(NONE);
+    table.front() = 0;
     return NONE;
 }
 
@@ -73,6 +72,7 @@ void EventHandler::mousePress()
 
 void EventHandler::startEvent(Event code)
 {
+    table[code] = 0;
     events.emplace_front(code);
 }
 
@@ -87,7 +87,7 @@ void EventHandler::resetTable(Event code)
     switch(code)
     {
     case NONE:
-        table.front() = 0;
+        table[code] = 0;
         break;
     case MOVE_LEFT:
     case MOVE_RIGHT:
