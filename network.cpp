@@ -12,8 +12,8 @@ std::string toString(std::istream& stream)
 }
 bool isLoginSucessfull(const Poco::DynamicAny& data)
 {
-    bool check1 = data["code"] == 200;
-    bool check2 = data["status"] == 200;
+    bool check1 = data["code"] == 200ul;
+    bool check2 = data["status"] == 200ul;
     return check1 && check2;
 }
 std::vector<std::string> getIDs(const std::string& body)
