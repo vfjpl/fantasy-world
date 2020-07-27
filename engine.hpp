@@ -4,6 +4,7 @@
 #include "network.hpp"
 #include "interface.hpp"
 #include "map.hpp"
+#include "localplayer.hpp"
 #include "eventhandler.hpp"
 
 class Engine
@@ -12,8 +13,9 @@ class Engine
     sf::RenderWindow window;
 
     Network network;
-    Interface inteface;
+    Interface interface;
     Map map;
+    LocalPlayer localPlayer;
     EventHandler eventHandler;
 
 public:

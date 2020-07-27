@@ -18,7 +18,7 @@ unsigned long var2int(const Poco::DynamicAny& var)
 void Engine::setup()
 {
     setup_window(false);
-    inteface.loginScreen(&network, window.getSize());
+    interface.loginScreen(&network, &localPlayer, window.getSize());
 }
 
 bool Engine::run_game()
@@ -54,7 +54,7 @@ void Engine::setup_window(bool fullscreen)
     }
     window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
-    inteface.setRenderTarget(window);
+    interface.setRenderTarget(window);
     map.setDefaultCamera(window.getDefaultView());
 }
 
@@ -64,7 +64,7 @@ void Engine::process_input()
     while(window.pollEvent(event))
     {
         //process event only if gui didn't consume it
-        if(inteface.handleEvent(event))
+        if(interface.handleEvent(event))
             continue;
 
         switch(event.type)
@@ -109,26 +109,18 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
-            if(map.moveDirIfPossible(1))
-                network.move(1);
             break;
         }
         case MOVE_RIGHT:
         {
-            if(map.moveDirIfPossible(2))
-                network.move(2);
             break;
         }
         case MOVE_UP:
         {
-            if(map.moveDirIfPossible(3))
-                network.move(3);
             break;
         }
         case MOVE_DOWN:
         {
-            if(map.moveDirIfPossible(4))
-                network.move(4);
             break;
         }
         default:
@@ -143,7 +135,7 @@ void Engine::draw_frame()
 {
     window.clear();
     map.draw(window);
-    inteface.draw();
+    interface.draw();
     window.display();
 }
 

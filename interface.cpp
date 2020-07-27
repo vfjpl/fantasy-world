@@ -9,7 +9,7 @@ void Interface::setRenderTarget(sf::RenderWindow& window)
     gui.setTarget(window);
 }
 
-void Interface::loginScreen(Network* network, sf::Vector2u windowSize)
+void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -26,7 +26,7 @@ void Interface::loginScreen(Network* network, sf::Vector2u windowSize)
         if(network->login1_credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(network, windowSize);
+            selectHeroScreen(network, localPlayer, windowSize);
         }
     });
 
@@ -47,7 +47,7 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(Network* network, sf::Vector2u windowSize)
+void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
     auto listBox = tgui::ListBox::create();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -60,15 +60,15 @@ void Interface::selectHeroScreen(Network* network, sf::Vector2u windowSize)
     {
         network->login3_selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(network, windowSize);
+        gameScreen(network, localPlayer, windowSize);
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(Network* network, sf::Vector2u windowSize)
+void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
-    network->login4_getLookType();
+    localPlayer->looktype = network->login4_getLookType();
     network->login5_sendInit(windowSize);
 }
