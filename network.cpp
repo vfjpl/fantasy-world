@@ -146,7 +146,9 @@ Poco::DynamicAny Network::receive()
     int flags;
     buffer.resize(0, false);
     socket.receiveFrame(buffer, flags);
-    return Poco::DynamicAny::parse(std::string(buffer.begin(), buffer.end()));
+    return Poco::DynamicAny::parse(Poco::UTF8::unescape(
+                                       std::string::const_iterator(buffer.begin()),
+                                       std::string::const_iterator(buffer.end())));
 }
 
 void Network::attackMonster(unsigned long target_id)

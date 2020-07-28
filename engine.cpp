@@ -178,7 +178,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 100://first load map data
     {
-        map.firstLoadMapData(networkData["data"]);
+        map.loadData_100(networkData["data"], localPlayer);
         break;
     }
     case 101://my movement
@@ -218,7 +218,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("teleport"):
     {
-        map.loadMapData(networkData["data"]);
+        map.loadData_teleport(networkData["data"], localPlayer);
         break;
     }
     case char2int("load_game"):

@@ -7,6 +7,7 @@
 #include "monster.hpp"
 #include "npc.hpp"
 #include "player.hpp"
+#include "localplayer.hpp"
 #include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
@@ -25,7 +26,6 @@ class Map
     std::vector<Door> doors;
     //8
     Poco::DynamicAny obstacles;
-    sf::Vector2i current_position;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
     sf::Mutex mutex;
@@ -33,8 +33,8 @@ class Map
 public:
     void setDefaultCamera(const sf::View& view);
 
-    void firstLoadMapData(const Poco::DynamicAny& data);
-    void loadMapData(const Poco::DynamicAny& data);
+    void loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
+    void loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void updateMapData(const Poco::DynamicAny& data);
 
     void movePlayer(const Poco::DynamicAny& data);
@@ -44,16 +44,15 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
-    void pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
-    bool moveDirIfPossible(unsigned long dir);
+    void getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
+    bool isObstacle(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
 
 private:
-    void moveCamera(unsigned long x, unsigned long y);
+    void loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
+    void addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y);
     void setCamera(unsigned long x, unsigned long y);
-    bool moveToIfPossible(unsigned long x, unsigned long y);
-    void setPosition(unsigned long x, unsigned long y);
-    void loadMapPositionsData(const Poco::DynamicAny& data);
+    void moveCamera(unsigned long x, unsigned long y);
 
     void moveMonster(const Poco::DynamicAny& data);
     void moveNpc(const Poco::DynamicAny& data);

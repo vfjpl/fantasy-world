@@ -19,16 +19,16 @@ void Player::set_dir(unsigned long dir)
     sprite.setTextureRect(rect);
 }
 
-void Player::move(unsigned long x, unsigned long y)
-{
-    desired_px.x = (32 * x) - 32;
-    desired_px.y = (32 * y) - 48;
-}
-
 void Player::set_position(unsigned long x, unsigned long y)
 {
     move(x, y);
     current_px = desired_px;
+}
+
+void Player::move(unsigned long x, unsigned long y)
+{
+    desired_px.x = (32 * x) - 32;
+    desired_px.y = (32 * y) - 48;
 }
 
 bool Player::contains(sf::Vector2f coords)

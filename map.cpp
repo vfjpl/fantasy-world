@@ -9,24 +9,9 @@
 
 namespace
 {
-sf::Vector2i dirToPos(sf::Vector2i pos, unsigned long dir)
+unsigned long var2num(const Poco::DynamicAny& var)
 {
-    switch(dir%4)
-    {
-    case 0:
-        ++pos.y;
-        break;
-    case 1:
-        --pos.x;
-        break;
-    case 2:
-        ++pos.x;
-        break;
-    case 3:
-        --pos.y;
-        break;
-    }
-    return pos;
+    return var;
 }
 }
 
@@ -35,17 +20,18 @@ void Map::setDefaultCamera(const sf::View& view)
     camera = view;
 }
 
-void Map::firstLoadMapData(const Poco::DynamicAny& data)
+void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    loadMapData(data);
+    localPlayer.id = data["player"]["id"];
+    loadData_teleport(data, localPlayer);
 }
 
-void Map::loadMapData(const Poco::DynamicAny& data)
+void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
     //todo better
 
     obstacles = data["obstacles"];
-    loadMapPositionsData(data["map_positions"]);
+    loadMapPositionsData(data["map_positions"], localPlayer);
 
     for(const auto& map_chunk: data["map_data"])
         addMultiMapData(map_chunk);
@@ -59,7 +45,7 @@ void Map::loadMapData(const Poco::DynamicAny& data)
         addMonster(monster);
     for(const auto& npc: data["npcs"])
         addNpc(npc);
-    if(data["players"].size())//poco bug
+    if(data["players"].size())
         for(const auto& player: data["players"])
             addPlayer(player);
 }
@@ -148,7 +134,7 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-void Map::pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
+void Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
 
@@ -161,10 +147,9 @@ void Map::pointToObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
     //todo return
 }
 
-bool Map::moveDirIfPossible(unsigned long dir)
+bool Map::isObstacle(unsigned long x, unsigned long y)
 {
-    sf::Vector2i new_position = dirToPos(current_position, dir);
-    return moveToIfPossible(new_position.x, new_position.y);
+    return obstacles[x][y];
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -193,10 +178,17 @@ void Map::draw(sf::RenderWindow& window)
 
 // private
 
-void Map::moveCamera(unsigned long x, unsigned long y)
+void Map::loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    desired_camera.x = (32 * x) - 16;
-    desired_camera.y = (32 * y);
+    addLocalPlayer(localPlayer, data["PLAYER_X"], data["PLAYER_Y"]);
+}
+
+void Map::addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y)
+{
+    setCamera(x, y);
+    players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
+    players[localPlayer.id].set_position(x, y);
+    localPlayer.set_position(x, y);
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)
@@ -205,27 +197,10 @@ void Map::setCamera(unsigned long x, unsigned long y)
     current_camera = desired_camera;
 }
 
-bool Map::moveToIfPossible(unsigned long x, unsigned long y)
+void Map::moveCamera(unsigned long x, unsigned long y)
 {
-    if(obstacles[x][y])
-        return false;
-
-    moveCamera(x, y);
-    current_position.x = x;
-    current_position.y = y;
-    return true;
-}
-
-void Map::setPosition(unsigned long x, unsigned long y)
-{
-    setCamera(x, y);
-    current_position.x = x;
-    current_position.y = y;
-}
-
-void Map::loadMapPositionsData(const Poco::DynamicAny& data)
-{
-    setPosition(data["PLAYER_X"], data["PLAYER_Y"]);
+    desired_camera.x = (32 * x) - 16;
+    desired_camera.y = (32 * y);
 }
 
 void Map::moveMonster(const Poco::DynamicAny& data)

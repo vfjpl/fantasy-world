@@ -20,8 +20,8 @@ class Npc
 public:
     void setTexture(const sf::Texture& texture);
     void set_dir(unsigned long dir);
-    void move(unsigned long x, unsigned long y);
     void set_position(unsigned long x, unsigned long y);
+    void move(unsigned long x, unsigned long y);
 
     bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
