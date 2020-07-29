@@ -152,6 +152,13 @@ bool Map::isObstacle(unsigned long x, unsigned long y)
     return obstacles[x][y];
 }
 
+void Map::moveLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y)
+{
+    moveCamera(x, y);
+    players[localPlayer.id].move(x, y);
+    localPlayer.set_position(x, y);
+}
+
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
@@ -237,7 +244,7 @@ void Map::addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned 
 void Map::addTile(const Poco::DynamicAny& data)
 {
     //todo better
-    if(data["type"] == 2)
+    if(data["type"] == 2ul)
     {
         doors.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
         doors.back().set_position(data["x"], data["y"]);

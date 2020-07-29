@@ -109,18 +109,42 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
+            sf::Vector2i pos = localPlayer.nextPosition(1);
+            if(!map.isObstacle(pos.x, pos.y))
+            {
+                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
+                network.move(1);
+            }
             break;
         }
         case MOVE_RIGHT:
         {
+            sf::Vector2i pos = localPlayer.nextPosition(2);
+            if(!map.isObstacle(pos.x, pos.y))
+            {
+                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
+                network.move(2);
+            }
             break;
         }
         case MOVE_UP:
         {
+            sf::Vector2i pos = localPlayer.nextPosition(3);
+            if(!map.isObstacle(pos.x, pos.y))
+            {
+                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
+                network.move(3);
+            }
             break;
         }
         case MOVE_DOWN:
         {
+            sf::Vector2i pos = localPlayer.nextPosition(4);
+            if(!map.isObstacle(pos.x, pos.y))
+            {
+                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
+                network.move(4);
+            }
             break;
         }
         default:
