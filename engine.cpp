@@ -109,42 +109,22 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
-            sf::Vector2i pos = localPlayer.nextPosition(1);
-            if(!map.isObstacle(pos.x, pos.y))
-            {
-                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
-                network.move(1);
-            }
+            moveLocalPlayer(localPlayer.nextPosition(1), 1);
             break;
         }
         case MOVE_RIGHT:
         {
-            sf::Vector2i pos = localPlayer.nextPosition(2);
-            if(!map.isObstacle(pos.x, pos.y))
-            {
-                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
-                network.move(2);
-            }
+            moveLocalPlayer(localPlayer.nextPosition(2), 2);
             break;
         }
         case MOVE_UP:
         {
-            sf::Vector2i pos = localPlayer.nextPosition(3);
-            if(!map.isObstacle(pos.x, pos.y))
-            {
-                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
-                network.move(3);
-            }
+            moveLocalPlayer(localPlayer.nextPosition(3), 3);
             break;
         }
         case MOVE_DOWN:
         {
-            sf::Vector2i pos = localPlayer.nextPosition(4);
-            if(!map.isObstacle(pos.x, pos.y))
-            {
-                map.moveLocalPlayer(localPlayer, pos.x, pos.y);
-                network.move(4);
-            }
+            moveLocalPlayer(localPlayer.nextPosition(4), 4);
             break;
         }
         default:
@@ -242,6 +222,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("teleport"):
     {
+        map.clear();
         map.loadData_teleport(networkData["data"], localPlayer);
         break;
     }
@@ -256,4 +237,13 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         break;
     }
     }//end switch
+}
+
+void Engine::moveLocalPlayer(sf::Vector2i pos, unsigned long dir)
+{
+    if(map.isObstacle(pos.x - 1, pos.y - 1))
+        return;
+    map.moveLocalPlayer(localPlayer.id, pos.x, pos.y, dir);
+    localPlayer.position = pos;
+    network.move(dir);
 }

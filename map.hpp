@@ -46,8 +46,9 @@ public:
 
     void getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
     bool isObstacle(unsigned long x, unsigned long y);
-    void moveLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y);
+    void moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, unsigned long dir);
     void draw(sf::RenderWindow& window);
+    void clear();
 
 private:
     void loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
@@ -70,8 +71,6 @@ private:
     unsigned long getMonsterID(sf::Vector2f coords);
     unsigned long getNpcID(sf::Vector2f coords);
     unsigned long getPlayerID(sf::Vector2f coords);
-
-    void clear();
 };
 
 #endif // MAP_HPP_INCLUDED

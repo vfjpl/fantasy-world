@@ -7,14 +7,6 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
-namespace
-{
-unsigned long var2num(const Poco::DynamicAny& var)
-{
-    return var;
-}
-}
-
 void Map::setDefaultCamera(const sf::View& view)
 {
     camera = view;
@@ -33,18 +25,28 @@ void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlay
     obstacles = data["obstacles"];
     loadMapPositionsData(data["map_positions"], localPlayer);
 
-    for(const auto& map_chunk: data["map_data"])
-        addMultiMapData(map_chunk);
+    if(data["map"]["type"] == 2ul)
+    {
+        addSingleMapData(data["map"]);
+    }
+    else
+    {
+        for(const auto& map_chunk: data["map_data"])
+            addMultiMapData(map_chunk);
+    }
     for(const auto& tile: data["tiles"])
         addTile(tile);
-    for(const auto& chest: data["chests"])
-        addChest(chest);
+    if(data["chests"].size())
+        for(const auto& chest: data["chests"])
+            addChest(chest);
     for(const auto& map_item: data["map_items"])
         addMapItem(map_item);
-    for(const auto& monster: data["monsters"])
-        addMonster(monster);
-    for(const auto& npc: data["npcs"])
-        addNpc(npc);
+    if(data["monsters"].size())
+        for(const auto& monster: data["monsters"])
+            addMonster(monster);
+    if(data["npcs"].size())
+        for(const auto& npc: data["npcs"])
+            addNpc(npc);
     if(data["players"].size())
         for(const auto& player: data["players"])
             addPlayer(player);
@@ -113,7 +115,7 @@ void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].set_position(data["x"], data["y"]);
+    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicAny& data)
@@ -152,11 +154,11 @@ bool Map::isObstacle(unsigned long x, unsigned long y)
     return obstacles[x][y];
 }
 
-void Map::moveLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y)
+void Map::moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, unsigned long dir)
 {
     moveCamera(x, y);
-    players[localPlayer.id].move(x, y);
-    localPlayer.set_position(x, y);
+    players[id].move(x, y);
+    players[id].set_dir(dir);
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -183,6 +185,19 @@ void Map::draw(sf::RenderWindow& window)
         i.second.draw(window);
 }
 
+void Map::clear()
+{
+    sf::Lock lock(mutex);
+
+    map_backgrounds.clear();
+    doors.clear();
+    chests.clear();
+    map_items.clear();
+    monsters.clear();
+    npcs.clear();
+    players.clear();
+}
+
 // private
 
 void Map::loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
@@ -195,7 +210,8 @@ void Map::addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned lon
     setCamera(x, y);
     players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
     players[localPlayer.id].set_position(x, y);
-    localPlayer.set_position(x, y);
+    localPlayer.position.x = x;
+    localPlayer.position.y = y;
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)
@@ -233,12 +249,10 @@ void Map::addMultiMapData(const Poco::DynamicAny& data)
 {
     addMultiMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI), data["x"], data["y"]);
 }
-
 void Map::addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
 {
-    sf::Vector2u texture_size = texture.getSize();
     map_backgrounds.emplace_back(texture);
-    map_backgrounds.back().setPosition(texture_size.x * x, texture_size.y * y);
+    map_backgrounds.back().setPosition(x * 640, y * 640);
 }
 
 void Map::addTile(const Poco::DynamicAny& data)
@@ -310,17 +324,4 @@ unsigned long Map::getPlayerID(sf::Vector2f coords)
         if(i.second.contains(coords))
             return i.first;
     return 0;
-}
-
-void Map::clear()
-{
-    sf::Lock lock(mutex);
-
-    map_backgrounds.clear();
-    doors.clear();
-    chests.clear();
-    map_items.clear();
-    monsters.clear();
-    npcs.clear();
-    players.clear();
 }

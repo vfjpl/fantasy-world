@@ -14,7 +14,6 @@ public:
     unsigned long id;
 
 public:
-    void set_position(unsigned long x, unsigned long y);
     sf::Vector2i nextPosition(unsigned long dir);
 };
 

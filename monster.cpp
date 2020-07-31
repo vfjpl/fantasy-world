@@ -4,7 +4,9 @@
 
 void Monster::setTexture(const sf::Texture& texture, unsigned long width, unsigned long height)
 {
-    frames = texture.getSize().x/width;
+    sf::Vector2u size = texture.getSize();
+    frames_x = size.x/width;
+    frames_y = size.y/height;
     rect.width = width;
     rect.height = height;
     sprite.setTexture(texture);
@@ -14,8 +16,8 @@ void Monster::setTexture(const sf::Texture& texture, unsigned long width, unsign
 void Monster::set_dir(unsigned long dir)
 {
     ++steps;
-    rect.left = (steps%frames) * rect.width;
-    rect.top = (dir%4) * rect.height;
+    rect.left = (steps%frames_x) * rect.width;
+    rect.top = (dir%frames_y) * rect.height;
     sprite.setTextureRect(rect);
 }
 

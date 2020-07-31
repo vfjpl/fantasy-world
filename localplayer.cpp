@@ -23,12 +23,6 @@ sf::Vector2i dirToNewPos(sf::Vector2i pos, unsigned long dir)
 }
 }
 
-void LocalPlayer::set_position(unsigned long x, unsigned long y)
-{
-    position.x = x;
-    position.y = y;
-}
-
 sf::Vector2i LocalPlayer::nextPosition(unsigned long dir)
 {
     return dirToNewPos(position, dir);

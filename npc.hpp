@@ -15,7 +15,8 @@ class Npc
     sf::Vector2i desired_px;
     //1
     sf::Uint8 steps;
-    sf::Uint8 frames;
+    sf::Uint8 frames_x;
+    sf::Uint8 frames_y;
 
 public:
     void setTexture(const sf::Texture& texture);
