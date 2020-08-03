@@ -34,7 +34,7 @@ public:
     std::string login4_getLookType();
     void login5_sendInit(sf::Vector2u windowSize);
 
-    Poco::DynamicAny receiveInit();
+    Poco::DynamicAny receiveInit(const std::string& token);
     Poco::DynamicAny receive();
 
     void attackMonster(unsigned long target_id);

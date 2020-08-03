@@ -130,7 +130,7 @@ void Network::login5_sendInit(sf::Vector2u windowSize)
     send(json.toString());
 }
 
-Poco::DynamicAny Network::receiveInit()
+Poco::DynamicAny Network::receiveInit(const std::string& token)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/game/init/" + token,

@@ -228,7 +228,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("load_game"):
     {
-        process_network(network.receiveInit());
+        process_network(network.receiveInit(networkData["token"]));
         break;
     }
     default:
