@@ -60,7 +60,6 @@ private:
     void moveNpc(const Poco::DynamicAny& data);
     void addSingleMapData(const Poco::DynamicAny& data);
     void addMultiMapData(const Poco::DynamicAny& data);
-    void addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned long y);
     void addTile(const Poco::DynamicAny& data);
     void addChest(const Poco::DynamicAny& data);
     void addMonster(const Poco::DynamicAny& data);

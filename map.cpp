@@ -247,12 +247,8 @@ void Map::addSingleMapData(const Poco::DynamicAny& data)
 
 void Map::addMultiMapData(const Poco::DynamicAny& data)
 {
-    addMultiMapData(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI), data["x"], data["y"]);
-}
-void Map::addMultiMapData(const sf::Texture& texture, unsigned long x, unsigned long y)
-{
-    map_backgrounds.emplace_back(texture);
-    map_backgrounds.back().setPosition(x * 640, y * 640);
+    map_backgrounds.emplace_back(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI));
+    map_backgrounds.back().setPosition(data["x"] * 640, data["y"] * 640);
 }
 
 void Map::addTile(const Poco::DynamicAny& data)
