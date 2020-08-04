@@ -29,12 +29,12 @@ public:
     Network();
 
     bool login1_credentials(const std::string& login, const std::string& password);
-    std::vector<std::string> login2_getListOfIDs();
+    std::vector<std::string> login2_getHeroesIDs();
     void login3_selectHero(const std::string& hero_id);
-    std::string login4_getLookType();
+    std::string login4_getLooktype();
     void login5_sendInit(sf::Vector2u windowSize);
 
-    Poco::DynamicAny receiveInit(const std::string& token);
+    Poco::DynamicAny receiveInit(const std::string& url_token);
     Poco::DynamicAny receive();
 
     void attackMonster(unsigned long target_id);

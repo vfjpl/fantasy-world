@@ -30,17 +30,17 @@ std::vector<std::string> getIDs(const std::string& body)
     }
     return IDs;
 }
-std::string cookiesToString(const Poco::Net::NameValueCollection& collection)
+std::string cookiesToString(const Poco::Net::NameValueCollection& cookies_collection)
 {
-    std::string cookies;
-    for(const auto& i: collection)
+    std::string str;
+    for(const auto& i: cookies_collection)
     {
-        cookies.append(i.first);
-        cookies.push_back('=');
-        cookies.append(i.second);
-        cookies.push_back(';');
+        str.append(i.first);
+        str.push_back('=');
+        str.append(i.second);
+        str.push_back(';');
     }
-    return cookies;
+    return str;
 }
 std::string getTOKEN(const std::string& body)
 {
@@ -84,7 +84,7 @@ bool Network::login1_credentials(const std::string& login, const std::string& pa
     return true;
 }
 
-std::vector<std::string> Network::login2_getListOfIDs()
+std::vector<std::string> Network::login2_getHeroesIDs()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
@@ -107,14 +107,16 @@ void Network::login3_selectHero(const std::string& hero_id)
     https.receiveResponse(resp);
 }
 
-std::string Network::login4_getLookType()
+std::string Network::login4_getLooktype()
 {
     sf::Http sfhttp("alkatria.pl");
     sf::Http::Request sfrequ("/game");
     sfrequ.setField(Poco::Net::HTTPRequest::COOKIE, cookiesToString(cookies));
     sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
-    token = getTOKEN(sfresp.getBody());
-    return getLOOKTYPE(sfresp.getBody());
+
+    const std::string& body = sfresp.getBody();
+    token = getTOKEN(body);
+    return getLOOKTYPE(body);
 }
 
 void Network::login5_sendInit(sf::Vector2u windowSize)
@@ -130,10 +132,10 @@ void Network::login5_sendInit(sf::Vector2u windowSize)
     send(json.toString());
 }
 
-Poco::DynamicAny Network::receiveInit(const std::string& token)
+Poco::DynamicAny Network::receiveInit(const std::string& url_token)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
-                                "/game/init/" + token,
+                                "/game/init/" + url_token,
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);

@@ -51,7 +51,7 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf:
 {
     auto listBox = tgui::ListBox::create();
     listBox->setPosition("50% - width/2", "50% - height");
-    for(auto& i: network->login2_getListOfIDs())
+    for(auto& i: network->login2_getHeroesIDs())
         listBox->addItem(i);
 
     auto button = tgui::Button::create("Select");
@@ -69,6 +69,6 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf:
 
 void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
-    localPlayer->looktype = network->login4_getLookType();
+    localPlayer->looktype = network->login4_getLooktype();
     network->login5_sendInit(windowSize);
 }
