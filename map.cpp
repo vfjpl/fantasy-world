@@ -151,6 +151,8 @@ void Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
 
 bool Map::isObstacle(unsigned long x, unsigned long y)
 {
+    if(x >= max_x || y >= max_y)
+        return true;
     return obstacles[x][y];
 }
 
@@ -202,6 +204,8 @@ void Map::clear()
 
 void Map::loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
+    max_x = data["MAX_X"];
+    max_y = data["MAX_Y"];
     addLocalPlayer(localPlayer, data["PLAYER_X"], data["PLAYER_Y"]);
 }
 

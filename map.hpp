@@ -25,10 +25,12 @@ class Map
     std::vector<sf::Sprite> map_backgrounds;
     std::vector<Door> doors;
     //8
-    Poco::DynamicAny obstacles;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
+    Poco::DynamicAny obstacles;
     sf::Mutex mutex;
+    unsigned long max_x;
+    unsigned long max_y;
 
 public:
     void setDefaultCamera(const sf::View& view);
