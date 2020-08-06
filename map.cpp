@@ -7,7 +7,7 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
-void Map::setDefaultCamera(const sf::View& view)
+void Map::setup(const sf::View& view)
 {
     camera = view;
 }

@@ -1,12 +1,15 @@
 #include "interface.hpp"
 #include <TGUI/SignalImpl.hpp>
+#include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/ListBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 
-void Interface::setRenderTarget(sf::RenderWindow& window)
+void Interface::setup(sf::RenderWindow& window)
 {
     gui.setTarget(window);
+    chatbox = tgui::ChatBox::create();
+    chatbox->setSize("100%", "50%");
 }
 
 void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
@@ -33,6 +36,11 @@ void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vect
     gui.add(editBoxUsername);
     gui.add(editBoxPassword);
     gui.add(button);
+}
+
+void Interface::chatMessage(const Poco::DynamicAny& data)
+{
+    addChatLine(data["message"]);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -71,4 +79,20 @@ void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vecto
 {
     localPlayer->looktype = network->login4_getLooktype();
     network->login5_sendInit(windowSize);
+
+    auto editbox = tgui::EditBox::create();
+    editbox->setSize("100%", editbox->getSize().y);
+    editbox->setPosition("0%", "100% - height");
+
+    auto chatwindow = tgui::ChildWindow::create();
+    chatwindow->setResizable();
+    chatwindow->add(chatbox);
+    chatwindow->add(editbox);
+
+    gui.add(chatwindow);
+}
+
+void Interface::addChatLine(const std::string& line)
+{
+    chatbox->addLine(line);
 }

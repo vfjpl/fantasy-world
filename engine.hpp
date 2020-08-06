@@ -20,6 +20,7 @@ class Engine
 
 public:
     void setup();
+
     bool run_game();
     bool run_network();
 

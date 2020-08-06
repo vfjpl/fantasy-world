@@ -18,6 +18,8 @@ unsigned long var2int(const Poco::DynamicAny& var)
 void Engine::setup()
 {
     setup_window(false);
+    interface.setup(window);
+    map.setup(window.getDefaultView());
     interface.loginScreen(&network, &localPlayer, window.getSize());
 }
 
@@ -52,10 +54,8 @@ void Engine::setup_window(bool fullscreen)
         mode.height = (mode.height*3)/4;
         window.create(mode, "Fantasy World", sf::Style::Close);
     }
-    window.setFramerateLimit(60);
     window.setKeyRepeatEnabled(false);
-    interface.setRenderTarget(window);
-    map.setDefaultCamera(window.getDefaultView());
+    window.setFramerateLimit(60);
 }
 
 void Engine::process_input()
@@ -149,6 +149,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     {
     case 1://global chat message
     {
+        interface.chatMessage(networkData);
         break;
     }
     case 5://show damage

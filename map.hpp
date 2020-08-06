@@ -33,7 +33,7 @@ class Map
     unsigned long max_y;
 
 public:
-    void setDefaultCamera(const sf::View& view);
+    void setup(const sf::View& view);
 
     void loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
