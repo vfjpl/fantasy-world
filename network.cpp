@@ -16,19 +16,19 @@ bool isLoginSucessfull(const Poco::DynamicAny& data)
     bool check2 = data["status"] == 200ul;
     return check1 && check2;
 }
-std::vector<std::string> getIDs(const std::string& body)
+tgui::ListBox::Ptr createHeroListBox(const std::string& body)
 {
-    std::vector<std::string> IDs;
+    auto listBox = tgui::ListBox::create();
     for(unsigned long start_pos = body.find("value");;)
     {
         start_pos += 7;
         unsigned long end_pos = body.find('"', start_pos);
-        IDs.emplace_back(body.substr(start_pos, end_pos - start_pos));
+        listBox->addItem(body.substr(start_pos, end_pos - start_pos));
         start_pos = body.find("value", end_pos + 1);
         if(start_pos == std::string::npos)
             break;
     }
-    return IDs;
+    return listBox;
 }
 std::string cookiesToString(const Poco::Net::NameValueCollection& cookies_collection)
 {
@@ -62,7 +62,7 @@ Network::Network():
     socket(http, request, response) {}
 
 
-bool Network::login1_credentials(const std::string& login, const std::string& password)
+bool Network::credentials(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/ajax/login",
@@ -84,16 +84,16 @@ bool Network::login1_credentials(const std::string& login, const std::string& pa
     return true;
 }
 
-std::vector<std::string> Network::login2_getHeroesIDs()
+tgui::ListBox::Ptr Network::getHeroesListBox()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return getIDs(toString(https.receiveResponse(resp)));
+    return createHeroListBox(toString(https.receiveResponse(resp)));
 }
 
-void Network::login3_selectHero(const std::string& hero_id)
+void Network::selectHero(const std::string& hero)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
                                 "/game/login",
@@ -101,13 +101,13 @@ void Network::login3_selectHero(const std::string& hero_id)
     Poco::Net::HTTPResponse resp;
     Poco::Net::HTMLForm html;
     requ.setCookies(cookies);
-    html.add("id", hero_id);
+    html.add("id", hero);
     html.prepareSubmit(requ);
     html.write(https.sendRequest(requ));
     https.receiveResponse(resp);
 }
 
-std::string Network::login4_getLooktype()
+std::string Network::startGame(sf::Vector2u windowSize)
 {
     sf::Http sfhttp("alkatria.pl");
     sf::Http::Request sfrequ("/game");
@@ -115,27 +115,14 @@ std::string Network::login4_getLooktype()
     sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
 
     const std::string& body = sfresp.getBody();
-    token = getTOKEN(body);
+    sendInit(getTOKEN(body), windowSize);
     return getLOOKTYPE(body);
 }
 
-void Network::login5_sendInit(sf::Vector2u windowSize)
-{
-    std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(windowSize.x);
-    jsonArray.emplace_back(windowSize.y);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 1);
-    json.insert("window", jsonArray);
-    json.insert("token", token);
-    send(json.toString());
-}
-
-Poco::DynamicAny Network::receiveInit(const std::string& url_token)
+Poco::DynamicAny Network::receiveInit(const std::string& token)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
-                                "/game/init/" + url_token,
+                                "/game/init/" + token,
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
@@ -217,6 +204,19 @@ void Network::spellMonster(unsigned long spell_id, unsigned long target_id)
 }
 
 // private
+
+void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
+{
+    std::vector<Poco::DynamicAny> jsonArray;
+    jsonArray.emplace_back(windowSize.x);
+    jsonArray.emplace_back(windowSize.y);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 1);
+    json.insert("window", jsonArray);
+    json.insert("token", token);
+    send(json.toString());
+}
 
 void Network::send(const Poco::DynamicStruct& data, unsigned long code)
 {

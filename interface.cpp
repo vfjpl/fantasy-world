@@ -2,7 +2,6 @@
 #include <TGUI/SignalImpl.hpp>
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
-#include <TGUI/Widgets/ListBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 
 void Interface::setup(sf::RenderWindow& window)
@@ -26,7 +25,7 @@ void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vect
     button->setPosition("50% - width/2", "50% + height");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        if(network->login1_credentials(editBoxUsername->getText(), editBoxPassword->getText()))
+        if(network->credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
             selectHeroScreen(network, localPlayer, windowSize);
@@ -57,16 +56,14 @@ void Interface::draw()
 
 void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
-    auto listBox = tgui::ListBox::create();
+    auto listBox = network->getHeroesListBox();
     listBox->setPosition("50% - width/2", "50% - height");
-    for(auto& i: network->login2_getHeroesIDs())
-        listBox->addItem(i);
 
     auto button = tgui::Button::create("Select");
     button->setPosition("50% - width/2", "50%");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        network->login3_selectHero(listBox->getSelectedItem());
+        network->selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
         gameScreen(network, localPlayer, windowSize);
     });
@@ -77,8 +74,7 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf:
 
 void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
-    localPlayer->looktype = network->login4_getLooktype();
-    network->login5_sendInit(windowSize);
+    localPlayer->looktype = network->startGame(windowSize);
 
     auto editbox = tgui::EditBox::create();
     editbox->setSize("100%", editbox->getSize().y);
