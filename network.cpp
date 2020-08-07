@@ -161,7 +161,7 @@ void Network::attackMonster(unsigned long target_id)
     send(data, 3);
 }
 
-void Network::message(const char* message)
+void Network::message(const std::string& message)
 {
     Poco::DynamicStruct data;
     data.insert("message", message);

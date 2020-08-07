@@ -40,7 +40,7 @@ void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vect
 
 void Interface::chatMessage(const Poco::DynamicAny& data)
 {
-    addChatLine(data["message"]);
+    addChatLine(data["player"] + data["message"]);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -83,6 +83,11 @@ void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vecto
     auto editbox = tgui::EditBox::create();
     editbox->setSize("100%", editbox->getSize().y);
     editbox->setPosition("0%", "100% - height");
+    editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const std::string& text)
+    {
+        editbox->setText(sf::String());
+        network->message(text);
+    });
 
     auto chatwindow = tgui::ChildWindow::create();
     chatwindow->setResizable();

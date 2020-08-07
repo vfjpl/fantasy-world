@@ -38,7 +38,7 @@ public:
     Poco::DynamicAny receive();
 
     void attackMonster(unsigned long target_id);
-    void message(const char* message);
+    void message(const std::string& message);
     void move(unsigned long dir);
     void shortcut(unsigned long slot);
     void takeLoot();
