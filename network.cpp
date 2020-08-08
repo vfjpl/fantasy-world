@@ -18,7 +18,7 @@ bool isLoginSucessfull(const Poco::DynamicAny& data)
 }
 tgui::ListBox::Ptr createHeroListBox(const std::string& body)
 {
-    auto listBox = tgui::ListBox::create();
+    tgui::ListBox::Ptr listBox = tgui::ListBox::create();
     for(unsigned long start_pos = body.find("value");;)
     {
         start_pos += 7;
@@ -107,7 +107,7 @@ void Network::selectHero(const std::string& hero)
     https.receiveResponse(resp);
 }
 
-std::string Network::startGame(sf::Vector2u windowSize)
+void Network::startGame(LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
     sf::Http sfhttp("alkatria.pl");
     sf::Http::Request sfrequ("/game");
@@ -115,8 +115,8 @@ std::string Network::startGame(sf::Vector2u windowSize)
     sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
 
     const std::string& body = sfresp.getBody();
+    localPlayer->looktype = getLOOKTYPE(body);
     sendInit(getTOKEN(body), windowSize);
-    return getLOOKTYPE(body);
 }
 
 Poco::DynamicAny Network::receiveInit(const std::string& token)

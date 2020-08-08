@@ -7,6 +7,7 @@
 #include <Poco/Net/WebSocket.h>
 #include <Poco/DynamicStruct.h>
 #include <TGUI/Widgets/ListBox.hpp>
+#include "localplayer.hpp"
 
 class Network
 {
@@ -30,7 +31,7 @@ public:
     bool credentials(const std::string& login, const std::string& password);
     tgui::ListBox::Ptr getHeroesListBox();
     void selectHero(const std::string& hero);
-    std::string startGame(sf::Vector2u windowSize);
+    void startGame(LocalPlayer* localPlayer, sf::Vector2u windowSize);
 
     Poco::DynamicAny receiveInit(const std::string& token);
     Poco::DynamicAny receive();

@@ -8,7 +8,6 @@ void Interface::setup(sf::RenderWindow& window)
 {
     gui.setTarget(window);
     chatbox = tgui::ChatBox::create();
-    chatbox->setSize("100%", "50%");
 }
 
 void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
@@ -39,7 +38,7 @@ void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vect
 
 void Interface::chatMessage(const Poco::DynamicAny& data)
 {
-    addChatLine(data["player"] + data["message"]);
+    addChatLine(data["player"] + ": " + data["message"]);
 }
 
 bool Interface::handleEvent(const sf::Event& event)
@@ -74,10 +73,9 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf:
 
 void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
 {
-    localPlayer->looktype = network->startGame(windowSize);
+    network->startGame(localPlayer, windowSize);
 
     auto editbox = tgui::EditBox::create();
-    editbox->setSize("100%", editbox->getSize().y);
     editbox->setPosition("0%", "100% - height");
     editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const std::string& text)
     {

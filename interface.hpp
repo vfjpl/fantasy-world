@@ -4,7 +4,6 @@
 #include <TGUI/Gui.hpp>
 #include <TGUI/Widgets/ChatBox.hpp>
 #include "network.hpp"
-#include "localplayer.hpp"
 
 class Interface
 {
