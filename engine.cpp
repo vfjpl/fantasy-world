@@ -20,6 +20,7 @@ void Engine::setup()
     setup_window(false);
     interface.setup(window);
     map.setup(window.getDefaultView());
+
     interface.loginScreen(&network, &localPlayer, window.getSize());
 }
 
@@ -109,22 +110,27 @@ void Engine::game_logic()
         }
         case MOVE_LEFT:
         {
-            moveLocalPlayer(localPlayer.nextPosition(1), 1);
+            moveLocalPlayer(1);
             break;
         }
         case MOVE_RIGHT:
         {
-            moveLocalPlayer(localPlayer.nextPosition(2), 2);
+            moveLocalPlayer(2);
             break;
         }
         case MOVE_UP:
         {
-            moveLocalPlayer(localPlayer.nextPosition(3), 3);
+            moveLocalPlayer(3);
             break;
         }
         case MOVE_DOWN:
         {
-            moveLocalPlayer(localPlayer.nextPosition(4), 4);
+            moveLocalPlayer(4);
+            break;
+        }
+        case ATTACK_MONSTER:
+        {
+            network.attackMonster(localPlayer.target_id);
             break;
         }
         default:
@@ -240,8 +246,9 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }//end switch
 }
 
-void Engine::moveLocalPlayer(sf::Vector2i pos, unsigned long dir)
+void Engine::moveLocalPlayer(unsigned long dir)
 {
+    sf::Vector2i pos = localPlayer.nextPosition(dir);
     if(map.isObstacle(pos.x - 1, pos.y - 1))
         return;
     map.moveLocalPlayer(localPlayer.id, pos.x, pos.y, dir);

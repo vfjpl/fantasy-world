@@ -11,6 +11,7 @@ public:
     std::string looktype;
     //8
     sf::Vector2i position;
+    unsigned long target_id;
     unsigned long id;
 
 public:

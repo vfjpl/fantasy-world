@@ -32,7 +32,7 @@ private:
     void draw_frame();
     void process_network(const Poco::DynamicAny& networkData);
 
-    void moveLocalPlayer(sf::Vector2i pos, unsigned long dir);
+    void moveLocalPlayer(unsigned long dir);
 };
 
 #endif // ENGINE_HPP_INCLUDED
