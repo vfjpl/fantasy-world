@@ -11,6 +11,15 @@
 #include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
+struct objectsIDs
+{
+    unsigned long chestID;
+    unsigned long itemID;
+    unsigned long monsterID;
+    unsigned long npcID;
+    unsigned long playerID;
+};
+
 class Map
 {
     //168
@@ -46,7 +55,7 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
 
-    void getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
+    struct objectsIDs getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
     bool isObstacle(unsigned long x, unsigned long y);
     void moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, unsigned long dir);
     void draw(sf::RenderWindow& window);

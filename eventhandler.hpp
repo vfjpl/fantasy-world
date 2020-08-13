@@ -30,11 +30,10 @@ public:
 
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
-    void mousePress();
-
-private:
     void startEvent(Event code);
     void stopEvent(Event code);
+
+private:
     void resetTable(Event code);
 };
 

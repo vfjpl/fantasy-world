@@ -63,12 +63,6 @@ void EventHandler::keyRelease(sf::Keyboard::Key code)
     }//end switch
 }
 
-void EventHandler::mousePress()
-{
-
-}
-
-// private
 
 void EventHandler::startEvent(Event code)
 {
@@ -81,6 +75,8 @@ void EventHandler::stopEvent(Event code)
     if(!events.empty())
         events.erase(std::find(events.cbegin(), events.cend(), code));
 }
+
+// private
 
 void EventHandler::resetTable(Event code)
 {

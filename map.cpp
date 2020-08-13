@@ -136,17 +136,10 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-void Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
+struct objectsIDs Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
-
-    unsigned long chestID = getChestID(coords);
-    unsigned long itemID = getItemID(coords);
-    unsigned long monsterID = getMonsterID(coords);
-    unsigned long npcID = getNpcID(coords);
-    unsigned long playerID = getPlayerID(coords);
-
-    //todo return
+    return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords)};
 }
 
 bool Map::isObstacle(unsigned long x, unsigned long y)

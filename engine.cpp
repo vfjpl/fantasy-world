@@ -87,7 +87,7 @@ void Engine::process_input()
         }
         case sf::Event::MouseButtonPressed:
         {
-            eventHandler.mousePress();
+            mousePress(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
             break;
         }
         default:
@@ -225,6 +225,8 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
+        eventHandler.stopEvent(ATTACK_MONSTER);
+        network.takeLoot();
         break;
     }
     case char2int("teleport"):
@@ -254,4 +256,14 @@ void Engine::moveLocalPlayer(unsigned long dir)
     map.moveLocalPlayer(localPlayer.id, pos.x, pos.y, dir);
     localPlayer.position = pos;
     network.move(dir);
+}
+
+void Engine::mousePress(sf::Vector2i point)
+{
+    struct objectsIDs IDs = map.getObjectsIDs(window, point);
+    if(IDs.monsterID)
+    {
+        localPlayer.target_id = IDs.monsterID;
+        eventHandler.startEvent(ATTACK_MONSTER);
+    }
 }

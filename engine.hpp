@@ -33,6 +33,7 @@ private:
     void process_network(const Poco::DynamicAny& networkData);
 
     void moveLocalPlayer(unsigned long dir);
+    void mousePress(sf::Vector2i point);
 };
 
 #endif // ENGINE_HPP_INCLUDED
