@@ -15,9 +15,8 @@ void Npc::setTexture(const sf::Texture& texture)
 
 void Npc::set_dir(unsigned long dir)
 {
-    ++steps;
-    rect.left = (steps%frames_x) * rect.width;
-    rect.top = (dir%frames_y) * rect.height;
+    rect.left = (++steps % frames_x) * rect.width;
+    rect.top = (dir % frames_y) * rect.height;
     sprite.setTextureRect(rect);
 }
 
