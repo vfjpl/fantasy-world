@@ -10,7 +10,7 @@ void Interface::setup(sf::RenderWindow& window)
     chatbox = tgui::ChatBox::create();
 }
 
-void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
+void Interface::loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -27,7 +27,7 @@ void Interface::loginScreen(Network* network, LocalPlayer* localPlayer, sf::Vect
         if(network->credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(network, localPlayer, windowSize);
+            selectHeroScreen(network, localplayer, windowSize);
         }
     });
 
@@ -53,7 +53,7 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
+void Interface::selectHeroScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
     auto listBox = network->getHeroesListBox();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -64,16 +64,16 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localPlayer, sf:
     {
         network->selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(network, localPlayer, windowSize);
+        gameScreen(network, localplayer, windowSize);
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(Network* network, LocalPlayer* localPlayer, sf::Vector2u windowSize)
+void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
-    network->startGame(localPlayer, windowSize);
+    network->sendInit(network->getToken(localplayer), windowSize);
 
     auto editbox = tgui::EditBox::create();
     editbox->setPosition("0%", "100% - height");
