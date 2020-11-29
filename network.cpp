@@ -1,6 +1,5 @@
 #include "network.hpp"
 #include <Poco/Net/HTMLForm.h>
-#include <SFML/Network/Http.hpp>
 
 namespace
 {
@@ -19,28 +18,16 @@ bool isLoginSucessfull(const Poco::DynamicAny& data)
 tgui::ListBox::Ptr createHeroListBox(const std::string& body)
 {
     tgui::ListBox::Ptr listBox = tgui::ListBox::create();
-    for(unsigned long start_pos = body.find("value");;)
+    for(unsigned long start_pos = body.find("login");;)
     {
-        start_pos += 7;
-        unsigned long end_pos = body.find('"', start_pos);
+        start_pos += 6;
+        unsigned long end_pos = body.find('\'', start_pos + 1);
         listBox->addItem(body.substr(start_pos, end_pos - start_pos));
-        start_pos = body.find("value", end_pos + 1);
+        start_pos = body.find("login", end_pos + 1);
         if(start_pos == std::string::npos)
             break;
     }
     return listBox;
-}
-std::string cookiesToString(const Poco::Net::NameValueCollection& cookies_collection)
-{
-    std::string str;
-    for(const auto& i: cookies_collection)
-    {
-        str.append(i.first);
-        str.push_back('=');
-        str.append(i.second);
-        str.push_back(';');
-    }
-    return str;
 }
 std::string getLOOKTYPE(const std::string& body)
 {
@@ -93,7 +80,9 @@ bool Network::credentials(const std::string& login, const std::string& password)
 
 tgui::ListBox::Ptr Network::getHeroesListBox()
 {
-    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/modal/get/player-select",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
@@ -102,25 +91,24 @@ tgui::ListBox::Ptr Network::getHeroesListBox()
 
 void Network::selectHero(const std::string& hero)
 {
-    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
-                                "/game/login",
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/game/login" + hero,
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
-    Poco::Net::HTMLForm html;
     requ.setCookies(cookies);
-    html.add("id", hero);
-    html.prepareSubmit(requ);
-    html.write(https.sendRequest(requ));
+    https.sendRequest(requ);
     https.receiveResponse(resp);
 }
 
 std::string Network::getToken(LocalPlayer* localplayer)
 {
-    sf::Http sfhttp("alkatria.pl");
-    sf::Http::Request sfrequ("/game");
-    sfrequ.setField(Poco::Net::HTTPRequest::COOKIE, cookiesToString(cookies));
-    sf::Http::Response sfresp = sfhttp.sendRequest(sfrequ);
-    return getTOKENsetLOOKTYPE(localplayer, sfresp.getBody());
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/game",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    requ.setCookies(cookies);
+    https.sendRequest(requ);
+    return getTOKENsetLOOKTYPE(localplayer, toString(https.receiveResponse(resp)));
 }
 
 void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
