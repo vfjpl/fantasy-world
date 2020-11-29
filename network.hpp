@@ -13,12 +13,11 @@ class Network
 {
     //344
     Poco::Net::HTTPSClientSession https;
-    //328
-    Poco::Net::HTTPClientSession http;
+    Poco::Net::HTTPSClientSession wssHTTPS;
     //136
-    Poco::Net::HTTPRequest request;
+    Poco::Net::HTTPRequest wssREQUEST;
     //112
-    Poco::Net::HTTPResponse response;
+    Poco::Net::HTTPResponse wssRESPONSE;
     //32
     Poco::Net::NameValueCollection cookies;
     Poco::Buffer<char> buffer;

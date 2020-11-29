@@ -61,10 +61,12 @@ std::string getTOKENsetLOOKTYPE(LocalPlayer* localplayer, const std::string& bod
 
 Network::Network():
     https("alkatria.pl"),
-    http("alkatria.pl", 9001),
-    request(Poco::Net::HTTPRequest::HTTP_1_1),
+    wssHTTPS("alkatria.pl"),
+    wssREQUEST(Poco::Net::HTTPRequest::HTTP_GET,
+               "/websocket-test",
+               Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
-    socket(http, request, response) {}
+    socket(wssHTTPS, wssREQUEST, wssRESPONSE) {}
 
 
 bool Network::credentials(const std::string& login, const std::string& password)
