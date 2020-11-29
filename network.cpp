@@ -39,11 +39,6 @@ std::string getTOKEN(const std::string& body)
     unsigned long pos = body.find("token") + 9;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
-std::string getTOKENsetLOOKTYPE(LocalPlayer* localplayer, const std::string& body)
-{
-    localplayer->looktype = getLOOKTYPE(body);
-    return getTOKEN(body);
-}
 }
 
 Network::Network():
@@ -92,7 +87,7 @@ tgui::ListBox::Ptr Network::getHeroesListBox()
 void Network::selectHero(const std::string& hero)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
-                                "/game/login" + hero,
+                                "/game/login/" + hero,
                                 Poco::Net::HTTPRequest::HTTP_1_1);
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
@@ -108,7 +103,9 @@ std::string Network::getToken(LocalPlayer* localplayer)
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return getTOKENsetLOOKTYPE(localplayer, toString(https.receiveResponse(resp)));
+    std::string body = toString(https.receiveResponse(resp));
+    localplayer->looktype = getLOOKTYPE(body);
+    return getTOKEN(body);
 }
 
 void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
