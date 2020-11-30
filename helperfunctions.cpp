@@ -5,7 +5,7 @@ namespace
 {
 int clamp(int val)
 {
-    return std::max(-2, std::min(val, 2));
+    return std::min(std::max(val, -2), 2);
 }
 }
 

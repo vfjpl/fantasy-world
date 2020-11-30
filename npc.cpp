@@ -5,8 +5,8 @@
 void Npc::setTexture(const sf::Texture& texture)
 {
     sf::Vector2u size = texture.getSize();
-    frames_x = size.x/32;
-    frames_y = size.y/48;
+    frames_x = std::max(size.x/32, 1u);
+    frames_y = std::max(size.y/48, 1u);
     rect.width = 32;
     rect.height = 48;
     sprite.setTexture(texture);
