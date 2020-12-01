@@ -15,5 +15,6 @@ int main()
 
     while(engine.run_game());
 
+    thread.terminate();
     return EXIT_SUCCESS;
 }

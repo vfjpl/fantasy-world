@@ -4,9 +4,8 @@
 #include <SFML/System/Vector2.hpp>
 #include <string>
 
-class LocalPlayer
+struct LocalPlayer
 {
-public:
     //32
     std::string looktype;
     //8
@@ -14,7 +13,6 @@ public:
     unsigned long target_id;
     unsigned long id;
 
-public:
     sf::Vector2i nextPosition(unsigned long dir);
 };
 

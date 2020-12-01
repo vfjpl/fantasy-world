@@ -45,16 +45,18 @@ bool Engine::run_network()
 void Engine::setup_window(bool fullscreen)
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
+    sf::Uint32 style;
     if(fullscreen)
     {
-        window.create(mode, "Fantasy World", sf::Style::Fullscreen);
+        style = sf::Style::Fullscreen;
     }
     else
     {
-        mode.width = (mode.width*3)/4;
-        mode.height = (mode.height*3)/4;
-        window.create(mode, "Fantasy World", sf::Style::Close);
+        mode.width = (mode.width * 3) / 4;
+        mode.height = (mode.height * 3) / 4;
+        style = sf::Style::Close;
     }
+    window.create(mode, "Fantasy World", style);
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
 }
@@ -77,12 +79,10 @@ void Engine::process_input()
         }
         case sf::Event::KeyPressed:
         {
-            eventHandler.keyPress(event.key.code);
             break;
         }
         case sf::Event::KeyReleased:
         {
-            eventHandler.keyRelease(event.key.code);
             break;
         }
         case sf::Event::MouseButtonPressed:
@@ -100,45 +100,38 @@ void Engine::process_input()
 
 void Engine::game_logic()
 {
-    for(;;)
+    switch(eventHandler.pollEvent())
     {
-        switch(eventHandler.pollEvent())
-        {
-        case NONE:
-        {
-            return;
-        }
-        case MOVE_LEFT:
-        {
-            moveLocalPlayer(1);
-            break;
-        }
-        case MOVE_RIGHT:
-        {
-            moveLocalPlayer(2);
-            break;
-        }
-        case MOVE_UP:
-        {
-            moveLocalPlayer(3);
-            break;
-        }
-        case MOVE_DOWN:
-        {
-            moveLocalPlayer(4);
-            break;
-        }
-        case ATTACK_MONSTER:
-        {
-            network.attackMonster(localPlayer.target_id);
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }//end switch
-    }//end for
+    case Event::MOVE_LEFT:
+    {
+        moveLocalPlayer(1);
+        break;
+    }
+    case Event::MOVE_RIGHT:
+    {
+        moveLocalPlayer(2);
+        break;
+    }
+    case Event::MOVE_UP:
+    {
+        moveLocalPlayer(3);
+        break;
+    }
+    case Event::MOVE_DOWN:
+    {
+        moveLocalPlayer(4);
+        break;
+    }
+    case Event::ATTACK_MONSTER:
+    {
+        network.attackMonster(localPlayer.target_id);
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }//end switch
 }
 
 void Engine::draw_frame()
@@ -225,7 +218,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
-        eventHandler.stopEvent(ATTACK_MONSTER);
+        eventHandler.stopEvent(Event::ATTACK_MONSTER);
         network.takeLoot();
         break;
     }
@@ -264,6 +257,6 @@ void Engine::mousePress(sf::Vector2i point)
     if(IDs.monsterID)
     {
         localPlayer.target_id = IDs.monsterID;
-        eventHandler.startEvent(ATTACK_MONSTER);
+        eventHandler.startEvent(Event::ATTACK_MONSTER);
     }
 }

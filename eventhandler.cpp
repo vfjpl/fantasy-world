@@ -8,14 +8,14 @@ sf::Time getPeriod(Event code)
 {
     switch(code)
     {
-    case MOVE_LEFT:
-    case MOVE_RIGHT:
-    case MOVE_UP:
-    case MOVE_DOWN:
-        return sf::Time::asMicroseconds(PERIOD_IN_FRAMES(16, 60));
-    case ATTACK_MONSTER:
-    case ATTACK_PLAYER:
-        return sf::Time::asMicroseconds(PERIOD_IN_FRAMES(60, 60));
+    case Event::MOVE_LEFT:
+    case Event::MOVE_RIGHT:
+    case Event::MOVE_UP:
+    case Event::MOVE_DOWN:
+        return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
+    case Event::ATTACK_MONSTER:
+    case Event::ATTACK_PLAYER:
+        return sf::microseconds(PERIOD_IN_FRAMES(60, 60));
     default:
         return sf::Time::Zero;
     }//end switch
