@@ -1,101 +1,55 @@
 #include "eventhandler.hpp"
 #include <algorithm>
 
-Event EventHandler::pollEvent()
+namespace
 {
-    while(table.front() < events.size())
-    {
-        Event code = events[table.front()++];
-        if(table[code])
-        {
-            --table[code];
-        }
-        else
-        {
-            resetTable(code);
-            return code;
-        }
-    }
-
-    table.front() = 0;
-    return NONE;
-}
-
-void EventHandler::keyPress(sf::Keyboard::Key code)
+#define PERIOD_IN_FRAMES(frames, fps) ((1000000 * frames) / fps)
+sf::Time getPeriod(Event code)
 {
     switch(code)
     {
-    case sf::Keyboard::A:
-        startEvent(MOVE_LEFT);
-        break;
-    case sf::Keyboard::D:
-        startEvent(MOVE_RIGHT);
-        break;
-    case sf::Keyboard::S:
-        startEvent(MOVE_DOWN);
-        break;
-    case sf::Keyboard::W:
-        startEvent(MOVE_UP);
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void EventHandler::keyRelease(sf::Keyboard::Key code)
-{
-    switch(code)
-    {
-    case sf::Keyboard::A:
-        stopEvent(MOVE_LEFT);
-        break;
-    case sf::Keyboard::D:
-        stopEvent(MOVE_RIGHT);
-        break;
-    case sf::Keyboard::S:
-        stopEvent(MOVE_DOWN);
-        break;
-    case sf::Keyboard::W:
-        stopEvent(MOVE_UP);
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-
-void EventHandler::startEvent(Event code)
-{
-    table[code] = 0;
-    events.emplace_front(code);
-}
-
-void EventHandler::stopEvent(Event code)
-{
-    if(!events.empty())
-        events.erase(std::find(events.cbegin(), events.cend(), code));
-}
-
-// private
-
-void EventHandler::resetTable(Event code)
-{
-    switch(code)
-    {
-    case NONE:
-        table[code] = 0;
-        break;
     case MOVE_LEFT:
     case MOVE_RIGHT:
     case MOVE_UP:
     case MOVE_DOWN:
-        table[code] = 15;
-        break;
+        return sf::Time::asMicroseconds(PERIOD_IN_FRAMES(16, 60));
     case ATTACK_MONSTER:
     case ATTACK_PLAYER:
-        table[code] = 59;
-        break;
+        return sf::Time::asMicroseconds(PERIOD_IN_FRAMES(60, 60));
     default:
-        break;
+        return sf::Time::Zero;
     }//end switch
+}
+}
+
+Event EventHandler::pollEvent()
+{
+    sf::Time currentTime = clock.getElapsedTime();
+    for(auto& tE: events)
+    {
+        if(currentTime >= tE.time)
+        {
+            tE.time = currentTime + getPeriod(tE.code);
+            return tE.code;
+        }
+    }
+    return Event::NONE;
+}
+
+void EventHandler::startEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found == it_end)
+        events.emplace_front(code);
+}
+
+void EventHandler::stopEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found != it_end)
+        events.erase(it_found);
 }

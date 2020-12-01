@@ -1,40 +1,39 @@
 #ifndef EVENTHANDLER_HPP_INCLUDED
 #define EVENTHANDLER_HPP_INCLUDED
 
-#include <SFML/Window/Keyboard.hpp>
+#include <SFML/System/Clock.hpp>
 #include <deque>
-#include <array>
 
-enum Event
+enum class Event
 {
-    NONE,
     MOVE_LEFT,
     MOVE_RIGHT,
     MOVE_UP,
     MOVE_DOWN,
     ATTACK_MONSTER,
     ATTACK_PLAYER,
+    NONE,
+};
 
-    EVENT_COUNT,
+struct timedEvent
+{
+    sf::Time time;
+    Event code;
+    timedEvent(Event c): code(c) {}
+    bool operator==(Event c) const { return code == c; }
 };
 
 class EventHandler
 {
     //80
-    std::deque<Event> events;
-    //1
-    std::array<sf::Uint8, EVENT_COUNT> table;
+    std::deque<timedEvent> events;
+    //8
+    sf::Clock clock;
 
 public:
     Event pollEvent();
-
-    void keyPress(sf::Keyboard::Key code);
-    void keyRelease(sf::Keyboard::Key code);
     void startEvent(Event code);
     void stopEvent(Event code);
-
-private:
-    void resetTable(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED
