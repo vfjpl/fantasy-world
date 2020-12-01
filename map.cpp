@@ -207,8 +207,6 @@ void Map::addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned lon
     setCamera(x, y);
     players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
     players[localPlayer.id].set_position(x, y);
-    localPlayer.position.x = x;
-    localPlayer.position.y = y;
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)

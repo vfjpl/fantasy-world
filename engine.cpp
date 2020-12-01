@@ -79,15 +79,22 @@ void Engine::process_input()
         }
         case sf::Event::KeyPressed:
         {
+            keyPress(event.key.code);
             break;
         }
         case sf::Event::KeyReleased:
         {
+            keyRelease(event.key.code);
             break;
         }
         case sf::Event::MouseButtonPressed:
         {
             mousePress(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            break;
+        }
+        case sf::Event::MouseButtonReleased:
+        {
+            mouseRelease(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
             break;
         }
         default:
@@ -104,22 +111,22 @@ void Engine::game_logic()
     {
     case Event::MOVE_LEFT:
     {
-        moveLocalPlayer(1);
+        network.move(1);
         break;
     }
     case Event::MOVE_RIGHT:
     {
-        moveLocalPlayer(2);
+        network.move(2);
         break;
     }
     case Event::MOVE_UP:
     {
-        moveLocalPlayer(3);
+        network.move(3);
         break;
     }
     case Event::MOVE_DOWN:
     {
-        moveLocalPlayer(4);
+        network.move(4);
         break;
     }
     case Event::ATTACK_MONSTER:
@@ -185,14 +192,8 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.loadData_100(networkData["data"], localPlayer);
         break;
     }
-    case 101://my movement
-    {
-        break;
-    }
-    case 102://my back movement
-    {
-        break;
-    }
+    //case 101://my movement
+    //case 102://my back movement
     case 877://remove map item
     {
         map.deleteMapItem(networkData);
@@ -203,10 +204,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.addMapItem(networkData["item"]);
         break;
     }
-    case 1030://my health
-    {
-        break;
-    }
+    //case 1030://my health
     case 1051://other player left
     {
         map.deletePlayer(networkData["player"]);
@@ -214,6 +212,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 1504://other player yell
     {
+        break;
+    }
+    case char2int("move_me"):
+    {
+        map.moveLocalPlayer(localPlayer.id, networkData["x"], networkData["y"], networkData["dir"]);
         break;
     }
     case char2int("loot"):
@@ -241,22 +244,59 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }//end switch
 }
 
-void Engine::moveLocalPlayer(unsigned long dir)
+void Engine::keyPress(sf::Keyboard::Key code)
 {
-    sf::Vector2i pos = localPlayer.nextPosition(dir);
-    if(map.isObstacle(pos.x - 1, pos.y - 1))
-        return;
-    map.moveLocalPlayer(localPlayer.id, pos.x, pos.y, dir);
-    localPlayer.position = pos;
-    network.move(dir);
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        eventHandler.startEvent(Event::MOVE_LEFT);
+        break;
+    case sf::Keyboard::D:
+        eventHandler.startEvent(Event::MOVE_RIGHT);
+        break;
+    case sf::Keyboard::S:
+        eventHandler.startEvent(Event::MOVE_DOWN);
+        break;
+    case sf::Keyboard::W:
+        eventHandler.startEvent(Event::MOVE_UP);
+        break;
+    case sf::Keyboard::Escape:
+        window.close();
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void Engine::keyRelease(sf::Keyboard::Key code)
+{
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        eventHandler.stopEvent(Event::MOVE_LEFT);
+        break;
+    case sf::Keyboard::D:
+        eventHandler.stopEvent(Event::MOVE_RIGHT);
+        break;
+    case sf::Keyboard::S:
+        eventHandler.stopEvent(Event::MOVE_DOWN);
+        break;
+    case sf::Keyboard::W:
+        eventHandler.stopEvent(Event::MOVE_UP);
+        break;
+    case sf::Keyboard::Escape:
+        break;
+    default:
+        break;
+    }//end switch
 }
 
 void Engine::mousePress(sf::Vector2i point)
 {
     struct objectsIDs IDs = map.getObjectsIDs(window, point);
-    if(IDs.monsterID)
-    {
-        localPlayer.target_id = IDs.monsterID;
-        eventHandler.startEvent(Event::ATTACK_MONSTER);
-    }
+}
+
+void Engine::mouseRelease(sf::Vector2i point)
+{
+
 }

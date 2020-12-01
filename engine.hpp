@@ -32,8 +32,10 @@ private:
     void draw_frame();
     void process_network(const Poco::DynamicAny& networkData);
 
-    void moveLocalPlayer(unsigned long dir);
+    void keyPress(sf::Keyboard::Key code);
+    void keyRelease(sf::Keyboard::Key code);
     void mousePress(sf::Vector2i point);
+    void mouseRelease(sf::Vector2i point);
 };
 
 #endif // ENGINE_HPP_INCLUDED
