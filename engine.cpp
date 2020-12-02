@@ -109,29 +109,13 @@ void Engine::game_logic()
 {
     switch(eventHandler.pollEvent())
     {
-    case Event::MOVE_LEFT:
+    case Event::MOVE:
     {
-        network.move(1);
+        //network.move();
         break;
     }
-    case Event::MOVE_RIGHT:
+    case Event::ATTACK:
     {
-        network.move(2);
-        break;
-    }
-    case Event::MOVE_UP:
-    {
-        network.move(3);
-        break;
-    }
-    case Event::MOVE_DOWN:
-    {
-        network.move(4);
-        break;
-    }
-    case Event::ATTACK_MONSTER:
-    {
-        network.attackMonster(localPlayer.target_id);
         break;
     }
     default:
@@ -221,8 +205,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
-        eventHandler.stopEvent(Event::ATTACK_MONSTER);
-        network.takeLoot();
         break;
     }
     case char2int("teleport"):
@@ -249,16 +231,12 @@ void Engine::keyPress(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        eventHandler.startEvent(Event::MOVE_LEFT);
         break;
     case sf::Keyboard::D:
-        eventHandler.startEvent(Event::MOVE_RIGHT);
         break;
     case sf::Keyboard::S:
-        eventHandler.startEvent(Event::MOVE_DOWN);
         break;
     case sf::Keyboard::W:
-        eventHandler.startEvent(Event::MOVE_UP);
         break;
     case sf::Keyboard::Escape:
         window.close();
@@ -273,16 +251,12 @@ void Engine::keyRelease(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        eventHandler.stopEvent(Event::MOVE_LEFT);
         break;
     case sf::Keyboard::D:
-        eventHandler.stopEvent(Event::MOVE_RIGHT);
         break;
     case sf::Keyboard::S:
-        eventHandler.stopEvent(Event::MOVE_DOWN);
         break;
     case sf::Keyboard::W:
-        eventHandler.stopEvent(Event::MOVE_UP);
         break;
     case sf::Keyboard::Escape:
         break;

@@ -15,7 +15,7 @@ bool isLoginSucessfull(const Poco::DynamicAny& data)
     bool check2 = data["status"] == 200ul;
     return check1 && check2;
 }
-tgui::ListBox::Ptr createHeroListBox(const std::string& body)
+tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
 {
     tgui::ListBox::Ptr listBox = tgui::ListBox::create();
     for(unsigned long start_pos = body.find("login");;)
@@ -73,7 +73,7 @@ bool Network::credentials(const std::string& login, const std::string& password)
     return true;
 }
 
-tgui::ListBox::Ptr Network::getHeroesListBox()
+tgui::ListBox::Ptr Network::getHeroesList()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/modal/get/player-select",
@@ -81,7 +81,7 @@ tgui::ListBox::Ptr Network::getHeroesListBox()
     Poco::Net::HTTPResponse resp;
     requ.setCookies(cookies);
     https.sendRequest(requ);
-    return createHeroListBox(toString(https.receiveResponse(resp)));
+    return createHeroesListBox(toString(https.receiveResponse(resp)));
 }
 
 void Network::selectHero(const std::string& hero)

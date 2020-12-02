@@ -6,12 +6,8 @@
 
 enum class Event
 {
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    MOVE_UP,
-    MOVE_DOWN,
-    ATTACK_MONSTER,
-    ATTACK_PLAYER,
+    MOVE,
+    ATTACK,
     NONE,
 };
 

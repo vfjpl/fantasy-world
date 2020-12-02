@@ -28,7 +28,7 @@ public:
     Network();
 
     bool credentials(const std::string& login, const std::string& password);
-    tgui::ListBox::Ptr getHeroesListBox();
+    tgui::ListBox::Ptr getHeroesList();
     void selectHero(const std::string& hero);
     std::string getToken(LocalPlayer* localplayer);
     void sendInit(const std::string& token, sf::Vector2u windowSize);

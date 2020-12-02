@@ -4,18 +4,15 @@
 namespace
 {
 #define PERIOD_IN_FRAMES(frames, fps) ((1000000 * frames) / fps)
+#define PERIOD_IN_SECONDS(seconds) (1000000 * seconds)
 sf::Time getPeriod(Event code)
 {
     switch(code)
     {
-    case Event::MOVE_LEFT:
-    case Event::MOVE_RIGHT:
-    case Event::MOVE_UP:
-    case Event::MOVE_DOWN:
+    case Event::MOVE:
         return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
-    case Event::ATTACK_MONSTER:
-    case Event::ATTACK_PLAYER:
-        return sf::microseconds(PERIOD_IN_FRAMES(60, 60));
+    case Event::ATTACK:
+        return sf::microseconds(PERIOD_IN_SECONDS(1));
     default:
         return sf::Time::Zero;
     }//end switch
@@ -25,12 +22,12 @@ sf::Time getPeriod(Event code)
 Event EventHandler::pollEvent()
 {
     sf::Time currentTime = clock.getElapsedTime();
-    for(auto& tE: events)
+    for(auto& event: events)
     {
-        if(currentTime >= tE.time)
+        if(currentTime >= event.time)
         {
-            tE.time = currentTime + getPeriod(tE.code);
-            return tE.code;
+            event.time = currentTime + getPeriod(event.code);
+            return event.code;
         }
     }
     return Event::NONE;

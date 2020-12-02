@@ -55,7 +55,7 @@ void Interface::draw()
 
 void Interface::selectHeroScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
-    auto listBox = network->getHeroesListBox();
+    auto listBox = network->getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
 
     auto button = tgui::Button::create("Select");
