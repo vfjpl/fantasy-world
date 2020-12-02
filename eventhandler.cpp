@@ -53,11 +53,11 @@ void EventHandler::stopEvent(Event code)
 
 void EventHandler::startMove(unsigned long dir)
 {
-    if(directions.empty())
-        startEvent(Event::MOVE);
     auto it_begin = directions.cbegin();
     auto it_end = directions.cend();
     auto it_found = std::find(it_begin, it_end, dir);
+    if(directions.empty())
+        startEvent(Event::MOVE);
     if(it_found == it_end)
         directions.emplace_back(dir);
 }
