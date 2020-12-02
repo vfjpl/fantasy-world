@@ -93,5 +93,6 @@ void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vecto
 
 void Interface::addChatLine(const std::string& line)
 {
-    chatbox->addLine(line);
+    // fromUtf8 don't work with Poco::DynamicAny
+    chatbox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
 }

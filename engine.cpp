@@ -111,7 +111,7 @@ void Engine::game_logic()
     {
     case Event::MOVE:
     {
-        //network.move();
+        network.move(localPlayer.directions.back());
         break;
     }
     case Event::ATTACK:
@@ -203,10 +203,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.moveLocalPlayer(localPlayer.id, networkData["x"], networkData["y"], networkData["dir"]);
         break;
     }
-    case char2int("loot"):
-    {
-        break;
-    }
+    //case char2int("loot"):
     case char2int("teleport"):
     {
         map.clear();
@@ -231,12 +228,16 @@ void Engine::keyPress(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
+        localPlayer.startMove(1);
         break;
     case sf::Keyboard::D:
+        localPlayer.startMove(2);
         break;
     case sf::Keyboard::S:
+        localPlayer.startMove(4);
         break;
     case sf::Keyboard::W:
+        localPlayer.startMove(3);
         break;
     case sf::Keyboard::Escape:
         window.close();
@@ -251,12 +252,16 @@ void Engine::keyRelease(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
+        localPlayer.stopMove(1);
         break;
     case sf::Keyboard::D:
+        localPlayer.stopMove(2);
         break;
     case sf::Keyboard::S:
+        localPlayer.stopMove(4);
         break;
     case sf::Keyboard::W:
+        localPlayer.stopMove(3);
         break;
     case sf::Keyboard::Escape:
         break;
@@ -267,7 +272,7 @@ void Engine::keyRelease(sf::Keyboard::Key code)
 
 void Engine::mousePress(sf::Vector2i point)
 {
-    struct objectsIDs IDs = map.getObjectsIDs(window, point);
+
 }
 
 void Engine::mouseRelease(sf::Vector2i point)
