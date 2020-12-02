@@ -111,7 +111,7 @@ void Engine::game_logic()
     {
     case Event::MOVE:
     {
-        network.move(localPlayer.directions.back());
+        network.move(eventHandler.getDir());
         break;
     }
     case Event::ATTACK:
@@ -228,19 +228,18 @@ void Engine::keyPress(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        localPlayer.startMove(1);
+        eventHandler.startMove(1);
         break;
     case sf::Keyboard::D:
-        localPlayer.startMove(2);
+        eventHandler.startMove(2);
         break;
     case sf::Keyboard::S:
-        localPlayer.startMove(4);
+        eventHandler.startMove(4);
         break;
     case sf::Keyboard::W:
-        localPlayer.startMove(3);
+        eventHandler.startMove(3);
         break;
     case sf::Keyboard::Escape:
-        window.close();
         break;
     default:
         break;
@@ -252,18 +251,19 @@ void Engine::keyRelease(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        localPlayer.stopMove(1);
+        eventHandler.stopMove(1);
         break;
     case sf::Keyboard::D:
-        localPlayer.stopMove(2);
+        eventHandler.stopMove(2);
         break;
     case sf::Keyboard::S:
-        localPlayer.stopMove(4);
+        eventHandler.stopMove(4);
         break;
     case sf::Keyboard::W:
-        localPlayer.stopMove(3);
+        eventHandler.stopMove(3);
         break;
     case sf::Keyboard::Escape:
+        window.close();
         break;
     default:
         break;

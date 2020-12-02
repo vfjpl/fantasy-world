@@ -50,3 +50,30 @@ void EventHandler::stopEvent(Event code)
     if(it_found != it_end)
         events.erase(it_found);
 }
+
+void EventHandler::startMove(unsigned long dir)
+{
+    if(directions.empty())
+        startEvent(Event::MOVE);
+    auto it_begin = directions.cbegin();
+    auto it_end = directions.cend();
+    auto it_found = std::find(it_begin, it_end, dir);
+    if(it_found == it_end)
+        directions.emplace_back(dir);
+}
+
+void EventHandler::stopMove(unsigned long dir)
+{
+    auto it_begin = directions.cbegin();
+    auto it_end = directions.cend();
+    auto it_found = std::find(it_begin, it_end, dir);
+    if(it_found != it_end)
+        directions.erase(it_found);
+    if(directions.empty())
+        stopEvent(Event::MOVE);
+}
+
+unsigned long EventHandler::getDir()
+{
+    return directions.back();
+}
