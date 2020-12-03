@@ -233,7 +233,6 @@ void Map::addMultiMapData(const Poco::DynamicAny& data)
 void Map::addTile(const Poco::DynamicAny& data)
 {
     unsigned long type = data["type"];
-
     switch(type)
     {
     case 2:
@@ -243,10 +242,9 @@ void Map::addTile(const Poco::DynamicAny& data)
         tiles.emplace_back();
         break;
     default:
-        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::TILE));
+        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::TILE), data["width"], data["height"]);
         break;
     }//end switch
-
     tiles.back().set_position(data["x"], data["y"]);
 }
 
