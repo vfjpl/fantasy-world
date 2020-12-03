@@ -1,7 +1,7 @@
 #ifndef MAP_HPP_INCLUDED
 #define MAP_HPP_INCLUDED
 
-#include "door.hpp"
+#include "tile.hpp"
 #include "chest.hpp"
 #include "item.hpp"
 #include "monster.hpp"
@@ -32,7 +32,7 @@ class Map
     std::map<unsigned long, Player> players;
     //24
     std::vector<sf::Sprite> map_backgrounds;
-    std::vector<Door> doors;
+    std::vector<Tile> tiles;
     //8
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;

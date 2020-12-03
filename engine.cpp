@@ -73,34 +73,22 @@ void Engine::process_input()
         switch(event.type)
         {
         case sf::Event::Closed:
-        {
             window.close();
             break;
-        }
         case sf::Event::KeyPressed:
-        {
             keyPress(event.key.code);
             break;
-        }
         case sf::Event::KeyReleased:
-        {
             keyRelease(event.key.code);
             break;
-        }
         case sf::Event::MouseButtonPressed:
-        {
             mousePress(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
             break;
-        }
         case sf::Event::MouseButtonReleased:
-        {
             mouseRelease(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
             break;
-        }
         default:
-        {
             break;
-        }
         }//end switch
     }//end while
 }
@@ -110,18 +98,12 @@ void Engine::game_logic()
     switch(eventHandler.pollEvent())
     {
     case Event::MOVE:
-    {
         network.move(eventHandler.getDir());
         break;
-    }
     case Event::ATTACK:
-    {
         break;
-    }
     default:
-    {
         break;
-    }
     }//end switch
 }
 

@@ -21,8 +21,6 @@ void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
     //todo better
-
-    obstacles = data["obstacles"];
     loadMapPositionsData(data["map_positions"], localPlayer);
 
     if(data["map"]["type"] == 2ul)
@@ -59,40 +57,26 @@ void Map::updateMapData(const Poco::DynamicAny& data)
         switch(str2int(i.first))
         {
         case char2int("moves"):
-        {
             for(const auto& monster: i.second)
                 moveMonster(monster);
             break;
-        }
         case char2int("npc_moves"):
-        {
             for(const auto& npc: i.second)
                 moveNpc(npc);
             break;
-        }
         case char2int("respawns"):
-        {
             for(const auto& monster: i.second)
                 addMonster(monster);
             break;
-        }
         case char2int("damages"):
-        {
             break;
-        }
         case char2int("spells"):
-        {
             break;
-        }
         case char2int("yells"):
-        {
             break;
-        }
         default:
-        {
             std::cout << i.first << '\n';
             break;
-        }
         }//end switch
     }//end for
 }
@@ -166,7 +150,7 @@ void Map::draw(sf::RenderWindow& window)
 
     for(auto& i: map_backgrounds)
         window.draw(i);
-    for(auto& i: doors)
+    for(auto& i: tiles)
         i.draw(window);
     for(auto& i: chests)
         i.second.draw(window);
@@ -185,7 +169,7 @@ void Map::clear()
     sf::Lock lock(mutex);
 
     map_backgrounds.clear();
-    doors.clear();
+    tiles.clear();
     chests.clear();
     map_items.clear();
     monsters.clear();
@@ -248,12 +232,22 @@ void Map::addMultiMapData(const Poco::DynamicAny& data)
 
 void Map::addTile(const Poco::DynamicAny& data)
 {
-    //todo better
-    if(data["type"] == 2ul)
+    unsigned long type = data["type"];
+
+    switch(type)
     {
-        doors.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
-        doors.back().set_position(data["x"], data["y"]);
-    }
+    case 2:
+        tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
+        break;
+    case 21:
+        tiles.emplace_back();
+        break;
+    default:
+        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::TILE));
+        break;
+    }//end switch
+
+    tiles.back().set_position(data["x"], data["y"]);
 }
 
 void Map::addChest(const Poco::DynamicAny& data)

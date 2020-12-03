@@ -11,22 +11,24 @@ std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
-    case Graphic::MAP_MULTI:
-        return "/assets/" + name + ".png";
-    case Graphic::MAP_SINGLE:
-        return "/assets/maps/files/" + name + ".png";
-    case Graphic::CHEST:
-        return "/templates/client/default/images/tiles/chest_" + name + ".png";
-    case Graphic::CHEST_OPEN:
-        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
-    case Graphic::ITEM:
-        return "/templates/client/default/images/items/" + name + ".png";
-    case Graphic::MONSTER:
-        return "/templates/client/default/images/monsters/" + name + ".gif";
     case Graphic::NPC:
         return "/assets/avatars/" + name + ".gif";
     case Graphic::PLAYER:
         return "/assets/looktypes/" + name + ".gif";
+    case Graphic::MONSTER:
+        return "/templates/client/default/images/monsters/" + name + ".gif";
+    case Graphic::MAP_MULTI:
+        return "/assets/" + name + ".png";
+    case Graphic::MAP_SINGLE:
+        return "/assets/maps/files/" + name + ".png";
+    case Graphic::ITEM:
+        return "/templates/client/default/images/items/" + name + ".png";
+    case Graphic::CHEST:
+        return "/templates/client/default/images/tiles/chest_" + name + ".png";
+    case Graphic::CHEST_OPEN:
+        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
+    case Graphic::TILE:
+        return "/assets/game_objects/" + name;
     default:
         return name;
     }//end switch

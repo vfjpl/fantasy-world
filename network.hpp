@@ -40,6 +40,7 @@ public:
     void move(unsigned long dir);
     void shortcut(unsigned long slot);
     void takeLoot();
+    void useElement(unsigned long x, unsigned long y);
     void attackPlayer(unsigned long target_id);
     void spell(unsigned long spell_id);
     void spellMonster(unsigned long spell_id, unsigned long target_id);

@@ -44,8 +44,6 @@
 		</Linker>
 		<Unit filename="chest.cpp" />
 		<Unit filename="chest.hpp" />
-		<Unit filename="door.cpp" />
-		<Unit filename="door.hpp" />
 		<Unit filename="engine.cpp" />
 		<Unit filename="engine.hpp" />
 		<Unit filename="eventhandler.cpp" />
@@ -71,6 +69,8 @@
 		<Unit filename="player.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
+		<Unit filename="tile.cpp" />
+		<Unit filename="tile.hpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

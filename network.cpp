@@ -179,6 +179,14 @@ void Network::takeLoot()
     send(data, 18);
 }
 
+void Network::useElement(unsigned long x, unsigned long y)
+{
+    Poco::DynamicStruct data;
+    data.insert("x", x);
+    data.insert("y", y);
+    send(data, 879);
+}
+
 void Network::attackPlayer(unsigned long target_id)
 {
     Poco::DynamicStruct data;
