@@ -13,14 +13,14 @@ void Player::setTexture(const sf::Texture& texture)
     sprite.setTextureRect(rect);
 }
 
-void Player::set_dir(unsigned long dir)
+void Player::setDir(unsigned long dir)
 {
     rect.left = (++steps % frames_x) * rect.width;
     rect.top = (dir % frames_y) * rect.height;
     sprite.setTextureRect(rect);
 }
 
-void Player::set_position(unsigned long x, unsigned long y)
+void Player::setPosition(unsigned long x, unsigned long y)
 {
     move(x, y);
     current_px = desired_px;

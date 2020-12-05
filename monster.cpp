@@ -13,14 +13,14 @@ void Monster::setTexture(const sf::Texture& texture, unsigned long width, unsign
     sprite.setTextureRect(rect);
 }
 
-void Monster::set_dir(unsigned long dir)
+void Monster::setDir(unsigned long dir)
 {
     rect.left = (++steps % frames_x) * rect.width;
     rect.top = (dir % frames_y) * rect.height;
     sprite.setTextureRect(rect);
 }
 
-void Monster::set_position(unsigned long x, unsigned long y)
+void Monster::setPosition(unsigned long x, unsigned long y)
 {
     move(x, y);
     current_px = desired_px;

@@ -17,7 +17,7 @@ Tile::Tile(const sf::Texture& texture, unsigned long width, unsigned long height
     height(height) {}
 
 
-void Tile::set_position(unsigned long x, unsigned long y)
+void Tile::setPosition(unsigned long x, unsigned long y)
 {
     sprite.setPosition((32 * x) - ((width - 32)/2) - 32,
                        (32 * y) - (height - 32) - 32);

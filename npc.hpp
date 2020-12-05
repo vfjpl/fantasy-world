@@ -13,15 +13,14 @@ class Npc
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
-    //1
-    sf::Uint8 steps;
-    sf::Uint8 frames_x;
-    sf::Uint8 frames_y;
+    unsigned long steps;
+    unsigned long frames_x;
+    unsigned long frames_y;
 
 public:
     void setTexture(const sf::Texture& texture);
-    void set_dir(unsigned long dir);
-    void set_position(unsigned long x, unsigned long y);
+    void setDir(unsigned long dir);
+    void setPosition(unsigned long x, unsigned long y);
     void move(unsigned long x, unsigned long y);
 
     bool contains(sf::Vector2f coords);

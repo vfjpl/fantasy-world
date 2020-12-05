@@ -8,6 +8,7 @@ class Tile
 {
     //288
     sf::Sprite sprite;
+    //8
     unsigned long width;
     unsigned long height;
 
@@ -15,7 +16,7 @@ public:
     Tile();
     Tile(const sf::Texture& texture);
     Tile(const sf::Texture& texture, unsigned long width, unsigned long height);
-    void set_position(unsigned long x, unsigned long y);
+    void setPosition(unsigned long x, unsigned long y);
 
     void draw(sf::RenderWindow& window);
 };

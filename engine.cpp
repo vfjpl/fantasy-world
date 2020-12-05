@@ -17,7 +17,7 @@ unsigned long var2int(const Poco::DynamicAny& var)
 
 void Engine::setup()
 {
-    setup_window(false);
+    setup_window();
     interface.setup(window);
     map.setup(window.getDefaultView());
 
@@ -42,21 +42,12 @@ bool Engine::run_network()
 
 // private
 
-void Engine::setup_window(bool fullscreen)
+void Engine::setup_window()
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-    sf::Uint32 style;
-    if(fullscreen)
-    {
-        style = sf::Style::Fullscreen;
-    }
-    else
-    {
-        mode.width = (mode.width * 3) / 4;
-        mode.height = (mode.height * 3) / 4;
-        style = sf::Style::Close;
-    }
-    window.create(mode, "Fantasy World", style);
+    mode.width = (mode.width * 3) / 4;
+    mode.height = (mode.height * 3) / 4;
+    window.create(mode, "Fantasy World", sf::Style::Close);
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
 }
@@ -183,6 +174,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case char2int("move_me"):
     {
         map.moveLocalPlayer(localPlayer.id, networkData["x"], networkData["y"], networkData["dir"]);
+        break;
+    }
+    case char2int("reset_move"):
+    {
         break;
     }
     //case char2int("loot"):

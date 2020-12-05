@@ -16,7 +16,6 @@ public:
     void setup(sf::RenderWindow& window);
 
     void loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
-
     void chatMessage(const Poco::DynamicAny& data);
     bool handleEvent(const sf::Event& event);
     void draw();
@@ -24,7 +23,6 @@ public:
 private:
     void selectHeroScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
     void gameScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
-
     void addChatLine(const std::string& line);
 };
 

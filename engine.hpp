@@ -25,7 +25,7 @@ public:
     bool run_network();
 
 private:
-    void setup_window(bool fullscreen);
+    void setup_window();
 
     void process_input();
     void game_logic();

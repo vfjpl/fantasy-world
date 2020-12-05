@@ -9,7 +9,6 @@ struct LocalPlayer
     std::string looktype;
     //8
     unsigned long id;
-    unsigned long target_id;
 };
 
 #endif // LOCALPLAYER_HPP_INCLUDED

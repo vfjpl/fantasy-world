@@ -11,7 +11,7 @@ class Chest
 
 public:
     void setTexture(const sf::Texture& texture);
-    void set_position(unsigned long x, unsigned long y);
+    void setPosition(unsigned long x, unsigned long y);
 
     bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);

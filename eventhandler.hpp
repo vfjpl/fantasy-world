@@ -29,8 +29,10 @@ class EventHandler
 
 public:
     Event pollEvent();
+
     void startEvent(Event code);
     void stopEvent(Event code);
+
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
     unsigned long getDir();

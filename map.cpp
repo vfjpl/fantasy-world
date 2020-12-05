@@ -85,21 +85,21 @@ void Map::movePlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["player"];
     players[id].move(data["x"], data["y"]);
-    players[id].set_dir(data["dir"]);
+    players[id].setDir(data["dir"]);
 }
 
 void Map::addMapItem(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     map_items[id].setTexture(ResourceManager::getTexture(data["item_id"], Graphic::ITEM));
-    map_items[id].set_position(data["x"], data["y"]);
+    map_items[id].setPosition(data["x"], data["y"]);
 }
 
 void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].set_position(data["x"] + 1, data["y"] + 1);//server bug
+    players[id].setPosition(data["x"] + 1, data["y"] + 1);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicAny& data)
@@ -137,7 +137,7 @@ void Map::moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, un
 {
     moveCamera(x, y);
     players[id].move(x, y);
-    players[id].set_dir(dir);
+    players[id].setDir(dir);
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -190,7 +190,7 @@ void Map::addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned lon
 {
     setCamera(x, y);
     players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
-    players[localPlayer.id].set_position(x, y);
+    players[localPlayer.id].setPosition(x, y);
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)
@@ -209,14 +209,14 @@ void Map::moveMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["monster"];
     monsters[id].move(data["x"], data["y"]);
-    monsters[id].set_dir(data["dir"]);
+    monsters[id].setDir(data["dir"]);
 }
 
 void Map::moveNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["npc"];
     npcs[id].move(data["x"], data["y"]);
-    npcs[id].set_dir(data["dir"]);
+    npcs[id].setDir(data["dir"]);
 }
 
 void Map::addSingleMapData(const Poco::DynamicAny& data)
@@ -245,28 +245,28 @@ void Map::addTile(const Poco::DynamicAny& data)
         tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::TILE), data["width"], data["height"]);
         break;
     }//end switch
-    tiles.back().set_position(data["x"], data["y"]);
+    tiles.back().setPosition(data["x"], data["y"]);
 }
 
 void Map::addChest(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     chests[id].setTexture(ResourceManager::getTexture(data["type"], data["open"] ? Graphic::CHEST_OPEN : Graphic::CHEST));
-    chests[id].set_position(data["x"], data["y"]);
+    chests[id].setPosition(data["x"], data["y"]);
 }
 
 void Map::addMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER), data["width"], data["height"]);
-    monsters[id].set_position(data["x"], data["y"]);
+    monsters[id].setPosition(data["x"], data["y"]);
 }
 
 void Map::addNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::NPC));
-    npcs[id].set_position(data["x"], data["y"]);
+    npcs[id].setPosition(data["x"], data["y"]);
 }
 
 unsigned long Map::getChestID(sf::Vector2f coords)

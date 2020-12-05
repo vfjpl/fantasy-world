@@ -5,7 +5,7 @@ void Item::setTexture(const sf::Texture& texture)
     sprite.setTexture(texture);
 }
 
-void Item::set_position(unsigned long x, unsigned long y)
+void Item::setPosition(unsigned long x, unsigned long y)
 {
     sprite.setPosition((32 * x) - 32, (32 * y) - 32);
 }
