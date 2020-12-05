@@ -173,7 +173,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("move_me"):
     {
-        map.moveLocalPlayer(localPlayer.id, networkData["x"], networkData["y"], networkData["dir"]);
+        map.moveLocalPlayer(networkData, localPlayer);
         break;
     }
     case char2int("reset_move"):

@@ -36,14 +36,12 @@ class Map
     //8
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
-    Poco::DynamicAny obstacles;
     sf::Mutex mutex;
-    unsigned long max_x;
-    unsigned long max_y;
 
 public:
     void setup(const sf::View& view);
 
+    void moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void updateMapData(const Poco::DynamicAny& data);
@@ -56,14 +54,11 @@ public:
     void deletePlayer(const Poco::DynamicAny& data);
 
     struct objectsIDs getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
-    bool isObstacle(unsigned long x, unsigned long y);
-    void moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, unsigned long dir);
     void draw(sf::RenderWindow& window);
     void clear();
 
 private:
-    void loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
-    void addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y);
+    void addLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void setCamera(unsigned long x, unsigned long y);
     void moveCamera(unsigned long x, unsigned long y);
 

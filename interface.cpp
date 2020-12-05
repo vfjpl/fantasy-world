@@ -79,7 +79,7 @@ void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vecto
     editbox->setPosition("0%", "100% - height");
     editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
     {
-        network->message(std::string(text.begin(), text.end()));
+        network->message(text);
         editbox->setText(sf::String());
     });
 

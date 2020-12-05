@@ -150,10 +150,10 @@ void Network::attackMonster(unsigned long target_id)
     send(data, 3);
 }
 
-void Network::message(const std::string& message)
+void Network::message(const sf::String& message)
 {
     Poco::DynamicStruct data;
-    data.insert("message", message);
+    data.insert("message", (const char*)message.toUtf8().data());
     send(data, 4);
 }
 

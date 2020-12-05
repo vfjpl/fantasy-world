@@ -12,6 +12,15 @@ void Map::setup(const sf::View& view)
     camera = view;
 }
 
+void Map::moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+{
+    unsigned long x = data["x"];
+    unsigned long y = data["y"];
+    moveCamera(x, y);
+    players[localPlayer.id].move(x, y);
+    players[localPlayer.id].setDir(data["dir"]);
+}
+
 void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
     localPlayer.id = data["player"]["id"];
@@ -21,7 +30,7 @@ void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
     //todo better
-    loadMapPositionsData(data["map_positions"], localPlayer);
+    addLocalPlayer(data["map_positions"], localPlayer);
 
     if(data["map"]["type"] == 2ul)
     {
@@ -126,20 +135,6 @@ struct objectsIDs Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i poin
     return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords)};
 }
 
-bool Map::isObstacle(unsigned long x, unsigned long y)
-{
-    if(x >= max_x || y >= max_y)
-        return true;
-    return obstacles[x][y];
-}
-
-void Map::moveLocalPlayer(unsigned long id, unsigned long x, unsigned long y, unsigned long dir)
-{
-    moveCamera(x, y);
-    players[id].move(x, y);
-    players[id].setDir(dir);
-}
-
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
@@ -179,15 +174,10 @@ void Map::clear()
 
 // private
 
-void Map::loadMapPositionsData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::addLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    max_x = data["MAX_X"];
-    max_y = data["MAX_Y"];
-    addLocalPlayer(localPlayer, data["PLAYER_X"], data["PLAYER_Y"]);
-}
-
-void Map::addLocalPlayer(LocalPlayer& localPlayer, unsigned long x, unsigned long y)
-{
+    unsigned long x = data["PLAYER_X"];
+    unsigned long y = data["PLAYER_Y"];
     setCamera(x, y);
     players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
     players[localPlayer.id].setPosition(x, y);
@@ -232,8 +222,7 @@ void Map::addMultiMapData(const Poco::DynamicAny& data)
 
 void Map::addTile(const Poco::DynamicAny& data)
 {
-    unsigned long type = data["type"];
-    switch(type)
+    switch((unsigned long)data["type"])
     {
     case 2:
         tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
