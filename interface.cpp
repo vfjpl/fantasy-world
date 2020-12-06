@@ -76,17 +76,20 @@ void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vecto
     network->sendInit(network->getToken(localplayer), windowSize);
 
     auto editbox = tgui::EditBox::create();
-    editbox->setPosition("0%", "100% - height");
+    editbox->setSize("100%", editbox->getFullSize().y);
+    editbox->setPosition(0.f, "100% - height");
     editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
     {
         network->message(text);
         editbox->setText(sf::String());
     });
 
+    chatbox->setSize("100%", bindTop(editbox));
+
     auto chatwindow = tgui::ChildWindow::create();
     chatwindow->setResizable();
-    chatwindow->add(chatbox);
     chatwindow->add(editbox);
+    chatwindow->add(chatbox);
 
     gui.add(chatwindow);
 }
