@@ -29,9 +29,9 @@ void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 
 void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    //todo better
     addLocalPlayer(data["map_positions"], localPlayer);
 
+    //todo better
     if(data["map"]["type"] == 2ul)
     {
         addSingleMapData(data["map"]);
@@ -41,13 +41,16 @@ void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlay
         for(const auto& map_chunk: data["map_data"])
             addMultiMapData(map_chunk);
     }
-    for(const auto& tile: data["tiles"])
-        addTile(tile);
+
+    if(data["tiles"].size())
+        for(const auto& tile: data["tiles"])
+            addTile(tile);
     if(data["chests"].size())
         for(const auto& chest: data["chests"])
             addChest(chest);
-    for(const auto& map_item: data["map_items"])
-        addMapItem(map_item);
+    if(data["map_items"].size())
+        for(const auto& map_item: data["map_items"])
+            addMapItem(map_item);
     if(data["monsters"].size())
         for(const auto& monster: data["monsters"])
             addMonster(monster);
@@ -82,6 +85,8 @@ void Map::updateMapData(const Poco::DynamicAny& data)
         case char2int("spells"):
             break;
         case char2int("yells"):
+            break;
+        case char2int("monster_yells"):
             break;
         default:
             std::cout << i.first << '\n';
@@ -224,10 +229,10 @@ void Map::addTile(const Poco::DynamicAny& data)
 {
     switch((unsigned long)data["type"])
     {
-    case 2:
+    case 2://door
         tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
         break;
-    case 21:
+    case 21://well
         tiles.emplace_back();
         break;
     default:

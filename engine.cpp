@@ -115,10 +115,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         interface.chatMessage(networkData);
         break;
     }
-    case 5://show damage
-    {
-        break;
-    }
+    //case 5://show damage
     case 10://other player movement
     {
         map.movePlayer(networkData);
