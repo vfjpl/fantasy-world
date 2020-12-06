@@ -113,7 +113,7 @@ void Map::addPlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     players[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].setPosition(data["x"] + 1, data["y"] + 1);//server bug
+    players[id].setPosition(data["x"] + 1ul, data["y"] + 1ul);//server bug
 }
 
 void Map::deleteMapItem(const Poco::DynamicAny& data)
@@ -222,7 +222,7 @@ void Map::addSingleMapData(const Poco::DynamicAny& data)
 void Map::addMultiMapData(const Poco::DynamicAny& data)
 {
     map_backgrounds.emplace_back(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI));
-    map_backgrounds.back().setPosition(data["x"] * 640, data["y"] * 640);
+    map_backgrounds.back().setPosition(data["x"] * 640ul, data["y"] * 640ul);
 }
 
 void Map::addTile(const Poco::DynamicAny& data)
@@ -265,7 +265,7 @@ void Map::addNpc(const Poco::DynamicAny& data)
 
 unsigned long Map::getChestID(sf::Vector2f coords)
 {
-    for(auto &i: chests)
+    for(auto& i: chests)
         if(i.second.contains(coords))
             return i.first;
     return 0;
@@ -273,7 +273,7 @@ unsigned long Map::getChestID(sf::Vector2f coords)
 
 unsigned long Map::getItemID(sf::Vector2f coords)
 {
-    for(auto &i: map_items)
+    for(auto& i: map_items)
         if(i.second.contains(coords))
             return i.first;
     return 0;
@@ -281,7 +281,7 @@ unsigned long Map::getItemID(sf::Vector2f coords)
 
 unsigned long Map::getMonsterID(sf::Vector2f coords)
 {
-    for(auto &i: monsters)
+    for(auto& i: monsters)
         if(i.second.contains(coords))
             return i.first;
     return 0;
@@ -289,7 +289,7 @@ unsigned long Map::getMonsterID(sf::Vector2f coords)
 
 unsigned long Map::getNpcID(sf::Vector2f coords)
 {
-    for(auto &i: npcs)
+    for(auto& i: npcs)
         if(i.second.contains(coords))
             return i.first;
     return 0;
@@ -297,7 +297,7 @@ unsigned long Map::getNpcID(sf::Vector2f coords)
 
 unsigned long Map::getPlayerID(sf::Vector2f coords)
 {
-    for(auto &i: players)
+    for(auto& i: players)
         if(i.second.contains(coords))
             return i.first;
     return 0;
