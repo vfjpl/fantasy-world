@@ -148,7 +148,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     //case 101://my movement
     //case 102://my back movement
-    case 638://open chest (general update?)
+    case 685://open chest (general update?)
     {
         map.openChest(networkData);
         break;

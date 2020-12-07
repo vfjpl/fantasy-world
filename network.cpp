@@ -206,7 +206,7 @@ void Network::attackPlayer(unsigned long target_id)
 void Network::chest(unsigned long id)
 {
     Poco::DynamicStruct data;
-    data.insert("chest", id);
+    data.insert("id", id);
     send(data, "chest");
 }
 
