@@ -164,11 +164,11 @@ void Network::move(unsigned long dir)
     send(data, 5);
 }
 
-void Network::shortcut(unsigned long slot)
+void Network::use(unsigned long slot, const char* type)
 {
     Poco::DynamicStruct data;
     data.insert("slot", slot);
-    data.insert("type", "shortcut");
+    data.insert("type", type);
     send(data, 9);
 }
 
@@ -177,6 +177,14 @@ void Network::takeLoot()
     Poco::DynamicStruct data;
     data.insert("action", 0);
     send(data, 18);
+}
+
+void Network::pickUpItem(unsigned long x, unsigned long y)
+{
+    Poco::DynamicStruct data;
+    data.insert("x", x);
+    data.insert("y", y);
+    send(data, 877);
 }
 
 void Network::useElement(unsigned long x, unsigned long y)
@@ -193,6 +201,13 @@ void Network::attackPlayer(unsigned long target_id)
     data.insert("target", target_id);
     data.insert("skill", 0);
     send(data, 1042);
+}
+
+void Network::chest(unsigned long id)
+{
+    Poco::DynamicStruct data;
+    data.insert("chest", id);
+    send(data, "chest");
 }
 
 void Network::spell(unsigned long spell_id)

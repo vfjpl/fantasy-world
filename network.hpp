@@ -38,10 +38,12 @@ public:
     void attackMonster(unsigned long target_id);
     void message(const sf::String& message);
     void move(unsigned long dir);
-    void shortcut(unsigned long slot);
+    void use(unsigned long slot, const char* type);
     void takeLoot();
+    void pickUpItem(unsigned long x, unsigned long y);
     void useElement(unsigned long x, unsigned long y);
     void attackPlayer(unsigned long target_id);
+    void chest(unsigned long id);
     void spell(unsigned long spell_id);
     void spellMonster(unsigned long spell_id, unsigned long target_id);
 

@@ -134,10 +134,17 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
     players.erase(id);
 }
 
-struct objectsIDs Map::getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point)
+void Map::openChest(const Poco::DynamicAny& data)
+{
+    unsigned long id = data["chest"];
+    chests[id].setTexture(ResourceManager::getTexture("1", Graphic::CHEST_OPEN));
+}
+
+mapObjects Map::getMapObjects(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
-    return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords)};
+    return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords),
+            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32)};
 }
 
 void Map::draw(sf::RenderWindow& window)

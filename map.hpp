@@ -11,13 +11,16 @@
 #include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
-struct objectsIDs
+struct mapObjects
 {
     unsigned long chestID;
     unsigned long itemID;
     unsigned long monsterID;
     unsigned long npcID;
     unsigned long playerID;
+
+    unsigned long x;
+    unsigned long y;
 };
 
 class Map
@@ -52,8 +55,9 @@ public:
     void deleteMapItem(const Poco::DynamicAny& data);
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
+    void openChest(const Poco::DynamicAny& data);
 
-    struct objectsIDs getObjectsIDs(sf::RenderWindow& window, sf::Vector2i point);
+    mapObjects getMapObjects(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
     void clear();
 

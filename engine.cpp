@@ -148,6 +148,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     //case 101://my movement
     //case 102://my back movement
+    case 638://open chest (general update?)
+    {
+        map.openChest(networkData);
+        break;
+    }
     case 877://remove map item
     {
         map.deleteMapItem(networkData);
@@ -246,7 +251,11 @@ void Engine::keyRelease(sf::Keyboard::Key code)
 
 void Engine::mousePress(sf::Vector2i point)
 {
-
+    mapObjects data = map.getMapObjects(window, point);
+    if(data.chestID)
+        network.chest(data.chestID);
+    if(data.itemID)
+        network.pickUpItem(data.x, data.y);
 }
 
 void Engine::mouseRelease(sf::Vector2i point)
