@@ -2,7 +2,7 @@
 
 void Item::setTexture(const sf::Texture& texture)
 {
-    sprite.setTexture(texture);
+    sprite.setTexture(texture, true);
 }
 
 void Item::setPosition(unsigned long x, unsigned long y)

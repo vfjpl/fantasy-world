@@ -2,7 +2,7 @@
 
 void Chest::setTexture(const sf::Texture& texture)
 {
-    sprite.setTexture(texture);
+    sprite.setTexture(texture, true);
 }
 
 void Chest::setPosition(unsigned long x, unsigned long y)

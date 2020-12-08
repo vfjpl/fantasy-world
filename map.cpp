@@ -144,7 +144,7 @@ mapObjects Map::getMapObjects(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
     return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords),
-            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32)};
+            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32), isTile(coords)};
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -308,4 +308,12 @@ unsigned long Map::getPlayerID(sf::Vector2f coords)
         if(i.second.contains(coords))
             return i.first;
     return 0;
+}
+
+bool Map::isTile(sf::Vector2f coords)
+{
+    for(auto& i: tiles)
+        if(i.contains(coords))
+            return true;
+    return false;
 }

@@ -9,8 +9,8 @@ class Tile
     //288
     sf::Sprite sprite;
     //8
-    unsigned long width;
-    unsigned long height;
+    unsigned long rect_width;
+    unsigned long rect_height;
 
 public:
     Tile();
@@ -18,6 +18,7 @@ public:
     Tile(const sf::Texture& texture, unsigned long width, unsigned long height);
     void setPosition(unsigned long x, unsigned long y);
 
+    bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };
 

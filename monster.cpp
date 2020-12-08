@@ -9,8 +9,8 @@ void Monster::setTexture(const sf::Texture& texture, unsigned long width, unsign
     frames_y = std::max(size.y/height, 1ul);
     rect.width = width;
     rect.height = height;
-    sprite.setTexture(texture);
     sprite.setTextureRect(rect);
+    sprite.setTexture(texture, false);
 }
 
 void Monster::setDir(unsigned long dir)

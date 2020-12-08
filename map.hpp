@@ -21,6 +21,8 @@ struct mapObjects
 
     unsigned long x;
     unsigned long y;
+
+    bool tile;
 };
 
 class Map
@@ -80,6 +82,7 @@ private:
     unsigned long getMonsterID(sf::Vector2f coords);
     unsigned long getNpcID(sf::Vector2f coords);
     unsigned long getPlayerID(sf::Vector2f coords);
+    bool isTile(sf::Vector2f coords);
 };
 
 #endif // MAP_HPP_INCLUDED

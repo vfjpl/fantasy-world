@@ -9,8 +9,8 @@ void Npc::setTexture(const sf::Texture& texture)
     frames_y = std::max(size.y/48, 1u);
     rect.width = 32;
     rect.height = 48;
-    sprite.setTexture(texture);
     sprite.setTextureRect(rect);
+    sprite.setTexture(texture, false);
 }
 
 void Npc::setDir(unsigned long dir)
