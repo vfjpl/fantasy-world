@@ -187,7 +187,7 @@ void Network::pickUpItem(unsigned long x, unsigned long y)
     send(data, 877);
 }
 
-void Network::useElement(unsigned long x, unsigned long y)
+void Network::useTile(unsigned long x, unsigned long y)
 {
     Poco::DynamicStruct data;
     data.insert("x", x);
@@ -203,7 +203,7 @@ void Network::attackPlayer(unsigned long target_id)
     send(data, 1042);
 }
 
-void Network::chest(unsigned long id)
+void Network::openChest(unsigned long id)
 {
     Poco::DynamicStruct data;
     data.insert("id", id);

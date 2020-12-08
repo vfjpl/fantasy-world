@@ -136,7 +136,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.addPlayer(networkData);
         break;
     }
-    case 99://message from server
+    case 99://server message
     {
         std::cout << networkData["message"].toString() << '\n';
         break;
@@ -161,6 +161,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case 878://new map item
     {
         map.addMapItem(networkData["item"]);
+        break;
+    }
+    case 1016://bottom message
+    {
+        std::cout << networkData["message"].toString() << '\n';
         break;
     }
     //case 1030://my health
@@ -253,9 +258,11 @@ void Engine::mousePress(sf::Vector2i point)
 {
     mapObjects data = map.getMapObjects(window, point);
     if(data.chestID)
-        network.chest(data.chestID);
+        network.openChest(data.chestID);
     if(data.itemID)
         network.pickUpItem(data.x, data.y);
+    if(data.tile)
+        network.useTile(data.x, data.y);
 }
 
 void Engine::mouseRelease(sf::Vector2i point)
