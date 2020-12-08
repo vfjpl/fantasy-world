@@ -259,7 +259,7 @@ void Engine::mousePress(sf::Vector2i point)
     mapObjects data = map.getMapObjects(window, point);
     if(data.chestID)
         network.openChest(data.chestID);
-    if(data.itemID)
+    if(data.item)
         network.pickUpItem(data.x, data.y);
     if(data.tile)
         network.useTile(data.x, data.y);

@@ -143,8 +143,9 @@ void Map::openChest(const Poco::DynamicAny& data)
 mapObjects Map::getMapObjects(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
-    return {getChestID(coords), getItemID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords),
-            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32), isTile(coords)};
+    return {getChestID(coords), getMonsterID(coords), getNpcID(coords), getPlayerID(coords),
+            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32),
+            isItem(coords), isTile(coords)};
 }
 
 void Map::draw(sf::RenderWindow& window)
@@ -278,14 +279,6 @@ unsigned long Map::getChestID(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long Map::getItemID(sf::Vector2f coords)
-{
-    for(auto& i: map_items)
-        if(i.second.contains(coords))
-            return i.first;
-    return 0;
-}
-
 unsigned long Map::getMonsterID(sf::Vector2f coords)
 {
     for(auto& i: monsters)
@@ -308,6 +301,14 @@ unsigned long Map::getPlayerID(sf::Vector2f coords)
         if(i.second.contains(coords))
             return i.first;
     return 0;
+}
+
+bool Map::isItem(sf::Vector2f coords)
+{
+    for(auto& i: map_items)
+        if(i.second.contains(coords))
+            return true;
+    return false;
 }
 
 bool Map::isTile(sf::Vector2f coords)

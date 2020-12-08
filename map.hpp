@@ -14,7 +14,6 @@
 struct mapObjects
 {
     unsigned long chestID;
-    unsigned long itemID;
     unsigned long monsterID;
     unsigned long npcID;
     unsigned long playerID;
@@ -22,6 +21,7 @@ struct mapObjects
     unsigned long x;
     unsigned long y;
 
+    bool item;
     bool tile;
 };
 
@@ -78,10 +78,10 @@ private:
     void addNpc(const Poco::DynamicAny& data);
 
     unsigned long getChestID(sf::Vector2f coords);
-    unsigned long getItemID(sf::Vector2f coords);
     unsigned long getMonsterID(sf::Vector2f coords);
     unsigned long getNpcID(sf::Vector2f coords);
     unsigned long getPlayerID(sf::Vector2f coords);
+    bool isItem(sf::Vector2f coords);
     bool isTile(sf::Vector2f coords);
 };
 
