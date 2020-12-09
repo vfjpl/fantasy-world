@@ -45,6 +45,9 @@ void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlay
     if(data["tiles"].size())
         for(const auto& tile: data["tiles"])
             addTile(tile);
+    if(data["map_objects"].size())
+        for(const auto& map_object: data["map_objects"])
+            addMapObject(map_object);
     if(data["chests"].size())
         for(const auto& chest: data["chests"])
             addChest(chest);
@@ -244,13 +247,20 @@ void Map::addTile(const Poco::DynamicAny& data)
         tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
         break;
     case 21://well
-        tiles.emplace_back();
+        tiles.emplace_back(ResourceManager::getTexture("25b98a9f83d82c02f60bdf8849aaa940.png", Graphic::OBJECT));
         break;
     default:
-        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::TILE), data["width"], data["height"]);
+        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::OBJECT), data["width"], data["height"]);
         break;
     }//end switch
     tiles.back().setPosition(data["x"], data["y"]);
+}
+
+void Map::addMapObject(const Poco::DynamicAny& data)
+{
+    unsigned long id = data["id"];
+    map_objects[id].setTexture(ResourceManager::getTexture(data["file"], Graphic::OBJECT), data["width"], data["height"]);
+    map_objects[id].setPosition(data["x"], data["y"]);
 }
 
 void Map::addChest(const Poco::DynamicAny& data)

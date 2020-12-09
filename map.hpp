@@ -75,6 +75,7 @@ private:
     void addSingleMapData(const Poco::DynamicAny& data);
     void addMultiMapData(const Poco::DynamicAny& data);
     void addTile(const Poco::DynamicAny& data);
+    void addMapObject(const Poco::DynamicAny& data);
     void addChest(const Poco::DynamicAny& data);
     void addMonster(const Poco::DynamicAny& data);
     void addNpc(const Poco::DynamicAny& data);

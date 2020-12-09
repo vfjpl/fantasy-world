@@ -27,7 +27,7 @@ std::string getURI(const std::string& name, Graphic type)
         return "/templates/client/default/images/tiles/chest_" + name + ".png";
     case Graphic::CHEST_OPEN:
         return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
-    case Graphic::TILE:
+    case Graphic::OBJECT:
         return "/assets/game_objects/" + name;
     default:
         return name;

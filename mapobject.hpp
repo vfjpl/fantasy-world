@@ -8,6 +8,9 @@ class MapObject
 {
     //288
     sf::Sprite sprite;
+    //8
+    unsigned long rect_width;
+    unsigned long rect_height;
 
 public:
     void setTexture(const sf::Texture& texture, unsigned long width, unsigned long height);

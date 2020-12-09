@@ -187,7 +187,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     {
         break;
     }
-    //case char2int("loot"):
+    case char2int("loot"):
+    {
+        eventHandler.stopEvent(Event::ATTACK);
+        break;
+    }
     case char2int("teleport"):
     {
         map.clear();
