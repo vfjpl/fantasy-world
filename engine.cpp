@@ -256,13 +256,13 @@ void Engine::keyRelease(sf::Keyboard::Key code)
 
 void Engine::mousePress(sf::Vector2i point)
 {
-    mapObjects data = map.getMapObjects(window, point);
+    MapClickData data = map.mapMouseClick(window, point);
     if(data.chestID)
         network.openChest(data.chestID);
     if(data.item)
         network.pickUpItem(data.x, data.y);
     if(data.tile)
-        network.useTile(data.x, data.y);
+        network.useElement(data.x, data.y);
 }
 
 void Engine::mouseRelease(sf::Vector2i point)

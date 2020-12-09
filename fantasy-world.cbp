@@ -52,13 +52,15 @@
 		<Unit filename="helperfunctions.hpp" />
 		<Unit filename="interface.cpp" />
 		<Unit filename="interface.hpp" />
-		<Unit filename="item.cpp" />
-		<Unit filename="item.hpp" />
 		<Unit filename="localplayer.cpp" />
 		<Unit filename="localplayer.hpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="map.cpp" />
 		<Unit filename="map.hpp" />
+		<Unit filename="mapitem.cpp" />
+		<Unit filename="mapitem.hpp" />
+		<Unit filename="mapobject.cpp" />
+		<Unit filename="mapobject.hpp" />
 		<Unit filename="monster.cpp" />
 		<Unit filename="monster.hpp" />
 		<Unit filename="network.cpp" />

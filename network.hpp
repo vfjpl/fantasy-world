@@ -41,7 +41,7 @@ public:
     void use(unsigned long slot, const char* type);
     void takeLoot();
     void pickUpItem(unsigned long x, unsigned long y);
-    void useTile(unsigned long x, unsigned long y);
+    void useElement(unsigned long x, unsigned long y);
     void attackPlayer(unsigned long target_id);
     void openChest(unsigned long id);
     void spell(unsigned long spell_id);

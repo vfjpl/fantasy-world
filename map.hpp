@@ -2,8 +2,9 @@
 #define MAP_HPP_INCLUDED
 
 #include "tile.hpp"
+#include "mapobject.hpp"
 #include "chest.hpp"
-#include "item.hpp"
+#include "mapitem.hpp"
 #include "monster.hpp"
 #include "npc.hpp"
 #include "player.hpp"
@@ -11,7 +12,7 @@
 #include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
-struct mapObjects
+struct MapClickData
 {
     unsigned long chestID;
     unsigned long monsterID;
@@ -30,8 +31,9 @@ class Map
     //168
     sf::View camera;
     //48
+    std::map<unsigned long, MapObject> map_objects;
     std::map<unsigned long, Chest> chests;
-    std::map<unsigned long, Item> map_items;
+    std::map<unsigned long, MapItem> map_items;
     std::map<unsigned long, Monster> monsters;
     std::map<unsigned long, Npc> npcs;
     std::map<unsigned long, Player> players;
@@ -59,7 +61,7 @@ public:
     void deletePlayer(const Poco::DynamicAny& data);
     void openChest(const Poco::DynamicAny& data);
 
-    mapObjects getMapObjects(sf::RenderWindow& window, sf::Vector2i point);
+    MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
     void draw(sf::RenderWindow& window);
     void clear();
 
@@ -81,7 +83,7 @@ private:
     unsigned long getMonsterID(sf::Vector2f coords);
     unsigned long getNpcID(sf::Vector2f coords);
     unsigned long getPlayerID(sf::Vector2f coords);
-    bool isItem(sf::Vector2f coords);
+    bool isMapItem(sf::Vector2f coords);
     bool isTile(sf::Vector2f coords);
 };
 

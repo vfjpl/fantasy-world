@@ -187,7 +187,7 @@ void Network::pickUpItem(unsigned long x, unsigned long y)
     send(data, 877);
 }
 
-void Network::useTile(unsigned long x, unsigned long y)
+void Network::useElement(unsigned long x, unsigned long y)
 {
     Poco::DynamicStruct data;
     data.insert("x", x);

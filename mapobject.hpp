@@ -1,20 +1,19 @@
-#ifndef ITEM_HPP_INCLUDED
-#define ITEM_HPP_INCLUDED
+#ifndef MAPOBJECT_HPP_INCLUDED
+#define MAPOBJECT_HPP_INCLUDED
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-class Item
+class MapObject
 {
     //288
     sf::Sprite sprite;
 
 public:
-    void setTexture(const sf::Texture& texture);
+    void setTexture(const sf::Texture& texture, unsigned long width, unsigned long height);
     void setPosition(unsigned long x, unsigned long y);
 
-    bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };
 
-#endif // ITEM_HPP_INCLUDED
+#endif // MAPOBJECT_HPP_INCLUDED
