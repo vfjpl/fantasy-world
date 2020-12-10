@@ -116,7 +116,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         interface.chatMessage(networkData);
         break;
     }
-    //case 5://show damage
+    case 5://show attack/damage
+    {
+        break;
+    }
     case 10://other player movement
     {
         map.movePlayer(networkData);
@@ -164,6 +167,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.addMapItem(networkData["item"]);
         break;
     }
+    case 964://show attack/damage
+    {
+        break;
+    }
     case 1016://bottom message
     {
         std::cout << networkData["message"].toString() << '\n';
@@ -191,6 +198,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case char2int("loot"):
     {
         eventHandler.stopMonsterAttack();
+        network.takeLoot();
         break;
     }
     case char2int("teleport"):
