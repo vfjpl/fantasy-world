@@ -26,16 +26,21 @@ class EventHandler
     std::deque<unsigned long> directions;
     //8
     sf::Clock clock;
+    unsigned long attack_id;
 
 public:
     Event pollEvent();
 
-    void startEvent(Event code);
-    void stopEvent(Event code);
-
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
     unsigned long getDir();
+    void startMonsterAttack(unsigned long id);
+    void stopMonsterAttack();
+    unsigned long getAttackId();
+
+private:
+    void startEvent(Event code);
+    void stopEvent(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED

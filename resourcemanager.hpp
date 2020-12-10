@@ -14,7 +14,7 @@ enum class Graphic
     ITEM,
     CHEST,
     CHEST_OPEN,
-    OBJECT,
+    GAME_OBJECT,
     DIRECT,
 };
 

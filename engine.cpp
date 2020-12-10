@@ -92,6 +92,7 @@ void Engine::game_logic()
         network.move(eventHandler.getDir());
         break;
     case Event::ATTACK:
+        network.attackMonster(eventHandler.getAttackId());
         break;
     default:
         break;
@@ -189,7 +190,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
-        eventHandler.stopEvent(Event::ATTACK);
+        eventHandler.stopMonsterAttack();
         break;
     }
     case char2int("teleport"):
@@ -201,6 +202,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case char2int("load_game"):
     {
         process_network(network.receiveInit(networkData["token"]));
+        break;
+    }
+    case char2int("json"):
+    {
         break;
     }
     default:
@@ -263,6 +268,8 @@ void Engine::mousePress(sf::Vector2i point)
     MapClickData data = map.mapMouseClick(window, point);
     if(data.chestID)
         network.openChest(data.chestID);
+    if(data.monsterID)
+        eventHandler.startMonsterAttack(data.monsterID);
     if(data.item)
         network.pickUpItem(data.x, data.y);
     if(data.tile)

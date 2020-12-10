@@ -247,10 +247,10 @@ void Map::addTile(const Poco::DynamicAny& data)
         tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
         break;
     case 21://well
-        tiles.emplace_back(ResourceManager::getTexture("25b98a9f83d82c02f60bdf8849aaa940.png", Graphic::OBJECT));
+        tiles.emplace_back(ResourceManager::getTexture("25b98a9f83d82c02f60bdf8849aaa940.png", Graphic::GAME_OBJECT));
         break;
     default:
-        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::OBJECT), data["width"], data["height"]);
+        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::GAME_OBJECT), data["width"], data["height"]);
         break;
     }//end switch
     tiles.back().setPosition(data["x"], data["y"]);
@@ -259,7 +259,7 @@ void Map::addTile(const Poco::DynamicAny& data)
 void Map::addMapObject(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
-    map_objects[id].setTexture(ResourceManager::getTexture(data["file"], Graphic::OBJECT), data["width"], data["height"]);
+    map_objects[id].setTexture(ResourceManager::getTexture(data["file"], Graphic::GAME_OBJECT), data["width"], data["height"]);
     map_objects[id].setPosition(data["x"], data["y"]);
 }
 
