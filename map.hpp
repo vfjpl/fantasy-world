@@ -41,6 +41,7 @@ class Map
     std::vector<sf::Sprite> map_backgrounds;
     std::vector<Tile> tiles;
     //8
+    Poco::DynamicAny obstacles;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
     sf::Mutex mutex;

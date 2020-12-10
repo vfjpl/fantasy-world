@@ -29,6 +29,8 @@ void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 
 void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
+    obstacles.swap(const_cast<Poco::DynamicAny&>(data["obstacles"]));
+
     addLocalPlayer(data["map_positions"], localPlayer);
 
     //todo better
