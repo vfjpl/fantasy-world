@@ -41,10 +41,12 @@ class Map
     std::vector<sf::Sprite> map_backgrounds;
     std::vector<Tile> tiles;
     //8
-    Poco::DynamicAny obstacles;
+    sf::Mutex mutex;
     sf::Vector2i current_camera;
     sf::Vector2i desired_camera;
-    sf::Mutex mutex;
+    Poco::DynamicAny obstacles;
+    unsigned long max_x;
+    unsigned long max_y;
 
 public:
     void setup(const sf::View& view);
@@ -63,11 +65,12 @@ public:
     void openChest(const Poco::DynamicAny& data);
 
     MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
+    bool isObstacle(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
     void clear();
 
 private:
-    void addLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
+    void loadMapPositionData(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void setCamera(unsigned long x, unsigned long y);
     void moveCamera(unsigned long x, unsigned long y);
 

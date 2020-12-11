@@ -14,10 +14,10 @@ void Map::setup(const sf::View& view)
 
 void Map::moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    unsigned long x = data["x"];
-    unsigned long y = data["y"];
-    moveCamera(x, y);
-    players[localPlayer.id].move(x, y);
+    localPlayer.x = data["x"];
+    localPlayer.y = data["y"];
+    moveCamera(localPlayer.x, localPlayer.y);
+    players[localPlayer.id].move(localPlayer.x, localPlayer.y);
     players[localPlayer.id].setDir(data["dir"]);
 }
 
@@ -30,8 +30,7 @@ void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
     obstacles.swap(const_cast<Poco::DynamicAny&>(data["obstacles"]));
-
-    addLocalPlayer(data["map_positions"], localPlayer);
+    loadMapPositionData(data["map_positions"], localPlayer);
 
     //todo better
     if(data["map"]["type"] == 2ul)
@@ -153,6 +152,13 @@ MapClickData Map::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
             isMapItem(coords), isTile(coords)};
 }
 
+bool Map::isObstacle(unsigned long x, unsigned long y)
+{
+    if(x >= max_x || y >= max_y)
+        return true;
+    return obstacles[x][y];
+}
+
 void Map::draw(sf::RenderWindow& window)
 {
     sf::Lock lock(mutex);
@@ -195,13 +201,15 @@ void Map::clear()
 
 // private
 
-void Map::addLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::loadMapPositionData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
 {
-    unsigned long x = data["PLAYER_X"];
-    unsigned long y = data["PLAYER_Y"];
-    setCamera(x, y);
+    max_x = data["MAX_X"];
+    max_y = data["MAX_Y"];
+    localPlayer.x = data["PLAYER_X"];
+    localPlayer.y = data["PLAYER_Y"];
+    setCamera(localPlayer.x, localPlayer.y);
     players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
-    players[localPlayer.id].setPosition(x, y);
+    players[localPlayer.id].setPosition(localPlayer.x, localPlayer.y);
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)
