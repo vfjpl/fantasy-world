@@ -282,9 +282,43 @@ void Engine::mousePress(sf::Vector2i point)
         network.pickUpItem(data.x, data.y);
     if(data.tile)
         network.useElement(data.x, data.y);
+
+    findPath(data.x, data.y);
 }
 
 void Engine::mouseRelease(sf::Vector2i point)
 {
 
+}
+
+void Engine::findPath(unsigned long x, unsigned long y)
+{
+    std::deque<sf::Vector2i> frontier;
+    std::map<sf::Vector2i, sf::Vector2i, std::equal_to<sf::Vector2i>> came_from;
+    sf::Vector2i start(localPlayer.x, localPlayer.y);
+    sf::Vector2i goal(x, y);
+
+    came_from.emplace(start, start);
+    frontier.emplace_front(start);
+
+    do
+    {
+        sf::Vector2i current = frontier.front();
+        frontier.pop_front();
+
+        for(auto next: {sf::Vector2i(current.x - 1, current.y),
+                        sf::Vector2i(current.x, current.y - 1),
+                        sf::Vector2i(current.x, current.y + 1),
+                        sf::Vector2i(current.x + 1, current.y)})
+        {
+            if(map.isObstacle(next.x, next.y))
+                continue;
+            if(came_from.count(next))
+                continue;
+
+            came_from.emplace(next, current);
+            frontier.emplace_back(next);
+        }
+    }
+    while(!frontier.empty());
 }
