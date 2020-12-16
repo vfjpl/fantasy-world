@@ -293,30 +293,28 @@ void Engine::mouseRelease(sf::Vector2i point)
 
 void Engine::findPath(unsigned long x, unsigned long y)
 {
-    std::deque<sf::Vector2i> frontier;
-    std::map<sf::Vector2i, sf::Vector2i, std::equal_to<sf::Vector2i>> came_from;
-    sf::Vector2i start(localPlayer.x, localPlayer.y);
-    sf::Vector2i goal(x, y);
-
-    came_from.emplace(start, start);
-    frontier.emplace_front(start);
+    std::pair<unsigned long, unsigned long> start(localPlayer.x, localPlayer.y);
+    std::deque<std::pair<unsigned long, unsigned long>> frontier;
+    std::map<std::pair<unsigned long, unsigned long>, unsigned long> came_from;
+    came_from.emplace(start, 0ul);
+    frontier.emplace_back(start);
 
     do
     {
-        sf::Vector2i current = frontier.front();
+        std::pair<unsigned long, unsigned long> current = frontier.front();
         frontier.pop_front();
 
-        for(auto next: {sf::Vector2i(current.x - 1, current.y),
-                        sf::Vector2i(current.x, current.y - 1),
-                        sf::Vector2i(current.x, current.y + 1),
-                        sf::Vector2i(current.x + 1, current.y)})
+        for(auto next: {std::pair<unsigned long, unsigned long>(current.first - 1, current.second),
+                        std::pair<unsigned long, unsigned long>(current.first, current.second - 1),
+                        std::pair<unsigned long, unsigned long>(current.first, current.second + 1),
+                        std::pair<unsigned long, unsigned long>(current.first + 1, current.second)})
         {
-            if(map.isObstacle(next.x, next.y))
+            if(map.isObstacle(next.first, next.second))
                 continue;
             if(came_from.count(next))
                 continue;
 
-            came_from.emplace(next, current);
+            came_from.emplace(next, 0ul);
             frontier.emplace_back(next);
         }
     }
