@@ -36,8 +36,6 @@ private:
     void keyRelease(sf::Keyboard::Key code);
     void mousePress(sf::Vector2i point);
     void mouseRelease(sf::Vector2i point);
-
-    void findPath(unsigned long x, unsigned long y);
 };
 
 #endif // ENGINE_HPP_INCLUDED

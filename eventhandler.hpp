@@ -1,8 +1,9 @@
 #ifndef EVENTHANDLER_HPP_INCLUDED
 #define EVENTHANDLER_HPP_INCLUDED
 
-#include <SFML/System/Clock.hpp>
-#include <deque>
+#include "map.hpp"
+
+typedef std::pair<unsigned long, unsigned long> Position;
 
 enum class Event
 {
@@ -24,6 +25,8 @@ class EventHandler
     //80
     std::deque<timedEvent> events;
     std::deque<unsigned long> directions;
+    //48
+    std::map<Position, unsigned long> path;
     //8
     sf::Clock clock;
     unsigned long attack_id;
@@ -31,9 +34,10 @@ class EventHandler
 public:
     Event pollEvent();
 
+    void goToPos(Map& map, Position start, Position goal);
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
-    unsigned long getDir();
+    unsigned long getDir(Position pos);
     void startMonsterAttack(unsigned long id);
     void stopMonsterAttack();
     unsigned long getAttackId();
