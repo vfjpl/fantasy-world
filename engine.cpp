@@ -89,7 +89,7 @@ void Engine::game_logic()
     switch(eventHandler.pollEvent())
     {
     case Event::MOVE:
-        network.move(eventHandler.getDir(Position(localPlayer.x, localPlayer.y)));
+        network.move(eventHandler.getDir());
         break;
     case Event::ATTACK:
         network.attackMonster(eventHandler.getAttackId());
@@ -282,8 +282,6 @@ void Engine::mousePress(sf::Vector2i point)
         network.pickUpItem(data.x, data.y);
     if(data.tile)
         network.useElement(data.x, data.y);
-
-    eventHandler.goToPos(map, Position(localPlayer.x, localPlayer.y), Position(data.x, data.y));
 }
 
 void Engine::mouseRelease(sf::Vector2i point)
