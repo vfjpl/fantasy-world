@@ -33,15 +33,39 @@ Event EventHandler::pollEvent()
     return Event::NONE;
 }
 
+void EventHandler::startEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found == it_end)
+        events.emplace_front(code);
+}
+
+void EventHandler::stopEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found != it_end)
+        events.erase(it_found);
+}
+
 void EventHandler::startMove(unsigned long dir)
 {
-    auto it_begin = directions.cbegin();
-    auto it_end = directions.cend();
-    auto it_found = std::find(it_begin, it_end, dir);
     if(directions.empty())
-        startEvent(Event::MOVE);
-    if(it_found == it_end)
+    {
         directions.emplace_back(dir);
+        startEvent(Event::MOVE);
+    }
+    else
+    {
+        auto it_begin = directions.cbegin();
+        auto it_end = directions.cend();
+        auto it_found = std::find(it_begin, it_end, dir);
+        if(it_found == it_end)
+            directions.emplace_back(dir);
+    }
 }
 
 void EventHandler::stopMove(unsigned long dir)
@@ -64,8 +88,8 @@ void EventHandler::startMonsterAttack(unsigned long id)
 {
     if(attack_id == id)
     {
-        attack_id = 0;
         stopEvent(Event::ATTACK);
+        attack_id = 0;
     }
     else
     {
@@ -78,32 +102,12 @@ void EventHandler::stopMonsterAttack()
 {
     if(attack_id != 0)
     {
-        attack_id = 0;
         stopEvent(Event::ATTACK);
+        attack_id = 0;
     }
 }
 
 unsigned long EventHandler::getAttackId()
 {
     return attack_id;
-}
-
-// private
-
-void EventHandler::startEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found == it_end)
-        events.emplace_front(code);
-}
-
-void EventHandler::stopEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found != it_end)
-        events.erase(it_found);
 }

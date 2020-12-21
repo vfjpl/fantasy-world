@@ -84,6 +84,71 @@ void Engine::process_input()
     }//end while
 }
 
+void Engine::keyPress(sf::Keyboard::Key code)
+{
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        eventHandler.startMove(1);
+        break;
+    case sf::Keyboard::D:
+        eventHandler.startMove(2);
+        break;
+    case sf::Keyboard::S:
+        eventHandler.startMove(4);
+        break;
+    case sf::Keyboard::W:
+        eventHandler.startMove(3);
+        break;
+    case sf::Keyboard::Escape:
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void Engine::keyRelease(sf::Keyboard::Key code)
+{
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        eventHandler.stopMove(1);
+        break;
+    case sf::Keyboard::D:
+        eventHandler.stopMove(2);
+        break;
+    case sf::Keyboard::S:
+        eventHandler.stopMove(4);
+        break;
+    case sf::Keyboard::W:
+        eventHandler.stopMove(3);
+        break;
+    case sf::Keyboard::Escape:
+        window.close();
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void Engine::mousePress(sf::Vector2i point)
+{
+    MapClickData data = map.mapMouseClick(window, point);
+    if(data.chestID)
+        network.openChest(data.chestID);
+    if(data.monsterID)
+        eventHandler.startMonsterAttack(data.monsterID);
+    if(data.item)
+        network.pickUpItem(data.x, data.y);
+    if(data.tile)
+        network.useElement(data.x, data.y);
+}
+
+void Engine::mouseRelease(sf::Vector2i point)
+{
+
+}
+
 void Engine::game_logic()
 {
     switch(eventHandler.pollEvent())
@@ -222,69 +287,4 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         break;
     }
     }//end switch
-}
-
-void Engine::keyPress(sf::Keyboard::Key code)
-{
-    switch(code)
-    {
-    case sf::Keyboard::A:
-        eventHandler.startMove(1);
-        break;
-    case sf::Keyboard::D:
-        eventHandler.startMove(2);
-        break;
-    case sf::Keyboard::S:
-        eventHandler.startMove(4);
-        break;
-    case sf::Keyboard::W:
-        eventHandler.startMove(3);
-        break;
-    case sf::Keyboard::Escape:
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void Engine::keyRelease(sf::Keyboard::Key code)
-{
-    switch(code)
-    {
-    case sf::Keyboard::A:
-        eventHandler.stopMove(1);
-        break;
-    case sf::Keyboard::D:
-        eventHandler.stopMove(2);
-        break;
-    case sf::Keyboard::S:
-        eventHandler.stopMove(4);
-        break;
-    case sf::Keyboard::W:
-        eventHandler.stopMove(3);
-        break;
-    case sf::Keyboard::Escape:
-        window.close();
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void Engine::mousePress(sf::Vector2i point)
-{
-    MapClickData data = map.mapMouseClick(window, point);
-    if(data.chestID)
-        network.openChest(data.chestID);
-    if(data.monsterID)
-        eventHandler.startMonsterAttack(data.monsterID);
-    if(data.item)
-        network.pickUpItem(data.x, data.y);
-    if(data.tile)
-        network.useElement(data.x, data.y);
-}
-
-void Engine::mouseRelease(sf::Vector2i point)
-{
-
 }

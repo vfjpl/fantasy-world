@@ -28,14 +28,14 @@ private:
     void setup_window();
 
     void process_input();
-    void game_logic();
-    void draw_frame();
-    void process_network(const Poco::DynamicAny& networkData);
-
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
     void mousePress(sf::Vector2i point);
     void mouseRelease(sf::Vector2i point);
+
+    void game_logic();
+    void draw_frame();
+    void process_network(const Poco::DynamicAny& networkData);
 };
 
 #endif // ENGINE_HPP_INCLUDED

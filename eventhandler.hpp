@@ -30,6 +30,8 @@ class EventHandler
 
 public:
     Event pollEvent();
+    void startEvent(Event code);
+    void stopEvent(Event code);
 
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
@@ -37,10 +39,6 @@ public:
     void startMonsterAttack(unsigned long id);
     void stopMonsterAttack();
     unsigned long getAttackId();
-
-private:
-    void startEvent(Event code);
-    void stopEvent(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED
