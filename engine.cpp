@@ -154,7 +154,7 @@ void Engine::game_logic()
     switch(eventHandler.pollEvent())
     {
     case Event::MOVE:
-        network.move(eventHandler.getDir());
+        moveLocalPlayer(eventHandler.getDir());
         break;
     case Event::ATTACK:
         network.attackMonster(eventHandler.getAttackId());
@@ -162,6 +162,14 @@ void Engine::game_logic()
     default:
         break;
     }//end switch
+}
+
+void Engine::moveLocalPlayer(unsigned long dir)
+{
+    if(dir)
+        network.move(dir);
+    else
+        eventHandler.stopAllMove();
 }
 
 void Engine::draw_frame()

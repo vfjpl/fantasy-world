@@ -27,6 +27,7 @@ public:
 private:
     void setup_window();
 
+
     void process_input();
     void keyPress(sf::Keyboard::Key code);
     void keyRelease(sf::Keyboard::Key code);
@@ -34,7 +35,10 @@ private:
     void mouseRelease(sf::Vector2i point);
 
     void game_logic();
+    void moveLocalPlayer(unsigned long dir);
+
     void draw_frame();
+
     void process_network(const Poco::DynamicAny& networkData);
 };
 

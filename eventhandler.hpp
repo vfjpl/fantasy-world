@@ -4,6 +4,8 @@
 #include <SFML/System/Clock.hpp>
 #include <deque>
 
+typedef std::pair<unsigned long, unsigned long> Position;
+
 enum class Event
 {
     MOVE,
@@ -30,15 +32,19 @@ class EventHandler
 
 public:
     Event pollEvent();
-    void startEvent(Event code);
-    void stopEvent(Event code);
 
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
+    void stopAllMove();
     unsigned long getDir();
+
     void startMonsterAttack(unsigned long id);
     void stopMonsterAttack();
     unsigned long getAttackId();
+
+private:
+    void startEvent(Event code);
+    void stopEvent(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED

@@ -33,23 +33,6 @@ Event EventHandler::pollEvent()
     return Event::NONE;
 }
 
-void EventHandler::startEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found == it_end)
-        events.emplace_front(code);
-}
-
-void EventHandler::stopEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found != it_end)
-        events.erase(it_found);
-}
 
 void EventHandler::startMove(unsigned long dir)
 {
@@ -75,13 +58,18 @@ void EventHandler::stopMove(unsigned long dir)
     auto it_found = std::find(it_begin, it_end, dir);
     if(it_found != it_end)
         directions.erase(it_found);
-    if(directions.empty())
-        stopEvent(Event::MOVE);
+}
+
+void EventHandler::stopAllMove()
+{
+    stopEvent(Event::MOVE);
 }
 
 unsigned long EventHandler::getDir()
 {
-    return directions.back();
+    if(!directions.empty())
+        return directions.back();
+    return 0;
 }
 
 void EventHandler::startMonsterAttack(unsigned long id)
@@ -110,4 +98,24 @@ void EventHandler::stopMonsterAttack()
 unsigned long EventHandler::getAttackId()
 {
     return attack_id;
+}
+
+// private
+
+void EventHandler::startEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found == it_end)
+        events.emplace_front(code);
+}
+
+void EventHandler::stopEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found != it_end)
+        events.erase(it_found);
 }
