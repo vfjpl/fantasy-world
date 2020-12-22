@@ -16,6 +16,18 @@ sf::Time getPeriod(Event code)
         return sf::Time::Zero;
     }//end switch
 }
+unsigned long positionsToDir(Position from, Position to)
+{
+    if(from.second < to.second)
+        return 4;
+    if(from.second > to.second)
+        return 3;
+    if(from.first < to.first)
+        return 2;
+    if(from.first > to.first)
+        return 1;
+    return 0;
+}
 }
 
 Event EventHandler::pollEvent()
@@ -59,9 +71,36 @@ void EventHandler::stopMove(unsigned long dir)
         directions.erase(it_found);
 }
 
-void EventHandler::startMovePath(Map& map, LocalPlayer& LocalPlayer)
+void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y)
 {
+    std::deque<Position> frontier;
+    frontier.emplace_back(Position(x, y));
 
+    path.clear();
+    path.emplace(Position(x, y), 0ul);
+
+    while(!frontier.empty())
+    {
+        Position current = frontier.front();
+        frontier.pop_front();
+
+        if(current == Position(localPlayer.x, localPlayer.y))
+            break;
+
+        for(auto next: {Position(current.first - 1, current.second),
+                        Position(current.first, current.second - 1),
+                        Position(current.first, current.second + 1),
+                        Position(current.first + 1, current.second)})
+        {
+            if(map.isObstacle(next.first - 1, next.second - 1))
+                continue;
+            if(path.count(next))
+                continue;
+
+            path.emplace(next, positionsToDir(next, current));
+            frontier.emplace_back(next);
+        }
+    }
 }
 
 void EventHandler::stopMoveEvent()

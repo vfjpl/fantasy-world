@@ -37,7 +37,7 @@ public:
 
     void startMove(unsigned long dir);
     void stopMove(unsigned long dir);
-    void startMovePath(Map& map, LocalPlayer& LocalPlayer);
+    void startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y);
     void stopMoveEvent();
     unsigned long getDir(LocalPlayer& localPlayer);
 
