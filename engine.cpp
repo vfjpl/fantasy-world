@@ -291,10 +291,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         process_network(network.receiveInit(networkData["token"]));
         break;
     }
-    case char2int("json"):
-    {
-        break;
-    }
+    //case char2int("json"):
     default:
     {
         std::cout << networkData["code"].toString() << '\n';
