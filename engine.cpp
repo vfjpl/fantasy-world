@@ -133,14 +133,21 @@ void Engine::keyRelease(sf::Keyboard::Key code)
 void Engine::mousePress(sf::Vector2i point)
 {
     MapClickData data = map.mapMouseClick(window, point);
-    if(data.chestID)
-        network.openChest(data.chestID);
-    if(data.monsterID)
-        eventHandler.startMonsterAttack(data.monsterID);
-    if(data.item)
-        network.pickUpItem(data.x, data.y);
-    if(data.tile)
-        network.useElement(data.x, data.y);
+    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.item || data.tile)
+    {
+        if(data.chestID)
+            network.openChest(data.chestID);
+        if(data.monsterID)
+            eventHandler.startMonsterAttack(data.monsterID);
+        if(data.item)
+            network.pickUpItem(data.x, data.y);
+        if(data.tile)
+            network.useElement(data.x, data.y);
+    }
+    else
+    {
+        eventHandler.startMovePath(map, localPlayer, data.x, data.y);
+    }
 }
 
 void Engine::mouseRelease(sf::Vector2i point)

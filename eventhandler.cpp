@@ -101,6 +101,7 @@ void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned lo
             frontier.emplace_back(next);
         }
     }
+    startEvent(Event::MOVE);
 }
 
 void EventHandler::stopMoveEvent()
@@ -111,10 +112,10 @@ void EventHandler::stopMoveEvent()
 
 unsigned long EventHandler::getDir(LocalPlayer& localPlayer)
 {
-    if(!path.empty())
-        return path[Position(localPlayer.x, localPlayer.y)];
     if(!directions.empty())
         return directions.back();
+    if(!path.empty())
+        return path[Position(localPlayer.x, localPlayer.y)];
     return 0;
 }
 
