@@ -1,6 +1,5 @@
 #include "engine.hpp"
 #include "helperfunctions.hpp"
-#include <SFML/Window/Event.hpp>
 #include <iostream>
 
 // view-source:http://alkatria.pl/templates/client/default/js/game.js
@@ -154,7 +153,7 @@ void Engine::game_logic()
     switch(eventHandler.pollEvent())
     {
     case Event::MOVE:
-        moveLocalPlayer(eventHandler.getDir());
+        moveLocalPlayer(eventHandler.getDir(localPlayer));
         break;
     case Event::ATTACK:
         network.attackMonster(eventHandler.getAttackId());
@@ -169,7 +168,7 @@ void Engine::moveLocalPlayer(unsigned long dir)
     if(dir)
         network.move(dir);
     else
-        eventHandler.stopAllMove();
+        eventHandler.stopMoveEvent();
 }
 
 void Engine::draw_frame()

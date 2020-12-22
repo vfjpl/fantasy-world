@@ -1,5 +1,4 @@
 #include "eventhandler.hpp"
-#include <algorithm>
 
 namespace
 {
@@ -60,13 +59,21 @@ void EventHandler::stopMove(unsigned long dir)
         directions.erase(it_found);
 }
 
-void EventHandler::stopAllMove()
+void EventHandler::startMovePath(Map& map, LocalPlayer& LocalPlayer)
 {
-    stopEvent(Event::MOVE);
+
 }
 
-unsigned long EventHandler::getDir()
+void EventHandler::stopMoveEvent()
 {
+    stopEvent(Event::MOVE);
+    path.clear();
+}
+
+unsigned long EventHandler::getDir(LocalPlayer& localPlayer)
+{
+    if(!path.empty())
+        return path[Position(localPlayer.x, localPlayer.y)];
     if(!directions.empty())
         return directions.back();
     return 0;
