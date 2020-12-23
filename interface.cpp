@@ -7,7 +7,8 @@
 void Interface::setup(sf::RenderWindow& window)
 {
     gui.setTarget(window);
-    chatbox = tgui::ChatBox::create();
+    chatBox = tgui::ChatBox::create();
+    healthBar = tgui::ProgressBar::create();
 }
 
 void Interface::loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
@@ -34,6 +35,11 @@ void Interface::loginScreen(Network* network, LocalPlayer* localplayer, sf::Vect
     gui.add(editBoxUsername);
     gui.add(editBoxPassword);
     gui.add(button);
+}
+
+void Interface::health(const Poco::DynamicAny& data)
+{
+
 }
 
 void Interface::chatMessage(const Poco::DynamicAny& data)
@@ -84,18 +90,17 @@ void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vecto
         editbox->setText(sf::String());
     });
 
-    chatbox->setSize("100%", bindTop(editbox));
+    chatBox->setSize("100%", bindTop(editbox));
 
     auto chatwindow = tgui::ChildWindow::create();
     chatwindow->setResizable();
     chatwindow->add(editbox);
-    chatwindow->add(chatbox);
+    chatwindow->add(chatBox);
 
     gui.add(chatwindow);
 }
 
 void Interface::addChatLine(const std::string& line)
 {
-    // fromUtf8 don't work with Poco::DynamicAny
-    chatbox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
+    chatBox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
 }

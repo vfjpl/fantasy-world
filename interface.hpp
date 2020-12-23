@@ -3,6 +3,7 @@
 
 #include <TGUI/Gui.hpp>
 #include <TGUI/Widgets/ChatBox.hpp>
+#include <TGUI/Widgets/ProgressBar.hpp>
 #include "network.hpp"
 
 class Interface
@@ -10,13 +11,17 @@ class Interface
     //248
     tgui::Gui gui;
     //16
-    tgui::ChatBox::Ptr chatbox;
+    tgui::ChatBox::Ptr chatBox;
+    tgui::ProgressBar::Ptr healthBar;
 
 public:
     void setup(sf::RenderWindow& window);
 
     void loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+
+    void health(const Poco::DynamicAny& data);
     void chatMessage(const Poco::DynamicAny& data);
+
     bool handleEvent(const sf::Event& event);
     void draw();
 
