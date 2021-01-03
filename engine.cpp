@@ -229,8 +229,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.loadData_100(networkData["data"], localPlayer);
         break;
     }
-    //case 101://my movement
-    //case 102://my back movement
     case 685://open chest (general update?)
     {
         map.openChest(networkData);
@@ -280,10 +278,9 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         network.takeLoot();
         break;
     }
-    case char2int("teleport"):
+    case char2int("json"):
     {
-        map.clear();
-        map.loadData_teleport(networkData["data"], localPlayer);
+        process_network(network.receiveInit(networkData["hash"]));
         break;
     }
     case char2int("load_game"):
@@ -291,7 +288,12 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         process_network(network.receiveInit(networkData["token"]));
         break;
     }
-    //case char2int("json"):
+    case char2int("teleport"):
+    {
+        map.clear();
+        map.loadData_teleport(networkData["data"], localPlayer);
+        break;
+    }
     default:
     {
         std::cout << networkData["code"].toString() << '\n';
