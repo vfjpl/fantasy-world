@@ -13,7 +13,9 @@ class Tile
     unsigned long rect_height;
 
 public:
-    Tile(const sf::Texture& texture, unsigned long width = 32, unsigned long height = 32);
+    Tile();
+    Tile(const sf::Texture& texture);
+    Tile(const sf::Texture& texture, unsigned long width, unsigned long height);
     void setPosition(unsigned long x, unsigned long y);
 
     bool contains(sf::Vector2f coords);

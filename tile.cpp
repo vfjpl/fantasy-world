@@ -1,5 +1,18 @@
 #include "tile.hpp"
 
+Tile::Tile():
+    rect_width(32),
+    rect_height(32)
+{
+    sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+}
+
+Tile::Tile(const sf::Texture& texture):
+    sprite(texture),
+    rect_width(32),
+    rect_height(32) {}
+
+
 Tile::Tile(const sf::Texture& texture, unsigned long width, unsigned long height):
     sprite(texture),
     rect_width(width),

@@ -257,7 +257,7 @@ void Map::addTile(const Poco::DynamicAny& data)
         tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
         break;
     case 21://well
-        tiles.emplace_back(ResourceManager::getTexture("25b98a9f83d82c02f60bdf8849aaa940.png", Graphic::GAME_OBJECT));
+        tiles.emplace_back();
         break;
     default:
         tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::GAME_OBJECT), data["width"], data["height"]);
