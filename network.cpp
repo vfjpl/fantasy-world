@@ -45,7 +45,7 @@ Network::Network():
     https("alkatria.pl"),
     wssHTTPS("alkatria.pl"),
     wssREQUEST(Poco::Net::HTTPRequest::HTTP_GET,
-               "/websocket-test",
+               "/classic",
                Poco::Net::HTTPRequest::HTTP_1_1),
     buffer(0),
     socket(wssHTTPS, wssREQUEST, wssRESPONSE) {}
