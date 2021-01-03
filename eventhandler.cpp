@@ -73,19 +73,19 @@ void EventHandler::stopMove(unsigned long dir)
 
 void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y)
 {
-    std::deque<Position> frontier;
-    frontier.emplace_back(Position(x, y));
+    if(map.isObstacle(x - 1, y - 1))
+        return;
 
     path.clear();
     path.emplace(Position(x, y), 0ul);
+
+    std::deque<Position> frontier;
+    frontier.emplace_back(Position(x, y));
 
     while(!frontier.empty())
     {
         Position current = frontier.front();
         frontier.pop_front();
-
-        if(current == Position(localPlayer.x, localPlayer.y))
-            break;
 
         for(auto next: {Position(current.first - 1, current.second),
                         Position(current.first, current.second - 1),

@@ -141,6 +141,7 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
 void Map::openChest(const Poco::DynamicAny& data)
 {
     unsigned long id = data["chest"];
+    //todo better
     chests[id].setTexture(ResourceManager::getTexture("1", Graphic::CHEST_OPEN));
 }
 

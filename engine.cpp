@@ -294,6 +294,16 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.loadData_teleport(networkData["data"], localPlayer);
         break;
     }
+    case char2int("death"):
+    {
+        network.sendReload();
+        break;
+    }
+    case char2int("alert"):
+    {
+        std::cout << networkData["message"].toString() << '\n';
+        break;
+    }
     default:
     {
         std::cout << networkData["code"].toString() << '\n';
