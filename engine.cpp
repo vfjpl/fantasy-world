@@ -275,6 +275,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     {
         break;
     }
+    case char2int("spell_effect"):
+    {
+        break;
+    }
     case char2int("loot"):
     {
         eventHandler.stopMonsterAttack();

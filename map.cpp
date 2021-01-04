@@ -140,9 +140,13 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
 
 void Map::openChest(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["chest"];
     //todo better
-    chests[id].setTexture(ResourceManager::getTexture("1", Graphic::CHEST_OPEN));
+    if(data["chest"].size())
+    {
+        unsigned long id = data["chest"];
+        chests[id].setTexture(ResourceManager::getTexture("1", Graphic::CHEST_OPEN));
+    }
+    std::cout << data["text"].toString() << '\n';
 }
 
 MapClickData Map::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
