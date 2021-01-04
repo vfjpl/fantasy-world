@@ -253,7 +253,10 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         std::cout << networkData["message"].toString() << '\n';
         break;
     }
-    //case 1030://my health
+    case 1030://my health
+    {
+        break;
+    }
     case 1051://other player left
     {
         map.deletePlayer(networkData["player"]);
@@ -292,11 +295,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     {
         map.clear();
         map.loadData_teleport(networkData["data"], localPlayer);
-        break;
-    }
-    case char2int("death"):
-    {
-        network.sendReload();
         break;
     }
     case char2int("alert"):

@@ -42,7 +42,7 @@ public:
     void takeLoot();
     void pickUpItem(unsigned long x, unsigned long y);
     void useElement(unsigned long x, unsigned long y);
-    void sendReload();
+    void sendDeath();
     void attackPlayer(unsigned long target_id);
     void openChest(unsigned long id);
     void spell(unsigned long spell_id);

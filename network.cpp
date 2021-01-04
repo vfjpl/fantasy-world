@@ -195,7 +195,7 @@ void Network::useElement(unsigned long x, unsigned long y)
     send(data, 879);
 }
 
-void Network::sendReload()
+void Network::sendDeath()
 {
     Poco::DynamicStruct data;
     send(data, 1019);

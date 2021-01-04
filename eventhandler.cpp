@@ -51,6 +51,7 @@ void EventHandler::startMove(unsigned long dir)
     {
         directions.emplace_back(dir);
         startEvent(Event::MOVE);
+        path.clear();
     }
     else
     {
@@ -73,14 +74,13 @@ void EventHandler::stopMove(unsigned long dir)
 
 void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y)
 {
+    path.clear();
     if(map.isObstacle(x - 1, y - 1))
         return;
 
-    path.clear();
-    path.emplace(Position(x, y), 0ul);
-
     std::deque<Position> frontier;
-    frontier.emplace_back(Position(x, y));
+    frontier.emplace_front(Position(x, y));
+    path.emplace(Position(x, y), 0ul);
 
     while(!frontier.empty())
     {
