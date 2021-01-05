@@ -149,6 +149,20 @@ void Map::openChest(const Poco::DynamicAny& data)
     std::cout << data["text"].toString() << '\n';
 }
 
+void Map::updateTile(const Poco::DynamicAny& data)
+{
+    unsigned long x = data["x"];
+    unsigned long y = data["y"];
+    for(auto& i: tiles)
+    {
+        if(i.isOnPosition(x, y))
+        {
+            i.setTexture(ResourceManager::getTexture(data["file"], Graphic::GAME_OBJECT));
+            break;
+        }
+    }
+}
+
 MapClickData Map::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);

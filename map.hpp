@@ -63,6 +63,7 @@ public:
     void deleteMonster(const Poco::DynamicAny& data);
     void deletePlayer(const Poco::DynamicAny& data);
     void openChest(const Poco::DynamicAny& data);
+    void updateTile(const Poco::DynamicAny& data);
 
     MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
     bool isObstacle(unsigned long x, unsigned long y);

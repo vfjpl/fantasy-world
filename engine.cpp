@@ -285,6 +285,16 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         network.takeLoot();
         break;
     }
+    case char2int("show_tile"):
+    {
+        map.updateTile(networkData);
+        break;
+    }
+    case char2int("exhaust_tile"):
+    {
+        map.updateTile(networkData);
+        break;
+    }
     case char2int("json"):
     {
         process_network(network.receiveInit(networkData["hash"]));
