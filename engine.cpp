@@ -295,6 +295,12 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.updateTile(networkData);
         break;
     }
+    case char2int("multi_code"):
+    {
+        for(const auto& item: networkData["items"])
+            process_network(Poco::DynamicAny::parse(item));
+        break;
+    }
     case char2int("json"):
     {
         process_network(network.receiveInit(networkData["hash"]));
