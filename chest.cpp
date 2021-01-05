@@ -7,7 +7,8 @@ void Chest::setTexture(const sf::Texture& texture)
 
 void Chest::setPosition(unsigned long x, unsigned long y)
 {
-    sprite.setPosition((32 * x) - 32, (32 * y) - 32);
+    sprite.setPosition((32 * x) - 32,
+                       (32 * y) - 32);
 }
 
 bool Chest::contains(sf::Vector2f coords)

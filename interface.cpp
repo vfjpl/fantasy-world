@@ -1,8 +1,8 @@
 #include "interface.hpp"
-#include <TGUI/SignalImpl.hpp>
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
+#include <TGUI/SignalImpl.hpp>
 
 void Interface::setup(sf::RenderWindow& window)
 {

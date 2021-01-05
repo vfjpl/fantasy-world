@@ -2,9 +2,6 @@
 #define EVENTHANDLER_HPP_INCLUDED
 
 #include "map.hpp"
-#include "localplayer.hpp"
-
-typedef std::pair<unsigned long, unsigned long> Position;
 
 enum class Event
 {
@@ -12,7 +9,6 @@ enum class Event
     ATTACK,
     NONE,
 };
-
 struct timedEvent
 {
     sf::Time time;
@@ -20,6 +16,7 @@ struct timedEvent
     timedEvent(Event c): code(c) {}
     bool operator==(Event c) const { return code == c; }
 };
+typedef std::pair<unsigned long, unsigned long> Position;
 
 class EventHandler
 {
