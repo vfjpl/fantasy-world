@@ -99,6 +99,12 @@ void Map::updateMapData(const Poco::DynamicAny& data)
     }//end for
 }
 
+void Map::moveOutfit(const Poco::DynamicAny& data)
+{
+    unsigned long id = data["player"];
+    players[id].setDir(data["dir"]);
+}
+
 void Map::movePlayer(const Poco::DynamicAny& data)
 {
     unsigned long id = data["player"];
@@ -176,6 +182,14 @@ bool Map::isObstacle(unsigned long x, unsigned long y)
     if(x >= max_x || y >= max_y)
         return true;
     return obstacles[x][y];
+}
+
+bool Map::isNpc(unsigned long x, unsigned long y)
+{
+    for(auto& i: npcs)
+        if(i.second.isOnPosition(x, y))
+            return true;
+    return false;
 }
 
 void Map::draw(sf::RenderWindow& window)

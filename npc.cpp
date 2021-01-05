@@ -28,8 +28,15 @@ void Npc::setPosition(unsigned long x, unsigned long y)
 
 void Npc::move(unsigned long x, unsigned long y)
 {
+    position_x = x;
+    position_y = y;
     desired_px.x = (32 * x) - 32;
     desired_px.y = (32 * y) - 48;
+}
+
+bool Npc::isOnPosition(unsigned long x, unsigned long y)
+{
+    return (position_x == x && position_y == y);
 }
 
 bool Npc::contains(sf::Vector2f coords)

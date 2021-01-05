@@ -56,6 +56,7 @@ public:
     void loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void updateMapData(const Poco::DynamicAny& data);
 
+    void moveOutfit(const Poco::DynamicAny& data);
     void movePlayer(const Poco::DynamicAny& data);
     void addMapItem(const Poco::DynamicAny& data);
     void addPlayer(const Poco::DynamicAny& data);
@@ -67,6 +68,7 @@ public:
 
     MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
     bool isObstacle(unsigned long x, unsigned long y);
+    bool isNpc(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
     void clear();
 

@@ -219,11 +219,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.addPlayer(networkData);
         break;
     }
-    case 99://server message
-    {
-        std::cout << networkData["message"].toString() << '\n';
-        break;
-    }
     case 100://first load map data
     {
         map.loadData_100(networkData["data"], localPlayer);
@@ -246,11 +241,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 964://show attack/damage
     {
-        break;
-    }
-    case 1016://bottom message
-    {
-        std::cout << networkData["message"].toString() << '\n';
         break;
     }
     case 1030://my health
@@ -285,6 +275,11 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         network.takeLoot();
         break;
     }
+    case char2int("move_outfit"):
+    {
+        map.moveOutfit(networkData);
+        break;
+    }
     case char2int("show_tile"):
     {
         map.updateTile(networkData);
@@ -317,14 +312,9 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.loadData_teleport(networkData["data"], localPlayer);
         break;
     }
-    case char2int("alert"):
-    {
-        std::cout << networkData["message"].toString() << '\n';
-        break;
-    }
     default:
     {
-        std::cout << networkData["code"].toString() << '\n';
+        std::cout << networkData.toString() << '\n';
         break;
     }
     }//end switch
