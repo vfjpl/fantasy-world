@@ -2,9 +2,9 @@
 
 void MapObject::setTexture(const sf::Texture& texture, unsigned long width, unsigned long height)
 {
-    sprite.setTexture(texture, true);
     rect_width = width;
     rect_height = height;
+    sprite.setTexture(texture, true);
 }
 
 void MapObject::setPosition(unsigned long x, unsigned long y)

@@ -8,9 +8,9 @@ namespace
 {
 unsigned long var2int(const Poco::DynamicAny& var)
 {
-    if(var.isNumeric())
-        return var;
-    return str2int(var);
+    if(var.isString())
+        return str2int(var);
+    return var;
 }
 }
 
@@ -293,7 +293,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case char2int("multi_code"):
     {
         for(const auto& item: networkData["items"])
-            process_network(Poco::DynamicAny::parse(item));
+            process_network(item.isString() ? Poco::DynamicAny::parse(item) : item);
         break;
     }
     case char2int("json"):

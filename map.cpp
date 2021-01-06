@@ -150,7 +150,7 @@ void Map::openChest(const Poco::DynamicAny& data)
     if(data["chest"].size())
     {
         unsigned long id = data["chest"];
-        chests[id].setTexture(ResourceManager::getTexture("1", Graphic::CHEST_OPEN));
+        chests[id].setTexture(ResourceManager::getTexture(std::to_string(1ul), Graphic::CHEST_OPEN));
     }
     std::cout << data["text"].toString() << '\n';
 }
