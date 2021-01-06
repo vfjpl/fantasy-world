@@ -20,8 +20,9 @@ void Npc::setDir(unsigned long dir)
     sprite.setTextureRect(rect);
 }
 
-void Npc::setPosition(unsigned long x, unsigned long y)
+void Npc::setPosition(unsigned long x, unsigned long y, bool can_wak)
 {
+    npc_can_walk = can_wak;
     move(x, y);
     current_px = desired_px;
 }
@@ -36,7 +37,7 @@ void Npc::move(unsigned long x, unsigned long y)
 
 bool Npc::isOnPosition(unsigned long x, unsigned long y)
 {
-    return (position_x == x && position_y == y);
+    return (position_x == x && position_y == y && !npc_can_walk);
 }
 
 bool Npc::contains(sf::Vector2f coords)

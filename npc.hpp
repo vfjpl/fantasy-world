@@ -18,11 +18,12 @@ class Npc
     unsigned long steps;
     unsigned long frames_x;
     unsigned long frames_y;
+    bool npc_can_walk;
 
 public:
     void setTexture(const sf::Texture& texture);
     void setDir(unsigned long dir);
-    void setPosition(unsigned long x, unsigned long y);
+    void setPosition(unsigned long x, unsigned long y, bool can_walk);
     void move(unsigned long x, unsigned long y);
 
     bool isOnPosition(unsigned long x, unsigned long y);

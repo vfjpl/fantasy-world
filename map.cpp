@@ -324,7 +324,7 @@ void Map::addNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::NPC));
-    npcs[id].setPosition(data["x"], data["y"]);
+    npcs[id].setPosition(data["x"], data["y"], data["can_walk"]);
 }
 
 unsigned long Map::getChestID(sf::Vector2f coords)

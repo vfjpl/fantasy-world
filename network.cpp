@@ -179,6 +179,13 @@ void Network::takeLoot()
     send(data, 18);
 }
 
+void Network::sendReloadPlayer(unsigned long player_id)
+{
+    Poco::DynamicStruct data;
+    data.insert("player", player_id);
+    send(data, 71);
+}
+
 void Network::pickUpItem(unsigned long x, unsigned long y)
 {
     Poco::DynamicStruct data;
@@ -195,7 +202,7 @@ void Network::useElement(unsigned long x, unsigned long y)
     send(data, 879);
 }
 
-void Network::sendDeath()
+void Network::sendReload()
 {
     Poco::DynamicStruct data;
     send(data, 1019);
