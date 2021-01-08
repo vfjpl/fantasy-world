@@ -14,13 +14,13 @@ unsigned long var2int(const Poco::DynamicAny& var)
 }
 }
 
-void Engine::setup()
+void Engine::setup(sf::Thread& networkThread)
 {
     setup_window();
     interface.setup(window);
     map.setup(window.getDefaultView());
 
-    interface.loginScreen(&network, &localPlayer, window.getSize());
+    interface.loginScreen(&networkThread, &network, &localPlayer, window.getSize());
 }
 
 bool Engine::run_game()

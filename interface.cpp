@@ -11,7 +11,7 @@ void Interface::setup(sf::RenderWindow& window)
     healthBar = tgui::ProgressBar::create();
 }
 
-void Interface::loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -28,7 +28,7 @@ void Interface::loginScreen(Network* network, LocalPlayer* localplayer, sf::Vect
         if(network->credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(network, localplayer, windowSize);
+            selectHeroScreen(networkThread, network, localplayer, windowSize);
         }
     });
 
@@ -59,7 +59,7 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
     auto listBox = network->getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -70,16 +70,19 @@ void Interface::selectHeroScreen(Network* network, LocalPlayer* localplayer, sf:
     {
         network->selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(network, localplayer, windowSize);
+        gameScreen(networkThread, network, localplayer, windowSize);
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
     network->sendInit(network->getToken(localplayer), windowSize);
+    networkThread->launch();
+
+    //gui
 
     auto editbox = tgui::EditBox::create();
     editbox->setSize("100%", editbox->getFullSize().y);

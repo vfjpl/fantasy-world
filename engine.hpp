@@ -19,7 +19,7 @@ class Engine
     EventHandler eventHandler;
 
 public:
-    void setup();
+    void setup(sf::Thread& networkThread);
 
     bool run_game();
     bool run_network();

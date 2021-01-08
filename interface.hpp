@@ -1,6 +1,7 @@
 #ifndef INTERFACE_HPP_INCLUDED
 #define INTERFACE_HPP_INCLUDED
 
+#include <SFML/System/Thread.hpp>
 #include <TGUI/Gui.hpp>
 #include <TGUI/Widgets/ChatBox.hpp>
 #include <TGUI/Widgets/ProgressBar.hpp>
@@ -17,7 +18,7 @@ class Interface
 public:
     void setup(sf::RenderWindow& window);
 
-    void loginScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
 
     void health(const Poco::DynamicAny& data);
     void chatMessage(const Poco::DynamicAny& data);
@@ -26,8 +27,8 @@ public:
     void draw();
 
 private:
-    void selectHeroScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
-    void gameScreen(Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
     void addChatLine(const std::string& line);
 };
 
