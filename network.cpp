@@ -97,16 +97,16 @@ void Network::selectHero(const std::string& hero)
     https.receiveResponse(resp);
 }
 
-void Network::connect(LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Network::startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
-    std::string body = getGameData();
+    std::string body = loadGameData();
     wssREQUEST.setURI(getURI(body));
     socket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
-    sendInit(getTOKEN(body), windowSize);
+    sendStart(getTOKEN(body), windowSize);
     localplayer->looktype = getLOOKTYPE(body);
 }
 
-Poco::DynamicAny Network::receiveInit(const std::string& token)
+Poco::DynamicAny Network::receive(const std::string& token)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/json.php?token=" + token,
@@ -228,7 +228,7 @@ void Network::spellMonster(unsigned long spell_id, unsigned long target_id)
 
 // private
 
-std::string Network::getGameData()
+std::string Network::loadGameData()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/game",
@@ -239,7 +239,7 @@ std::string Network::getGameData()
     return toString(https.receiveResponse(resp));
 }
 
-void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
+void Network::sendStart(const std::string& token, sf::Vector2u windowSize)
 {
     std::vector<Poco::DynamicAny> jsonArray;
     jsonArray.emplace_back(windowSize.x);
@@ -249,6 +249,7 @@ void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
     json.insert("code", 1);
     json.insert("window", jsonArray);
     json.insert("token", token);
+
     sendJson(json.toString());
 }
 

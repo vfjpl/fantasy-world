@@ -79,7 +79,7 @@ void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, Lo
 
 void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
-    network->connect(localplayer, windowSize);
+    network->startWebSocket(localplayer, windowSize);
     networkThread->launch();
 
     //gui

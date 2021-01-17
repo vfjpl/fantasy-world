@@ -30,9 +30,9 @@ public:
     bool credentials(const std::string& login, const std::string& password);
     tgui::ListBox::Ptr getHeroesList();
     void selectHero(const std::string& hero);
-    void connect(LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize);
 
-    Poco::DynamicAny receiveInit(const std::string& token);
+    Poco::DynamicAny receive(const std::string& token);
     Poco::DynamicAny receive();
 
     void attackMonster(unsigned long target_id);
@@ -50,8 +50,8 @@ public:
     void spellMonster(unsigned long spell_id, unsigned long target_id);
 
 private:
-    std::string getGameData();
-    void sendInit(const std::string& token, sf::Vector2u windowSize);
+    std::string loadGameData();
+    void sendStart(const std::string& token, sf::Vector2u windowSize);
     void send(const Poco::DynamicStruct& data, unsigned long code);
     void send(const Poco::DynamicStruct& data, const char* code);
     void sendJson(const std::string& json);

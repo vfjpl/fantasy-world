@@ -298,12 +298,12 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("json"):
     {
-        process_network(network.receiveInit(networkData["hash"]));
+        process_network(network.receive(networkData["hash"]));
         break;
     }
     case char2int("load_game"):
     {
-        process_network(network.receiveInit(networkData["token"]));
+        process_network(network.receive(networkData["token"]));
         break;
     }
     case char2int("teleport"):
