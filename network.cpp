@@ -39,16 +39,18 @@ std::string getTOKEN(const std::string& body)
     unsigned long pos = body.find("token") + 9;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
+std::string getURI(const std::string& body)
+{
+    unsigned long pos = body.find("host") + 9;
+    return '/' + body.substr(pos, body.find('\'', pos) - pos);
+}
 }
 
 Network::Network():
     https("alkatria.pl"),
     wssHTTPS("alkatria.pl"),
-    wssREQUEST(Poco::Net::HTTPRequest::HTTP_GET,
-               "/classic",
-               Poco::Net::HTTPRequest::HTTP_1_1),
-    buffer(0),
-    socket(wssHTTPS, wssREQUEST, wssRESPONSE) {}
+    wssREQUEST(Poco::Net::HTTPRequest::HTTP_1_1),
+    buffer(0) {}
 
 
 bool Network::credentials(const std::string& login, const std::string& password)
@@ -95,30 +97,13 @@ void Network::selectHero(const std::string& hero)
     https.receiveResponse(resp);
 }
 
-std::string Network::getToken(LocalPlayer* localplayer)
+void Network::connect(LocalPlayer* localplayer, sf::Vector2u windowSize)
 {
-    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
-                                "/game",
-                                Poco::Net::HTTPRequest::HTTP_1_1);
-    Poco::Net::HTTPResponse resp;
-    requ.setCookies(cookies);
-    https.sendRequest(requ);
-    std::string body = toString(https.receiveResponse(resp));
+    std::string body = getGameData();
+    wssREQUEST.setURI(getURI(body));
+    socket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
+    sendInit(getTOKEN(body), windowSize);
     localplayer->looktype = getLOOKTYPE(body);
-    return getTOKEN(body);
-}
-
-void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
-{
-    std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(windowSize.x);
-    jsonArray.emplace_back(windowSize.y);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 1);
-    json.insert("window", jsonArray);
-    json.insert("token", token);
-    send(json.toString());
 }
 
 Poco::DynamicAny Network::receiveInit(const std::string& token)
@@ -136,7 +121,7 @@ Poco::DynamicAny Network::receive()
 {
     int flags;
     buffer.resize(0, false);
-    socket.receiveFrame(buffer, flags);
+    socket->receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(Poco::UTF8::unescape(
                                        std::string::const_iterator(buffer.begin()),
                                        std::string::const_iterator(buffer.end())));
@@ -243,12 +228,36 @@ void Network::spellMonster(unsigned long spell_id, unsigned long target_id)
 
 // private
 
+std::string Network::getGameData()
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/game",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    requ.setCookies(cookies);
+    https.sendRequest(requ);
+    return toString(https.receiveResponse(resp));
+}
+
+void Network::sendInit(const std::string& token, sf::Vector2u windowSize)
+{
+    std::vector<Poco::DynamicAny> jsonArray;
+    jsonArray.emplace_back(windowSize.x);
+    jsonArray.emplace_back(windowSize.y);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 1);
+    json.insert("window", jsonArray);
+    json.insert("token", token);
+    sendJson(json.toString());
+}
+
 void Network::send(const Poco::DynamicStruct& data, unsigned long code)
 {
     Poco::DynamicStruct json;
     json.insert("code", code);
     json.insert("data", data);
-    send(json.toString());
+    sendJson(json.toString());
 }
 
 void Network::send(const Poco::DynamicStruct& data, const char* code)
@@ -256,10 +265,10 @@ void Network::send(const Poco::DynamicStruct& data, const char* code)
     Poco::DynamicStruct json;
     json.insert("code", code);
     json.insert("data", data);
-    send(json.toString());
+    sendJson(json.toString());
 }
 
-void Network::send(const std::string& json)
+void Network::sendJson(const std::string& json)
 {
-    socket.sendFrame(json.data(), json.size());
+    socket->sendFrame(json.data(), json.size());
 }

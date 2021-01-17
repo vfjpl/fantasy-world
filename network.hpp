@@ -21,8 +21,8 @@ class Network
     //32
     Poco::Net::NameValueCollection cookies;
     Poco::Buffer<char> buffer;
-    //16
-    Poco::Net::WebSocket socket;
+    //8
+    Poco::Net::WebSocket* socket;
 
 public:
     Network();
@@ -30,8 +30,8 @@ public:
     bool credentials(const std::string& login, const std::string& password);
     tgui::ListBox::Ptr getHeroesList();
     void selectHero(const std::string& hero);
-    std::string getToken(LocalPlayer* localplayer);
-    void sendInit(const std::string& token, sf::Vector2u windowSize);
+    void connect(LocalPlayer* localplayer, sf::Vector2u windowSize);
+
     Poco::DynamicAny receiveInit(const std::string& token);
     Poco::DynamicAny receive();
 
@@ -50,9 +50,11 @@ public:
     void spellMonster(unsigned long spell_id, unsigned long target_id);
 
 private:
+    std::string getGameData();
+    void sendInit(const std::string& token, sf::Vector2u windowSize);
     void send(const Poco::DynamicStruct& data, unsigned long code);
     void send(const Poco::DynamicStruct& data, const char* code);
-    void send(const std::string& json);
+    void sendJson(const std::string& json);
 };
 
 #endif // NETWORK_HPP_INCLUDED
