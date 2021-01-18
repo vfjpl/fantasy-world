@@ -20,9 +20,9 @@ void Npc::setDir(unsigned long dir)
     sprite.setTextureRect(rect);
 }
 
-void Npc::setPosition(unsigned long x, unsigned long y, bool can_wak)
+void Npc::setPosition(unsigned long x, unsigned long y, bool can_walk)
 {
-    npc_can_walk = can_wak;
+    npc_can_walk = can_walk;
     move(x, y);
     current_px = desired_px;
 }

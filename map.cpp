@@ -159,6 +159,7 @@ void Map::updateTile(const Poco::DynamicAny& data)
 {
     unsigned long x = data["x"];
     unsigned long y = data["y"];
+    //todo better
     for(auto& i: tiles)
     {
         if(i.isOnPosition(x, y))
@@ -184,7 +185,7 @@ bool Map::isObstacle(unsigned long x, unsigned long y)
     return obstacles[x][y];
 }
 
-bool Map::isNpc(unsigned long x, unsigned long y)
+bool Map::isNpcOnPosition(unsigned long x, unsigned long y)
 {
     for(auto& i: npcs)
         if(i.second.isOnPosition(x, y))
@@ -273,13 +274,19 @@ void Map::moveNpc(const Poco::DynamicAny& data)
 
 void Map::addSingleMapData(const Poco::DynamicAny& data)
 {
-    map_backgrounds.emplace_back(ResourceManager::getTexture(data["id"], Graphic::MAP_SINGLE));
+    const sf::Texture& texture = ResourceManager::getTexture(data["id"], Graphic::MAP_SINGLE);
+    sf::Lock lock(mutex);
+    map_backgrounds.emplace_back(texture);
 }
 
 void Map::addMultiMapData(const Poco::DynamicAny& data)
 {
-    map_backgrounds.emplace_back(ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI));
-    map_backgrounds.back().setPosition(data["x"] * 640ul, data["y"] * 640ul);
+    const sf::Texture& texture = ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI);
+    float x = data["x"] * 640ul;
+    float y = data["y"] * 640ul;
+    sf::Lock lock(mutex);
+    map_backgrounds.emplace_back(texture);
+    map_backgrounds.back().setPosition(x, y);
 }
 
 void Map::addTile(const Poco::DynamicAny& data)

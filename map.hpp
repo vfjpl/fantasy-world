@@ -68,7 +68,7 @@ public:
 
     MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
     bool isObstacle(unsigned long x, unsigned long y);
-    bool isNpc(unsigned long x, unsigned long y);
+    bool isNpcOnPosition(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
     void clear();
 

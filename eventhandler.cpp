@@ -96,7 +96,7 @@ void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned lo
                 continue;
             if(path.count(next))
                 continue;
-            if(map.isNpc(next.first, next.second))
+            if(map.isNpcOnPosition(next.first, next.second))
                 continue;
 
             path.emplace(next, positionsToDir(next, current));
