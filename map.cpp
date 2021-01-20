@@ -254,8 +254,8 @@ void Map::setCamera(unsigned long x, unsigned long y)
 
 void Map::moveCamera(unsigned long x, unsigned long y)
 {
-    desired_camera.x = (32 * x) - 16;
-    desired_camera.y = (32 * y);
+    desired_camera.x = (x * 32) - 16;
+    desired_camera.y = (y * 32);
 }
 
 void Map::moveMonster(const Poco::DynamicAny& data)
@@ -294,16 +294,37 @@ void Map::addTile(const Poco::DynamicAny& data)
     switch((unsigned long)data["type"])
     {
     case 2://door
-        tiles.emplace_back(ResourceManager::getTexture(data["bg"], Graphic::DIRECT));
+    {
+        const sf::Texture& texture = ResourceManager::getTexture(data["bg"], Graphic::DIRECT);
+        unsigned long x = data["x"];
+        unsigned long y = data["y"];
+        sf::Lock lock(mutex);
+        tiles.emplace_back(texture);
+        tiles.back().setPosition(x, y);
         break;
+    }
     case 21://well
+    {
+        unsigned long x = data["x"];
+        unsigned long y = data["y"];
+        sf::Lock lock(mutex);
         tiles.emplace_back();
+        tiles.back().setPosition(x, y);
         break;
+    }
     default:
-        tiles.emplace_back(ResourceManager::getTexture(data["tile"], Graphic::GAME_OBJECT), data["width"], data["height"]);
+    {
+        const sf::Texture& texture = ResourceManager::getTexture(data["tile"], Graphic::GAME_OBJECT);
+        unsigned long width = data["width"];
+        unsigned long height = data["height"];
+        unsigned long x = data["x"];
+        unsigned long y = data["y"];
+        sf::Lock lock(mutex);
+        tiles.emplace_back(texture, width, height);
+        tiles.back().setPosition(x, y);
         break;
+    }
     }//end switch
-    tiles.back().setPosition(data["x"], data["y"]);
 }
 
 void Map::addMapObject(const Poco::DynamicAny& data)

@@ -28,8 +28,8 @@ void Player::setPosition(unsigned long x, unsigned long y)
 
 void Player::move(unsigned long x, unsigned long y)
 {
-    desired_px.x = (32 * x) - 32;
-    desired_px.y = (32 * y) - 48;
+    desired_px.x = (x * 32) - 32;
+    desired_px.y = (y * 32) - 48;
 }
 
 bool Player::contains(sf::Vector2f coords)

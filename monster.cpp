@@ -28,8 +28,8 @@ void Monster::setPosition(unsigned long x, unsigned long y)
 
 void Monster::move(unsigned long x, unsigned long y)
 {
-    desired_px.x = (32 * x) - ((rect.width - 32)/2);
-    desired_px.y = (32 * y) - (rect.height - 32);
+    desired_px.x = (x * 32) - ((rect.width - 32)/2);
+    desired_px.y = (y * 32) - (rect.height - 32);
 }
 
 bool Monster::contains(sf::Vector2f coords)

@@ -31,8 +31,8 @@ void Npc::move(unsigned long x, unsigned long y)
 {
     position_x = x;
     position_y = y;
-    desired_px.x = (32 * x) - 32;
-    desired_px.y = (32 * y) - 48;
+    desired_px.x = (x * 32) - 32;
+    desired_px.y = (y * 32) - 48;
 }
 
 bool Npc::isOnPosition(unsigned long x, unsigned long y)
