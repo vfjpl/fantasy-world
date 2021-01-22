@@ -4,8 +4,8 @@
 #include "network.hpp"
 #include "interface.hpp"
 #include "map.hpp"
-#include "localplayer.hpp"
 #include "eventhandler.hpp"
+#include "localplayer.hpp"
 
 class Engine
 {
@@ -15,8 +15,8 @@ class Engine
     Network network;
     Interface interface;
     Map map;
-    LocalPlayer localPlayer;
     EventHandler eventHandler;
+    LocalPlayer localPlayer;
 
 public:
     void setup(sf::Thread& networkThread);

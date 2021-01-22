@@ -106,6 +106,11 @@ void Network::startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize)
     localplayer->looktype = getLOOKTYPE(body);
 }
 
+void Network::stopWebSocket()
+{
+    delete socket;
+}
+
 Poco::DynamicAny Network::receive(const std::string& token)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,

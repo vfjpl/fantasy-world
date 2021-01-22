@@ -31,6 +31,7 @@ public:
     tgui::ListBox::Ptr getHeroesList();
     void selectHero(const std::string& hero);
     void startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void stopWebSocket();
 
     Poco::DynamicAny receive(const std::string& token);
     Poco::DynamicAny receive();
