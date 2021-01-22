@@ -53,12 +53,20 @@ void ResourceManager::loadGraphic(const std::string& name)
     if(storage.count(name))
         return;
 
-    sf::Http http("alkatria.pl");
-    sf::Http::Request requ(name);
-    sf::Http::Response resp = http.sendRequest(requ);
+RETRY:
+    try
+    {
+        sf::Http http("alkatria.pl");
+        sf::Http::Request requ(name);
+        sf::Http::Response resp = http.sendRequest(requ);
 
-    sf::MemoryInputStream data;
-    data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
+        sf::MemoryInputStream data;
+        data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
 
-    storage[name].loadFromStream(data);
+        storage[name].loadFromStream(data);
+    }
+    catch(...)
+    {
+        goto RETRY;
+    }
 }
