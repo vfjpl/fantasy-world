@@ -272,7 +272,6 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case char2int("loot"):
     {
         eventHandler.stopMonsterAttack();
-        network.takeLoot();
         break;
     }
     case char2int("move_outfit"):

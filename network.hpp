@@ -40,7 +40,7 @@ public:
     void message(const sf::String& message);
     void move(unsigned long dir);
     void use(unsigned long slot, const char* type);
-    void takeLoot();
+    void takeLoot(unsigned long index);
     void sendReloadPlayer(unsigned long player_id);
     void pickUpItem(unsigned long x, unsigned long y);
     void useElement(unsigned long x, unsigned long y);

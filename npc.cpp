@@ -2,13 +2,16 @@
 #include "helperfunctions.hpp"
 #include <SFML/Graphics/Texture.hpp>
 
+// view-source:http://alkatria.pl/templates/client/default/js/npc.js
+
 void Npc::setTexture(const sf::Texture& texture)
 {
     sf::Vector2u size = texture.getSize();
-    frames_x = std::max(size.x/32, 1u);
-    frames_y = std::max(size.y/48, 1u);
-    rect.width = 32;
-    rect.height = 48;
+    sf::Vector2u frames(size.x/32, size.y/48);
+    frames_x = std::max(frames.x, 1u);
+    frames_y = std::max(frames.y, 1u);
+    rect.width = frames.x == 1 ? size.x : 32;
+    rect.height = frames.y == 1 ? size.y : 48;
     sprite.setTextureRect(rect);
     sprite.setTexture(texture, false);
 }

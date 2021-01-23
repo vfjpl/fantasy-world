@@ -162,10 +162,10 @@ void Network::use(unsigned long slot, const char* type)
     send(data, 9);
 }
 
-void Network::takeLoot()
+void Network::takeLoot(unsigned long index)
 {
     Poco::DynamicStruct data;
-    data.insert("action", 0);
+    data.insert("action", index);
     send(data, 18);
 }
 
