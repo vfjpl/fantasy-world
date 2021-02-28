@@ -178,6 +178,14 @@ MapClickData Map::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
             isMapItem(coords), isTile(coords)};
 }
 
+unsigned long Map::getMonsterIDOnPosition(unsigned long x, unsigned long y)
+{
+    for(auto& i: monsters)
+        if(i.second.isOnPosition(x, y))
+            return i.first;
+    return 0;
+}
+
 bool Map::isObstacle(unsigned long x, unsigned long y)
 {
     if(x >= max_x || y >= max_y)

@@ -28,8 +28,15 @@ void Monster::setPosition(unsigned long x, unsigned long y)
 
 void Monster::move(unsigned long x, unsigned long y)
 {
+    position_x = x;
+    position_y = y;
     desired_px.x = (x * 32) - ((rect.width - 32)/2);
     desired_px.y = (y * 32) - (rect.height - 32);
+}
+
+bool Npc::isOnPosition(unsigned long x, unsigned long y)
+{
+    return (position_x == x && position_y == y);
 }
 
 bool Monster::contains(sf::Vector2f coords)

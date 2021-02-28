@@ -67,6 +67,7 @@ public:
     void updateTile(const Poco::DynamicAny& data);
 
     MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
+    unsigned long getMonsterIDOnPosition(unsigned long x, unsigned long y);
     bool isObstacle(unsigned long x, unsigned long y);
     bool isNpcOnPosition(unsigned long x, unsigned long y);
     void draw(sf::RenderWindow& window);
