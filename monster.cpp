@@ -34,7 +34,7 @@ void Monster::move(unsigned long x, unsigned long y)
     desired_px.y = (y * 32) - (rect.height - 32);
 }
 
-bool Npc::isOnPosition(unsigned long x, unsigned long y)
+bool Monster::isOnPosition(unsigned long x, unsigned long y)
 {
     return (position_x == x && position_y == y);
 }
