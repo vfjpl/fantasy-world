@@ -75,6 +75,6 @@ void ResourceManager::loadGraphic(const std::string& name)
 
     Poco::File dir(path.substr(0, path.rfind('/')));
     dir.createDirectories();
-    Poco::FileStream pocoFile(path);
+    Poco::FileOutputStream pocoFile(path);
     pocoFile << body;
 }
