@@ -4,9 +4,6 @@
 
 void Player::setTexture(const sf::Texture& texture)
 {
-    sf::Vector2u size = texture.getSize();
-    frames_x = std::max(size.x/32, 1u);
-    frames_y = std::max(size.y/48, 1u);
     rect.width = 32;
     rect.height = 48;
     sprite.setTextureRect(rect);
@@ -15,8 +12,8 @@ void Player::setTexture(const sf::Texture& texture)
 
 void Player::setDir(unsigned long dir)
 {
-    rect.left = (++steps % frames_x) * 32;
-    rect.top = (dir % frames_y) * 48;
+    rect.left = (++steps % 4) * 32;
+    rect.top = (dir % 4) * 48;
     sprite.setTextureRect(rect);
 }
 

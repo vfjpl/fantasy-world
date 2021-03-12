@@ -14,8 +14,6 @@ class Player
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
     unsigned long steps;
-    unsigned long frames_x;
-    unsigned long frames_y;
 
 public:
     void setTexture(const sf::Texture& texture);
