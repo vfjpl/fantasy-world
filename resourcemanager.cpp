@@ -1,6 +1,9 @@
 #include "resourcemanager.hpp"
 #include <Poco/Net/HTTPMessage.h>
+#include <Poco/File.h>
+#include <Poco/FileStream.h>
 #include <SFML/Network/Http.hpp>
+#include <SFML/System/FileInputStream.hpp>
 #include <SFML/System/MemoryInputStream.hpp>
 
 std::map<std::string, sf::Texture> ResourceManager::storage;
@@ -53,20 +56,25 @@ void ResourceManager::loadGraphic(const std::string& name)
     if(storage.count(name))
         return;
 
-RETRY:
-    try
+    std::string path = "cache" + name;
+    sf::FileInputStream sfFile;
+    if(sfFile.open(path))
     {
-        sf::Http http("alkatria.pl");
-        sf::Http::Request requ(name);
-        sf::Http::Response resp = http.sendRequest(requ);
-
-        sf::MemoryInputStream data;
-        data.open(resp.getBody().data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
-
-        storage[name].loadFromStream(data);
+        storage[name].loadFromStream(sfFile);
+        return;
     }
-    catch(...)
-    {
-        goto RETRY;
-    }
+
+    sf::Http http("alkatria.pl");
+    sf::Http::Request requ(name);
+    sf::Http::Response resp = http.sendRequest(requ);
+    const std::string& body = resp.getBody();
+
+    sf::MemoryInputStream data;
+    data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
+    storage[name].loadFromStream(data);
+
+    Poco::File dir(path.substr(0, path.rfind('/')));
+    dir.createDirectories();
+    Poco::FileStream pocoFile(path);
+    pocoFile << body;
 }
