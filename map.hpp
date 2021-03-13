@@ -49,7 +49,7 @@ class Map
     unsigned long max_y;
 
 public:
-    void setup(const sf::View& view);
+    void updateWindowSize(float width, float height);
 
     void moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
     void loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer);

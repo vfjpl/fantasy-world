@@ -30,7 +30,7 @@ public:
     bool credentials(const std::string& login, const std::string& password);
     tgui::ListBox::Ptr getHeroesList();
     void selectHero(const std::string& hero);
-    void startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void startWebSocket(LocalPlayer* localplayer);
     void stopWebSocket();
 
     Poco::DynamicAny receive(const std::string& token);
@@ -52,7 +52,7 @@ public:
 
 private:
     std::string loadGameData();
-    void sendStart(const std::string& token, sf::Vector2u windowSize);
+    void sendStart(const std::string& token);
     void send(const Poco::DynamicStruct& data, unsigned long code);
     void send(const Poco::DynamicStruct& data, const char* code);
     void sendJson(const std::string& json);

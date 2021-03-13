@@ -97,12 +97,12 @@ void Network::selectHero(const std::string& hero)
     https.receiveResponse(resp);
 }
 
-void Network::startWebSocket(LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Network::startWebSocket(LocalPlayer* localplayer)
 {
     std::string body = loadGameData();
     wssREQUEST.setURI(getURI(body));
     socket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
-    sendStart(getTOKEN(body), windowSize);
+    sendStart(getTOKEN(body));
     localplayer->looktype = getLOOKTYPE(body);
 }
 
@@ -244,11 +244,11 @@ std::string Network::loadGameData()
     return toString(https.receiveResponse(resp));
 }
 
-void Network::sendStart(const std::string& token, sf::Vector2u windowSize)
+void Network::sendStart(const std::string& token)
 {
     std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(windowSize.x);
-    jsonArray.emplace_back(windowSize.y);
+    jsonArray.emplace_back(1000u);
+    jsonArray.emplace_back(1000u);
 
     Poco::DynamicStruct json;
     json.insert("code", 1);

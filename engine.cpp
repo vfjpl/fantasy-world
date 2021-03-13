@@ -18,9 +18,7 @@ void Engine::setup(sf::Thread& networkThread)
 {
     setup_window();
     interface.setup(window);
-    map.setup(window.getDefaultView());
-
-    interface.loginScreen(&networkThread, &network, &localPlayer, window.getSize());
+    interface.loginScreen(&networkThread, &network, &localPlayer);
 }
 
 bool Engine::run_game()
@@ -44,9 +42,9 @@ bool Engine::run_network()
 void Engine::setup_window()
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-    mode.width = (mode.width * 3) / 4;
-    mode.height = (mode.height * 3) / 4;
-    window.create(mode, "Fantasy World", sf::Style::Close);
+    mode.width = 1000;
+    mode.height = 1000;
+    window.create(mode, "Fantasy World");
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
 }
@@ -64,6 +62,10 @@ void Engine::process_input()
         {
         case sf::Event::Closed:
             window.close();
+            break;
+        case sf::Event::Resized:
+            map.updateWindowSize(event.size.width, event.size.height);
+            interface.updateWindowSize(event.size.width, event.size.height);
             break;
         case sf::Event::KeyPressed:
             keyPress(event.key.code);

@@ -11,7 +11,12 @@ void Interface::setup(sf::RenderWindow& window)
     healthBar = tgui::ProgressBar::create();
 }
 
-void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::updateWindowSize(float width, float height)
+{
+    gui.setView(sf::View(sf::FloatRect(0, 0, width, height)));
+}
+
+void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -28,7 +33,7 @@ void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPl
         if(network->credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(networkThread, network, localplayer, windowSize);
+            selectHeroScreen(networkThread, network, localplayer);
         }
     });
 
@@ -59,7 +64,7 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
 {
     auto listBox = network->getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -70,16 +75,16 @@ void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, Lo
     {
         network->selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(networkThread, network, localplayer, windowSize);
+        gameScreen(networkThread, network, localplayer);
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize)
+void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
 {
-    network->startWebSocket(localplayer, windowSize);
+    network->startWebSocket(localplayer);
     networkThread->launch();
 
     //gui

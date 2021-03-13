@@ -17,8 +17,9 @@ class Interface
 
 public:
     void setup(sf::RenderWindow& window);
+    void updateWindowSize(float width, float height);
 
-    void loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer);
 
     void health(const Poco::DynamicAny& data);
     void chatMessage(const Poco::DynamicAny& data);
@@ -27,8 +28,8 @@ public:
     void draw();
 
 private:
-    void selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
-    void gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer, sf::Vector2u windowSize);
+    void selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer);
+    void gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer);
     void addChatLine(const std::string& line);
 };
 

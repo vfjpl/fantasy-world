@@ -7,9 +7,9 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
-void Map::setup(const sf::View& view)
+void Map::updateWindowSize(float width, float height)
 {
-    camera = view;
+    camera.setSize(width, height);
 }
 
 void Map::moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
