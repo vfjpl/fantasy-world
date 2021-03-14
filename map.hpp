@@ -8,7 +8,6 @@
 #include "monster.hpp"
 #include "npc.hpp"
 #include "player.hpp"
-#include "localplayer.hpp"
 #include <Poco/DynamicAny.h>
 #include <SFML/System/Mutex.hpp>
 
@@ -29,71 +28,71 @@ struct MapClickData
 class Map
 {
     //168
-    sf::View camera;
+    static sf::View camera;
     //48
-    std::map<unsigned long, MapObject> map_objects;
-    std::map<unsigned long, Chest> chests;
-    std::map<unsigned long, MapItem> map_items;
-    std::map<unsigned long, Monster> monsters;
-    std::map<unsigned long, Npc> npcs;
-    std::map<unsigned long, Player> players;
+    static std::map<unsigned long, MapObject> map_objects;
+    static std::map<unsigned long, Chest> chests;
+    static std::map<unsigned long, MapItem> map_items;
+    static std::map<unsigned long, Monster> monsters;
+    static std::map<unsigned long, Npc> npcs;
+    static std::map<unsigned long, Player> players;
     //24
-    std::vector<sf::Sprite> map_backgrounds;
-    std::vector<Tile> tiles;
+    static std::vector<sf::Sprite> map_backgrounds;
+    static std::vector<Tile> tiles;
     //8
-    sf::Mutex mutex;
-    sf::Vector2i current_camera;
-    sf::Vector2i desired_camera;
-    Poco::DynamicAny obstacles;
-    unsigned long max_x;
-    unsigned long max_y;
+    static sf::Mutex mutex;
+    static sf::Vector2i current_camera;
+    static sf::Vector2i desired_camera;
+    static Poco::DynamicAny obstacles;
+    static unsigned long max_x;
+    static unsigned long max_y;
 
 public:
-    void updateWindowSize(float width, float height);
+    static void updateWindowSize(float width, float height);
 
-    void moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
-    void loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
-    void loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
-    void updateMapData(const Poco::DynamicAny& data);
+    static void moveLocalPlayer(const Poco::DynamicAny& data);
+    static void loadData_100(const Poco::DynamicAny& data);
+    static void loadData_teleport(const Poco::DynamicAny& data);
+    static void updateMapData(const Poco::DynamicAny& data);
 
-    void moveOutfit(const Poco::DynamicAny& data);
-    void movePlayer(const Poco::DynamicAny& data);
-    void addMapItem(const Poco::DynamicAny& data);
-    void addPlayer(const Poco::DynamicAny& data);
-    void deleteMapItem(const Poco::DynamicAny& data);
-    void deleteMonster(const Poco::DynamicAny& data);
-    void deletePlayer(const Poco::DynamicAny& data);
-    void openChest(const Poco::DynamicAny& data);
-    void updateTile(const Poco::DynamicAny& data);
+    static void moveOutfit(const Poco::DynamicAny& data);
+    static void movePlayer(const Poco::DynamicAny& data);
+    static void addMapItem(const Poco::DynamicAny& data);
+    static void addPlayer(const Poco::DynamicAny& data);
+    static void deleteMapItem(const Poco::DynamicAny& data);
+    static void deleteMonster(const Poco::DynamicAny& data);
+    static void deletePlayer(const Poco::DynamicAny& data);
+    static void openChest(const Poco::DynamicAny& data);
+    static void updateTile(const Poco::DynamicAny& data);
 
-    MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
-    unsigned long getMonsterIDOnPosition(unsigned long x, unsigned long y);
-    bool isObstacle(unsigned long x, unsigned long y);
-    bool isNpcOnPosition(unsigned long x, unsigned long y);
-    void draw(sf::RenderWindow& window);
-    void clear();
+    static MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
+    static unsigned long getMonsterID(unsigned long x, unsigned long y);
+    static bool isObstacle(unsigned long x, unsigned long y);
+    static bool isNpc(unsigned long x, unsigned long y);
+    static void draw(sf::RenderWindow& window);
+    static void clear();
 
 private:
-    void loadMapPositionData(const Poco::DynamicAny& data, LocalPlayer& localPlayer);
-    void setCamera(unsigned long x, unsigned long y);
-    void moveCamera(unsigned long x, unsigned long y);
+    static void loadMapPositionData(const Poco::DynamicAny& data);
+    static void setCamera(unsigned long x, unsigned long y);
+    static void moveCamera(unsigned long x, unsigned long y);
 
-    void moveMonster(const Poco::DynamicAny& data);
-    void moveNpc(const Poco::DynamicAny& data);
-    void addSingleMapData(const Poco::DynamicAny& data);
-    void addMultiMapData(const Poco::DynamicAny& data);
-    void addTile(const Poco::DynamicAny& data);
-    void addMapObject(const Poco::DynamicAny& data);
-    void addChest(const Poco::DynamicAny& data);
-    void addMonster(const Poco::DynamicAny& data);
-    void addNpc(const Poco::DynamicAny& data);
+    static void moveMonster(const Poco::DynamicAny& data);
+    static void moveNpc(const Poco::DynamicAny& data);
+    static void addSingleMapData(const Poco::DynamicAny& data);
+    static void addMultiMapData(const Poco::DynamicAny& data);
+    static void addTile(const Poco::DynamicAny& data);
+    static void addMapObject(const Poco::DynamicAny& data);
+    static void addChest(const Poco::DynamicAny& data);
+    static void addMonster(const Poco::DynamicAny& data);
+    static void addNpc(const Poco::DynamicAny& data);
 
-    unsigned long getChestID(sf::Vector2f coords);
-    unsigned long getMonsterID(sf::Vector2f coords);
-    unsigned long getNpcID(sf::Vector2f coords);
-    unsigned long getPlayerID(sf::Vector2f coords);
-    bool isMapItem(sf::Vector2f coords);
-    bool isTile(sf::Vector2f coords);
+    static unsigned long getChestID(sf::Vector2f coords);
+    static unsigned long getMonsterID(sf::Vector2f coords);
+    static unsigned long getNpcID(sf::Vector2f coords);
+    static unsigned long getPlayerID(sf::Vector2f coords);
+    static bool isMapItem(sf::Vector2f coords);
+    static bool isTile(sf::Vector2f coords);
 };
 
 #endif // MAP_HPP_INCLUDED

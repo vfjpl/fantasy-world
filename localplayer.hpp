@@ -6,11 +6,11 @@
 struct LocalPlayer
 {
     //32
-    std::string looktype;
+    static std::string looktype;
     //8
-    unsigned long id;
-    unsigned long x;
-    unsigned long y;
+    static unsigned long id;
+    static unsigned long x;
+    static unsigned long y;
 };
 
 #endif // LOCALPLAYER_HPP_INCLUDED

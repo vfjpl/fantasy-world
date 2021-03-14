@@ -4,14 +4,13 @@
 
 int main()
 {
-    Engine engine;
     sf::Thread network_thread([&]
     {
-        while(engine.run_network());
+        while(Engine::run_network());
     });
-    engine.setup(network_thread);
+    Engine::setup(network_thread);
 
-    while(engine.run_game());
+    while(Engine::run_game());
 
     network_thread.terminate();
     return EXIT_SUCCESS;

@@ -1,8 +1,14 @@
 #include "engine.hpp"
+#include "network.hpp"
+#include "interface.hpp"
+#include "map.hpp"
+#include "eventhandler.hpp"
 #include "helperfunctions.hpp"
 #include <iostream>
 
 // view-source:http://alkatria.pl/templates/client/default/js/game.js
+
+sf::RenderWindow Engine::window;
 
 namespace
 {
@@ -17,8 +23,8 @@ unsigned long var2int(const Poco::DynamicAny& var)
 void Engine::setup(sf::Thread& networkThread)
 {
     setup_window();
-    interface.setup(window);
-    interface.loginScreen(&networkThread, &network, &localPlayer);
+    Interface::setup(window);
+    Interface::loginScreen(&networkThread);
 }
 
 bool Engine::run_game()
@@ -32,7 +38,7 @@ bool Engine::run_game()
 
 bool Engine::run_network()
 {
-    process_network(network.receive());
+    process_network(Network::receive());
 
     return window.isOpen();
 }
@@ -55,7 +61,7 @@ void Engine::process_input()
     while(window.pollEvent(event))
     {
         //process event only if gui didn't consume it
-        if(interface.handleEvent(event))
+        if(Interface::handleEvent(event))
             continue;
 
         switch(event.type)
@@ -64,8 +70,8 @@ void Engine::process_input()
             window.close();
             break;
         case sf::Event::Resized:
-            map.updateWindowSize(event.size.width, event.size.height);
-            interface.updateWindowSize(event.size.width, event.size.height);
+            Map::updateWindowSize(event.size.width, event.size.height);
+            Interface::updateWindowSize(event.size.width, event.size.height);
             break;
         case sf::Event::KeyPressed:
             keyPress(event.key.code);
@@ -90,16 +96,16 @@ void Engine::keyPress(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        eventHandler.startMove(1);
+        EventHandler::startMove(1);
         break;
     case sf::Keyboard::D:
-        eventHandler.startMove(2);
+        EventHandler::startMove(2);
         break;
     case sf::Keyboard::S:
-        eventHandler.startMove(4);
+        EventHandler::startMove(4);
         break;
     case sf::Keyboard::W:
-        eventHandler.startMove(3);
+        EventHandler::startMove(3);
         break;
     case sf::Keyboard::Escape:
         break;
@@ -113,16 +119,16 @@ void Engine::keyRelease(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        eventHandler.stopMove(1);
+        EventHandler::stopMove(1);
         break;
     case sf::Keyboard::D:
-        eventHandler.stopMove(2);
+        EventHandler::stopMove(2);
         break;
     case sf::Keyboard::S:
-        eventHandler.stopMove(4);
+        EventHandler::stopMove(4);
         break;
     case sf::Keyboard::W:
-        eventHandler.stopMove(3);
+        EventHandler::stopMove(3);
         break;
     case sf::Keyboard::Escape:
         window.close();
@@ -134,21 +140,21 @@ void Engine::keyRelease(sf::Keyboard::Key code)
 
 void Engine::mousePress(sf::Vector2i point)
 {
-    MapClickData data = map.mapMouseClick(window, point);
+    MapClickData data = Map::mapMouseClick(window, point);
     if(data.chestID || data.monsterID || data.npcID || data.playerID || data.item || data.tile)
     {
         if(data.chestID)
-            network.openChest(data.chestID);
+            Network::openChest(data.chestID);
         if(data.monsterID)
-            eventHandler.startMonsterAttack(data.monsterID);
+            EventHandler::startMonsterAttack(data.monsterID);
         if(data.item)
-            network.pickUpItem(data.x, data.y);
+            Network::pickUpItem(data.x, data.y);
         if(data.tile)
-            network.useElement(data.x, data.y);
+            Network::useElement(data.x, data.y);
     }
     else
     {
-        eventHandler.startMovePath(map, localPlayer, data.x, data.y);
+        EventHandler::startMovePath(data.x, data.y);
     }
 }
 
@@ -159,13 +165,13 @@ void Engine::mouseRelease(sf::Vector2i point)
 
 void Engine::game_logic()
 {
-    switch(eventHandler.pollEvent())
+    switch(EventHandler::pollEvent())
     {
     case Event::MOVE:
-        moveLocalPlayer(eventHandler.getDir(localPlayer));
+        moveLocalPlayer(EventHandler::getDir());
         break;
     case Event::ATTACK:
-        network.attackMonster(eventHandler.getAttackId());
+        Network::attackMonster(EventHandler::getAttackId());
         break;
     default:
         break;
@@ -175,16 +181,16 @@ void Engine::game_logic()
 void Engine::moveLocalPlayer(unsigned long dir)
 {
     if(dir)
-        network.move(dir);
+        Network::move(dir);
     else
-        eventHandler.stopMoveEvent();
+        EventHandler::stopMoveEvent();
 }
 
 void Engine::draw_frame()
 {
     window.clear();
-    map.draw(window);
-    interface.draw();
+    Map::draw(window);
+    Interface::draw();
     window.display();
 }
 
@@ -194,7 +200,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     {
     case 1://global chat message
     {
-        interface.chatMessage(networkData);
+        Interface::chatMessage(networkData);
         break;
     }
     case 5://show attack/damage
@@ -203,49 +209,49 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 10://other player movement
     {
-        map.movePlayer(networkData);
+        Map::movePlayer(networkData);
         break;
     }
     case 54://remove monster
     {
-        map.deleteMonster(networkData);
+        Map::deleteMonster(networkData);
         break;
     }
     case 55://update map data
     {
-        map.updateMapData(networkData["data"]);
+        Map::updateMapData(networkData["data"]);
         break;
     }
     case 71://other player join
     {
-        map.addPlayer(networkData);
+        Map::addPlayer(networkData);
         break;
     }
     case 100://first load map data
     {
-        map.loadData_100(networkData["data"], localPlayer);
+        Map::loadData_100(networkData["data"]);
         break;
     }
     case 654://gui update (general update?)
     {
         std::cout << networkData.toString() << '\n';
-        interface.health(networkData);
+        Interface::health(networkData);
         break;
     }
     case 685://open chest (general update?)
     {
         std::cout << networkData.toString() << '\n';
-        map.openChest(networkData);
+        Map::openChest(networkData);
         break;
     }
     case 877://remove map item
     {
-        map.deleteMapItem(networkData);
+        Map::deleteMapItem(networkData);
         break;
     }
     case 878://new map item
     {
-        map.addMapItem(networkData["item"]);
+        Map::addMapItem(networkData["item"]);
         break;
     }
     case 964://monster health percentage
@@ -255,17 +261,17 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     case 1016:
     {
         std::cout << networkData.toString() << '\n';
-        interface.health(networkData);
+        Interface::health(networkData);
         break;
     }
     case 1030://my health + message about dealt/received damage
     {
-        interface.health(networkData);
+        Interface::health(networkData);
         break;
     }
     case 1051://other player left
     {
-        map.deletePlayer(networkData["player"]);
+        Map::deletePlayer(networkData["player"]);
         break;
     }
     case 1504://other player yell
@@ -274,7 +280,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("move_me"):
     {
-        map.moveLocalPlayer(networkData, localPlayer);
+        Map::moveLocalPlayer(networkData);
         break;
     }
     case char2int("reset_move"):
@@ -287,22 +293,22 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("loot"):
     {
-        eventHandler.stopMonsterAttack();
+        EventHandler::stopMonsterAttack();
         break;
     }
     case char2int("move_outfit"):
     {
-        map.moveOutfit(networkData);
+        Map::moveOutfit(networkData);
         break;
     }
     case char2int("show_tile"):
     {
-        map.updateTile(networkData);
+        Map::updateTile(networkData);
         break;
     }
     case char2int("exhaust_tile"):
     {
-        map.updateTile(networkData);
+        Map::updateTile(networkData);
         break;
     }
     case char2int("multi_code"):
@@ -313,23 +319,23 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("json"):
     {
-        process_network(network.receive(networkData["hash"]));
+        process_network(Network::receive(networkData["hash"]));
         break;
     }
     case char2int("load_game"):
     {
-        process_network(network.receive(networkData["token"]));
+        process_network(Network::receive(networkData["token"]));
         break;
     }
     case char2int("teleport"):
     {
-        map.clear();
-        map.loadData_teleport(networkData["data"], localPlayer);
+        Map::clear();
+        Map::loadData_teleport(networkData["data"]);
         break;
     }
     case char2int("death"):
     {
-        network.sendReload();
+        Network::sendReload();
         break;
     }
     default:

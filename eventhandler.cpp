@@ -1,4 +1,12 @@
 #include "eventhandler.hpp"
+#include "map.hpp"
+#include "localplayer.hpp"
+
+std::deque<timedEvent> EventHandler::events;
+std::deque<unsigned long> EventHandler::directions;
+std::map<Position, unsigned long> EventHandler::path;
+sf::Clock EventHandler::clock;
+unsigned long EventHandler::attack_id;
 
 namespace
 {
@@ -72,9 +80,9 @@ void EventHandler::stopMove(unsigned long dir)
         directions.erase(it_found);
 }
 
-void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y)
+void EventHandler::startMovePath(unsigned long x, unsigned long y)
 {
-    if(map.isObstacle(x - 1, y - 1))
+    if(Map::isObstacle(x - 1, y - 1))
         return;
 
     path.clear();
@@ -92,11 +100,11 @@ void EventHandler::startMovePath(Map& map, LocalPlayer& localPlayer, unsigned lo
                         Position(current.first, current.second + 1),
                         Position(current.first + 1, current.second)})
         {
-            if(map.isObstacle(next.first - 1, next.second - 1))
+            if(Map::isObstacle(next.first - 1, next.second - 1))
                 continue;
             if(path.count(next))
                 continue;
-            if(map.isNpcOnPosition(next.first, next.second))
+            if(Map::isNpc(next.first, next.second))
                 continue;
 
             path.emplace(next, positionsToDir(next, current));
@@ -112,12 +120,12 @@ void EventHandler::stopMoveEvent()
     path.clear();
 }
 
-unsigned long EventHandler::getDir(LocalPlayer& localPlayer)
+unsigned long EventHandler::getDir()
 {
     if(!directions.empty())
         return directions.back();
     if(!path.empty())
-        return path[Position(localPlayer.x, localPlayer.y)];
+        return path[Position(LocalPlayer::x, LocalPlayer::y)];
     return 0;
 }
 

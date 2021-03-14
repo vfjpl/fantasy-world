@@ -1,5 +1,14 @@
 #include "network.hpp"
+#include "localplayer.hpp"
 #include <Poco/Net/HTMLForm.h>
+
+Poco::Net::HTTPSClientSession Network::https("alkatria.pl");
+Poco::Net::HTTPSClientSession Network::wssHTTPS("alkatria.pl");
+Poco::Net::HTTPRequest Network::wssREQUEST;
+Poco::Net::HTTPResponse Network::wssRESPONSE;
+Poco::Net::NameValueCollection Network::cookies;
+Poco::Buffer<char> Network::buffer(0);
+Poco::Net::WebSocket* Network::socket;
 
 namespace
 {
@@ -46,13 +55,6 @@ std::string getURI(const std::string& body)
 }
 }
 
-Network::Network():
-    https("alkatria.pl"),
-    wssHTTPS("alkatria.pl"),
-    wssREQUEST(Poco::Net::HTTPRequest::HTTP_1_1),
-    buffer(0) {}
-
-
 bool Network::credentials(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
@@ -97,13 +99,13 @@ void Network::selectHero(const std::string& hero)
     https.receiveResponse(resp);
 }
 
-void Network::startWebSocket(LocalPlayer* localplayer)
+void Network::startWebSocket()
 {
     std::string body = loadGameData();
     wssREQUEST.setURI(getURI(body));
     socket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
     sendStart(getTOKEN(body));
-    localplayer->looktype = getLOOKTYPE(body);
+    LocalPlayer::looktype = getLOOKTYPE(body);
 }
 
 void Network::stopWebSocket()

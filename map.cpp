@@ -1,5 +1,6 @@
 #include "map.hpp"
 #include "resourcemanager.hpp"
+#include "localplayer.hpp"
 #include "helperfunctions.hpp"
 #include <Poco/DynamicStruct.h>
 #include <SFML/System/Lock.hpp>
@@ -7,30 +8,46 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
+sf::View Map::camera;
+std::map<unsigned long, MapObject> Map::map_objects;
+std::map<unsigned long, Chest> Map::chests;
+std::map<unsigned long, MapItem> Map::map_items;
+std::map<unsigned long, Monster> Map::monsters;
+std::map<unsigned long, Npc> Map::npcs;
+std::map<unsigned long, Player> Map::players;
+std::vector<sf::Sprite> Map::map_backgrounds;
+std::vector<Tile> Map::tiles;
+sf::Mutex Map::mutex;
+sf::Vector2i Map::current_camera;
+sf::Vector2i Map::desired_camera;
+Poco::DynamicAny Map::obstacles;
+unsigned long Map::max_x;
+unsigned long Map::max_y;
+
 void Map::updateWindowSize(float width, float height)
 {
     camera.setSize(width, height);
 }
 
-void Map::moveLocalPlayer(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::moveLocalPlayer(const Poco::DynamicAny& data)
 {
-    localPlayer.x = data["x"];
-    localPlayer.y = data["y"];
-    moveCamera(localPlayer.x, localPlayer.y);
-    players[localPlayer.id].move(localPlayer.x, localPlayer.y);
-    players[localPlayer.id].setDir(data["dir"]);
+    LocalPlayer::x = data["x"];
+    LocalPlayer::y = data["y"];
+    moveCamera(LocalPlayer::x, LocalPlayer::y);
+    players[LocalPlayer::id].move(LocalPlayer::x, LocalPlayer::y);
+    players[LocalPlayer::id].setDir(data["dir"]);
 }
 
-void Map::loadData_100(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::loadData_100(const Poco::DynamicAny& data)
 {
-    localPlayer.id = data["player"]["id"];
-    loadData_teleport(data, localPlayer);
+    LocalPlayer::id = data["player"]["id"];
+    loadData_teleport(data);
 }
 
-void Map::loadData_teleport(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::loadData_teleport(const Poco::DynamicAny& data)
 {
     obstacles.swap(const_cast<Poco::DynamicAny&>(data["obstacles"]));
-    loadMapPositionData(data["map_positions"], localPlayer);
+    loadMapPositionData(data["map_positions"]);
 
     //todo better
     if(data["map"]["type"] == 2ul)
@@ -177,7 +194,7 @@ MapClickData Map::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
             isMapItem(coords), isTile(coords)};
 }
 
-unsigned long Map::getMonsterIDOnPosition(unsigned long x, unsigned long y)
+unsigned long Map::getMonsterID(unsigned long x, unsigned long y)
 {
     for(auto& i: monsters)
         if(i.second.isOnPosition(x, y))
@@ -192,7 +209,7 @@ bool Map::isObstacle(unsigned long x, unsigned long y)
     return obstacles[x][y];
 }
 
-bool Map::isNpcOnPosition(unsigned long x, unsigned long y)
+bool Map::isNpc(unsigned long x, unsigned long y)
 {
     for(auto& i: npcs)
         if(i.second.isOnPosition(x, y))
@@ -242,15 +259,15 @@ void Map::clear()
 
 // private
 
-void Map::loadMapPositionData(const Poco::DynamicAny& data, LocalPlayer& localPlayer)
+void Map::loadMapPositionData(const Poco::DynamicAny& data)
 {
     max_x = data["MAX_X"];
     max_y = data["MAX_Y"];
-    localPlayer.x = data["PLAYER_X"];
-    localPlayer.y = data["PLAYER_Y"];
-    setCamera(localPlayer.x, localPlayer.y);
-    players[localPlayer.id].setTexture(ResourceManager::getTexture(localPlayer.looktype, Graphic::DIRECT));
-    players[localPlayer.id].setPosition(localPlayer.x, localPlayer.y);
+    LocalPlayer::x = data["PLAYER_X"];
+    LocalPlayer::y = data["PLAYER_Y"];
+    setCamera(LocalPlayer::x, LocalPlayer::y);
+    players[LocalPlayer::id].setTexture(ResourceManager::getTexture(LocalPlayer::looktype, Graphic::DIRECT));
+    players[LocalPlayer::id].setPosition(LocalPlayer::x, LocalPlayer::y);
 }
 
 void Map::setCamera(unsigned long x, unsigned long y)

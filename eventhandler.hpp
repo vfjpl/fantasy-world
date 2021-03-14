@@ -1,7 +1,9 @@
 #ifndef EVENTHANDLER_HPP_INCLUDED
 #define EVENTHANDLER_HPP_INCLUDED
 
-#include "map.hpp"
+#include <SFML/System/Clock.hpp>
+#include <deque>
+#include <map>
 
 enum class Event
 {
@@ -21,30 +23,30 @@ typedef std::pair<unsigned long, unsigned long> Position;
 class EventHandler
 {
     //80
-    std::deque<timedEvent> events;
-    std::deque<unsigned long> directions;
+    static std::deque<timedEvent> events;
+    static std::deque<unsigned long> directions;
     //48
-    std::map<Position, unsigned long> path;
+    static std::map<Position, unsigned long> path;
     //8
-    sf::Clock clock;
-    unsigned long attack_id;
+    static sf::Clock clock;
+    static unsigned long attack_id;
 
 public:
-    Event pollEvent();
+    static Event pollEvent();
 
-    void startMove(unsigned long dir);
-    void stopMove(unsigned long dir);
-    void startMovePath(Map& map, LocalPlayer& localPlayer, unsigned long x, unsigned long y);
-    void stopMoveEvent();
-    unsigned long getDir(LocalPlayer& localPlayer);
+    static void startMove(unsigned long dir);
+    static void stopMove(unsigned long dir);
+    static void startMovePath(unsigned long x, unsigned long y);
+    static void stopMoveEvent();
+    static unsigned long getDir();
 
-    void startMonsterAttack(unsigned long id);
-    void stopMonsterAttack();
-    unsigned long getAttackId();
+    static void startMonsterAttack(unsigned long id);
+    static void stopMonsterAttack();
+    static unsigned long getAttackId();
 
 private:
-    void startEvent(Event code);
-    void stopEvent(Event code);
+    static void startEvent(Event code);
+    static void stopEvent(Event code);
 };
 
 #endif // EVENTHANDLER_HPP_INCLUDED

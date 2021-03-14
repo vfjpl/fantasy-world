@@ -1,8 +1,13 @@
 #include "interface.hpp"
+#include "network.hpp"
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <TGUI/SignalImpl.hpp>
+
+tgui::Gui Interface::gui;
+tgui::ChatBox::Ptr Interface::chatBox;
+tgui::ProgressBar::Ptr Interface::healthBar;
 
 void Interface::setup(sf::RenderWindow& window)
 {
@@ -17,7 +22,7 @@ void Interface::updateWindowSize(float width, float height)
     gui.setView(sf::View(sf::FloatRect(0, 0, width, height)));
 }
 
-void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
+void Interface::loginScreen(sf::Thread* networkThread)
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -31,10 +36,10 @@ void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPl
     button->setPosition("50% - width/2", "50% + height");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        if(network->credentials(editBoxUsername->getText(), editBoxPassword->getText()))
+        if(Network::credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(networkThread, network, localplayer);
+            selectHeroScreen(networkThread);
         }
     });
 
@@ -68,27 +73,27 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
+void Interface::selectHeroScreen(sf::Thread* networkThread)
 {
-    auto listBox = network->getHeroesList();
+    auto listBox = Network::getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
 
     auto button = tgui::Button::create("Select");
     button->setPosition("50% - width/2", "50%");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        network->selectHero(listBox->getSelectedItem());
+        Network::selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(networkThread, network, localplayer);
+        gameScreen(networkThread);
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPlayer* localplayer)
+void Interface::gameScreen(sf::Thread* networkThread)
 {
-    network->startWebSocket(localplayer);
+    Network::startWebSocket();
     networkThread->launch();
 
     //gui
@@ -98,7 +103,7 @@ void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPla
     editbox->setPosition(0.f, "100% - height");
     editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
     {
-        network->message(text);
+        Network::message(text);
         editbox->setText(sf::String());
     });
 
