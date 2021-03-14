@@ -9,6 +9,7 @@ void Interface::setup(sf::RenderWindow& window)
     gui.setTarget(window);
     chatBox = tgui::ChatBox::create();
     healthBar = tgui::ProgressBar::create();
+    healthBar->setPosition("50% - width/2", "100% - height");
 }
 
 void Interface::updateWindowSize(float width, float height)
@@ -44,7 +45,10 @@ void Interface::loginScreen(sf::Thread* networkThread, Network* network, LocalPl
 
 void Interface::health(const Poco::DynamicAny& data)
 {
-
+    unsigned long health_max = data["health_max"];
+    unsigned long health = data["health"];
+    healthBar->setMaximum(health_max);
+    healthBar->setValue(health);
 }
 
 void Interface::chatMessage(const Poco::DynamicAny& data)
@@ -106,6 +110,7 @@ void Interface::gameScreen(sf::Thread* networkThread, Network* network, LocalPla
     chatwindow->add(chatBox);
 
     gui.add(chatwindow);
+    gui.add(healthBar);
 }
 
 void Interface::addChatLine(const std::string& line)

@@ -226,8 +226,15 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.loadData_100(networkData["data"], localPlayer);
         break;
     }
+    case 654://gui update (general update?)
+    {
+        std::cout << networkData.toString() << '\n';
+        interface.health(networkData);
+        break;
+    }
     case 685://open chest (general update?)
     {
+        std::cout << networkData.toString() << '\n';
         map.openChest(networkData);
         break;
     }
@@ -243,6 +250,12 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
     }
     case 964://show attack/damage
     {
+        break;
+    }
+    case 1016:
+    {
+        std::cout << networkData.toString() << '\n';
+        interface.health(networkData);
         break;
     }
     case 1030://my health
