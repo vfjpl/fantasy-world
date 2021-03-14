@@ -248,7 +248,7 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         map.addMapItem(networkData["item"]);
         break;
     }
-    case 964://show attack/damage
+    case 964://monster health percentage
     {
         break;
     }
@@ -258,8 +258,9 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         interface.health(networkData);
         break;
     }
-    case 1030://my health
+    case 1030://my health + message about dealt/received damage
     {
+        interface.health(networkData);
         break;
     }
     case 1051://other player left
