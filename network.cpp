@@ -136,7 +136,7 @@ void Network::attackMonster(unsigned long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("monster", target_id);
-    data.insert("skill", 0);
+    data.insert("skill", 0ul);
     send(data, 3);
 }
 
@@ -202,7 +202,7 @@ void Network::attackPlayer(unsigned long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("target", target_id);
-    data.insert("skill", 0);
+    data.insert("skill", 0ul);
     send(data, 1042);
 }
 
@@ -217,8 +217,8 @@ void Network::spell(unsigned long spell_id)
 {
     Poco::DynamicStruct data;
     data.insert("spell", spell_id);
-    data.insert("type", 0);
-    data.insert("fight_type", 0);
+    data.insert("type", 0ul);
+    data.insert("fight_type", 0ul);
     send(data, "spell");
 }
 
@@ -247,11 +247,11 @@ std::string Network::loadGameData()
 void Network::sendStart(const std::string& token)
 {
     std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(1000u);
-    jsonArray.emplace_back(1000u);
+    jsonArray.emplace_back(1000ul);
+    jsonArray.emplace_back(1000ul);
 
     Poco::DynamicStruct json;
-    json.insert("code", 1);
+    json.insert("code", 1ul);
     json.insert("window", jsonArray);
     json.insert("token", token);
 
