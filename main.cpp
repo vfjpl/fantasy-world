@@ -1,17 +1,18 @@
 #include "engine.hpp"
+#include <SFML/System/Thread.hpp>
 
 // view-source:http://alkatria.pl/game
 
+sf::Thread networkThread([]
+{
+    while(Engine::run_network());
+});
+
 int main()
 {
-    sf::Thread network_thread([&]
-    {
-        while(Engine::run_network());
-    });
-    Engine::setup(network_thread);
+    Engine::setup();
 
     while(Engine::run_game());
 
-    network_thread.terminate();
     return EXIT_SUCCESS;
 }

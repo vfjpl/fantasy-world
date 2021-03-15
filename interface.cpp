@@ -1,5 +1,6 @@
 #include "interface.hpp"
 #include "network.hpp"
+#include "threads.hpp"
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
@@ -22,7 +23,7 @@ void Interface::updateWindowSize(float width, float height)
     gui.setView(sf::View(sf::FloatRect(0, 0, width, height)));
 }
 
-void Interface::loginScreen(sf::Thread* networkThread)
+void Interface::loginScreen()
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -39,7 +40,7 @@ void Interface::loginScreen(sf::Thread* networkThread)
         if(Network::credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
-            selectHeroScreen(networkThread);
+            selectHeroScreen();
         }
     });
 
@@ -73,7 +74,7 @@ void Interface::draw()
 
 // private
 
-void Interface::selectHeroScreen(sf::Thread* networkThread)
+void Interface::selectHeroScreen()
 {
     auto listBox = Network::getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -84,17 +85,17 @@ void Interface::selectHeroScreen(sf::Thread* networkThread)
     {
         Network::selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
-        gameScreen(networkThread);
+        gameScreen();
     });
 
     gui.add(listBox);
     gui.add(button);
 }
 
-void Interface::gameScreen(sf::Thread* networkThread)
+void Interface::gameScreen()
 {
     Network::startWebSocket();
-    networkThread->launch();
+    networkThread.launch();
 
     //gui
 

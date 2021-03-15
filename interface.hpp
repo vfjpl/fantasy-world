@@ -2,7 +2,6 @@
 #define INTERFACE_HPP_INCLUDED
 
 #include <Poco/DynamicAny.h>
-#include <SFML/System/Thread.hpp>
 #include <TGUI/Gui.hpp>
 #include <TGUI/Widgets/ChatBox.hpp>
 #include <TGUI/Widgets/ProgressBar.hpp>
@@ -19,7 +18,7 @@ public:
     static void setup(sf::RenderWindow& window);
     static void updateWindowSize(float width, float height);
 
-    static void loginScreen(sf::Thread* networkThread);
+    static void loginScreen();
 
     static void health(const Poco::DynamicAny& data);
     static void chatMessage(const Poco::DynamicAny& data);
@@ -28,8 +27,8 @@ public:
     static void draw();
 
 private:
-    static void selectHeroScreen(sf::Thread* networkThread);
-    static void gameScreen(sf::Thread* networkThread);
+    static void selectHeroScreen();
+    static void gameScreen();
     static void addChatLine(const std::string& line);
 };
 

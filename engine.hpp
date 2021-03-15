@@ -4,7 +4,6 @@
 #include <Poco/DynamicAny.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <SFML/System/Thread.hpp>
 
 class Engine
 {
@@ -12,7 +11,7 @@ class Engine
     static sf::RenderWindow window;
 
 public:
-    static void setup(sf::Thread& networkThread);
+    static void setup();
 
     static bool run_game();
     static bool run_network();

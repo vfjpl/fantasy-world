@@ -20,11 +20,11 @@ unsigned long var2int(const Poco::DynamicAny& var)
 }
 }
 
-void Engine::setup(sf::Thread& networkThread)
+void Engine::setup()
 {
     setup_window();
     Interface::setup(window);
-    Interface::loginScreen(&networkThread);
+    Interface::loginScreen();
 }
 
 bool Engine::run_game()
@@ -131,7 +131,6 @@ void Engine::keyRelease(sf::Keyboard::Key code)
         EventHandler::stopMove(3);
         break;
     case sf::Keyboard::Escape:
-        window.close();
         break;
     default:
         break;

@@ -71,6 +71,7 @@
 		<Unit filename="player.hpp" />
 		<Unit filename="resourcemanager.cpp" />
 		<Unit filename="resourcemanager.hpp" />
+		<Unit filename="threads.hpp" />
 		<Unit filename="tile.cpp" />
 		<Unit filename="tile.hpp" />
 		<Extensions />
