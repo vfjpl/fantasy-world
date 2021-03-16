@@ -18,6 +18,8 @@ std::string getURI(const std::string& name, Graphic type)
         return "/assets/avatars/" + name + ".gif";
     case Graphic::PLAYER:
         return "/assets/looktypes/" + name + ".gif";
+    case Graphic::ATTACK_EFFECT:
+        return "/assets/attacks/" + name + ".gif";
     case Graphic::MONSTER:
         return "/templates/client/default/images/monsters/" + name + ".gif";
     case Graphic::MAP_MULTI:
