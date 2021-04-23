@@ -2,14 +2,60 @@
 #include "map.hpp"
 #include "localplayer.hpp"
 
-std::deque<timedEvent> EventHandler::events;
-std::deque<unsigned long> EventHandler::directions;
-std::map<Position, unsigned long> EventHandler::path;
-sf::Clock EventHandler::clock;
-unsigned long EventHandler::attack_id;
+struct timedEvent
+{
+    sf::Time time;
+    Event code;
+    timedEvent(Event c): code(c) {}
+    bool operator==(Event c) const
+    {
+        return code == c;
+    }
+};
+typedef std::pair<unsigned long, unsigned long> Position;
 
 namespace
 {
+//80
+std::deque<timedEvent> events;
+std::deque<unsigned long> directions;
+//48
+std::map<Position, unsigned long> path;
+//8
+sf::Clock sfClock;
+unsigned long attack_id;
+
+void stopEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found != it_end)
+        events.erase(it_found);
+}
+
+void startEvent(Event code)
+{
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found == it_end)
+        events.emplace_front(code);
+}
+
+unsigned long positionsToDir(Position from, Position to)
+{
+    if(from.second < to.second)
+        return 4;
+    if(from.second > to.second)
+        return 3;
+    if(from.first < to.first)
+        return 2;
+    if(from.first > to.first)
+        return 1;
+    return 0;
+}
+
 #define PERIOD_IN_FRAMES(frames, fps) ((1000000 * (frames)) / (fps))
 #define PERIOD_IN_MILISECONDS(miliseconds) (1000 * (miliseconds))
 sf::Time getPeriod(Event code)
@@ -24,23 +70,12 @@ sf::Time getPeriod(Event code)
         return sf::Time::Zero;
     }//end switch
 }
-unsigned long positionsToDir(Position from, Position to)
-{
-    if(from.second < to.second)
-        return 4;
-    if(from.second > to.second)
-        return 3;
-    if(from.first < to.first)
-        return 2;
-    if(from.first > to.first)
-        return 1;
-    return 0;
-}
-}
+}//end namespace
+
 
 Event EventHandler::pollEvent()
 {
-    sf::Time currentTime = clock.getElapsedTime();
+    sf::Time currentTime = sfClock.getElapsedTime();
     for(auto& event: events)
     {
         if(currentTime >= event.time)
@@ -95,10 +130,13 @@ void EventHandler::startMovePath(unsigned long x, unsigned long y)
         Position current = frontier.front();
         frontier.pop_front();
 
-        for(auto next: {Position(current.first - 1, current.second),
-                        Position(current.first, current.second - 1),
-                        Position(current.first, current.second + 1),
-                        Position(current.first + 1, current.second)})
+        for(auto next:
+                {
+                    Position(current.first - 1, current.second),
+                    Position(current.first, current.second - 1),
+                    Position(current.first, current.second + 1),
+                    Position(current.first + 1, current.second)
+                })
         {
             if(Map::isObstacle(next.first - 1, next.second - 1))
                 continue;
@@ -155,24 +193,4 @@ void EventHandler::stopMonsterAttack()
 unsigned long EventHandler::getAttackId()
 {
     return attack_id;
-}
-
-// private
-
-void EventHandler::startEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found == it_end)
-        events.emplace_front(code);
-}
-
-void EventHandler::stopEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found != it_end)
-        events.erase(it_found);
 }

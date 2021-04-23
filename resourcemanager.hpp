@@ -2,7 +2,6 @@
 #define RESOURCEMANAGER_HPP_INCLUDED
 
 #include <SFML/Graphics/Texture.hpp>
-#include <map>
 
 enum class Graphic
 {
@@ -19,17 +18,9 @@ enum class Graphic
     DIRECT,
 };
 
-class ResourceManager
+namespace ResourceManager
 {
-    //48
-    static std::map<std::string, sf::Texture> storage;
-
-public:
-    static const sf::Texture& getTexture(const std::string& name, Graphic type);
-
-private:
-    static const sf::Texture& getTexture(const std::string& name);
-    static void loadGraphic(const std::string& name);
-};
+const sf::Texture& getTexture(const std::string& name, Graphic type);
+}
 
 #endif // RESOURCEMANAGER_HPP_INCLUDED

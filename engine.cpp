@@ -8,192 +8,19 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/game.js
 
-sf::RenderWindow Engine::window;
-
 namespace
 {
+//528
+sf::RenderWindow window;
+
 unsigned long var2int(const Poco::DynamicAny& var)
 {
     if(var.isString())
         return str2int(var);
     return var;
 }
-}
 
-void Engine::setup()
-{
-    setup_window();
-    Interface::setup(window);
-    Interface::loginScreen();
-}
-
-bool Engine::run_game()
-{
-    process_input();
-    game_logic();
-    draw_frame();
-
-    return window.isOpen();
-}
-
-bool Engine::run_network()
-{
-    process_network(Network::receive());
-
-    return window.isOpen();
-}
-
-// private
-
-void Engine::setup_window()
-{
-    sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-    mode.width = 1000;
-    mode.height = 1000;
-    window.create(mode, "Fantasy World");
-    window.setKeyRepeatEnabled(false);
-    window.setFramerateLimit(60);
-}
-
-void Engine::process_input()
-{
-    sf::Event event;
-    while(window.pollEvent(event))
-    {
-        //process event only if gui didn't consume it
-        if(Interface::handleEvent(event))
-            continue;
-
-        switch(event.type)
-        {
-        case sf::Event::Closed:
-            window.close();
-            break;
-        case sf::Event::Resized:
-            Map::updateWindowSize(event.size.width, event.size.height);
-            Interface::updateWindowSize(event.size.width, event.size.height);
-            break;
-        case sf::Event::KeyPressed:
-            keyPress(event.key.code);
-            break;
-        case sf::Event::KeyReleased:
-            keyRelease(event.key.code);
-            break;
-        case sf::Event::MouseButtonPressed:
-            mousePress(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            break;
-        case sf::Event::MouseButtonReleased:
-            mouseRelease(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
-            break;
-        default:
-            break;
-        }//end switch
-    }//end while
-}
-
-void Engine::keyPress(sf::Keyboard::Key code)
-{
-    switch(code)
-    {
-    case sf::Keyboard::A:
-        EventHandler::startMove(1);
-        break;
-    case sf::Keyboard::D:
-        EventHandler::startMove(2);
-        break;
-    case sf::Keyboard::S:
-        EventHandler::startMove(4);
-        break;
-    case sf::Keyboard::W:
-        EventHandler::startMove(3);
-        break;
-    case sf::Keyboard::Escape:
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void Engine::keyRelease(sf::Keyboard::Key code)
-{
-    switch(code)
-    {
-    case sf::Keyboard::A:
-        EventHandler::stopMove(1);
-        break;
-    case sf::Keyboard::D:
-        EventHandler::stopMove(2);
-        break;
-    case sf::Keyboard::S:
-        EventHandler::stopMove(4);
-        break;
-    case sf::Keyboard::W:
-        EventHandler::stopMove(3);
-        break;
-    case sf::Keyboard::Escape:
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void Engine::mousePress(sf::Vector2i point)
-{
-    MapClickData data = Map::mapMouseClick(window, point);
-    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.item || data.tile)
-    {
-        if(data.chestID)
-            Network::openChest(data.chestID);
-        if(data.monsterID)
-            EventHandler::startMonsterAttack(data.monsterID);
-        if(data.item)
-            Network::pickUpItem(data.x, data.y);
-        if(data.tile)
-            Network::useElement(data.x, data.y);
-    }
-    else
-    {
-        EventHandler::startMovePath(data.x, data.y);
-    }
-}
-
-void Engine::mouseRelease(sf::Vector2i point)
-{
-
-}
-
-void Engine::game_logic()
-{
-    switch(EventHandler::pollEvent())
-    {
-    case Event::MOVE:
-        moveLocalPlayer(EventHandler::getDir());
-        break;
-    case Event::ATTACK:
-        Network::attackMonster(EventHandler::getAttackId());
-        break;
-    default:
-        break;
-    }//end switch
-}
-
-void Engine::moveLocalPlayer(unsigned long dir)
-{
-    if(dir)
-        Network::move(dir);
-    else
-        EventHandler::stopMoveEvent();
-}
-
-void Engine::draw_frame()
-{
-    window.clear();
-    Map::draw(window);
-    Interface::draw();
-    window.display();
-}
-
-void Engine::process_network(const Poco::DynamicAny& networkData)
+void process_network(const Poco::DynamicAny& networkData)
 {
     switch(var2int(networkData["code"]))
     {
@@ -343,4 +170,177 @@ void Engine::process_network(const Poco::DynamicAny& networkData)
         break;
     }
     }//end switch
+}
+
+void draw_frame()
+{
+    window.clear();
+    Map::draw(window);
+    Interface::draw();
+    window.display();
+}
+
+void moveLocalPlayer(unsigned long dir)
+{
+    if(dir)
+        Network::move(dir);
+    else
+        EventHandler::stopMoveEvent();
+}
+
+void game_logic()
+{
+    switch(EventHandler::pollEvent())
+    {
+    case Event::MOVE:
+        moveLocalPlayer(EventHandler::getDir());
+        break;
+    case Event::ATTACK:
+        Network::attackMonster(EventHandler::getAttackId());
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void mouseRelease(sf::Vector2i point)
+{
+
+}
+
+void mousePress(sf::Vector2i point)
+{
+    MapClickData data = Map::mapMouseClick(window, point);
+    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.item || data.tile)
+    {
+        if(data.chestID)
+            Network::openChest(data.chestID);
+        if(data.monsterID)
+            EventHandler::startMonsterAttack(data.monsterID);
+        if(data.item)
+            Network::pickUpItem(data.x, data.y);
+        if(data.tile)
+            Network::useElement(data.x, data.y);
+    }
+    else
+    {
+        EventHandler::startMovePath(data.x, data.y);
+    }
+}
+
+void keyRelease(sf::Keyboard::Key code)
+{
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        EventHandler::stopMove(1);
+        break;
+    case sf::Keyboard::D:
+        EventHandler::stopMove(2);
+        break;
+    case sf::Keyboard::S:
+        EventHandler::stopMove(4);
+        break;
+    case sf::Keyboard::W:
+        EventHandler::stopMove(3);
+        break;
+    case sf::Keyboard::Escape:
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void keyPress(sf::Keyboard::Key code)
+{
+    switch(code)
+    {
+    case sf::Keyboard::A:
+        EventHandler::startMove(1);
+        break;
+    case sf::Keyboard::D:
+        EventHandler::startMove(2);
+        break;
+    case sf::Keyboard::S:
+        EventHandler::startMove(4);
+        break;
+    case sf::Keyboard::W:
+        EventHandler::startMove(3);
+        break;
+    case sf::Keyboard::Escape:
+        break;
+    default:
+        break;
+    }//end switch
+}
+
+void process_input()
+{
+    sf::Event event;
+    while(window.pollEvent(event))
+    {
+        //process event only if gui didn't consume it
+        if(Interface::handleEvent(event))
+            continue;
+
+        switch(event.type)
+        {
+        case sf::Event::Closed:
+            window.close();
+            break;
+        case sf::Event::Resized:
+            Map::updateWindowSize(event.size.width, event.size.height);
+            Interface::updateWindowSize(event.size.width, event.size.height);
+            break;
+        case sf::Event::KeyPressed:
+            keyPress(event.key.code);
+            break;
+        case sf::Event::KeyReleased:
+            keyRelease(event.key.code);
+            break;
+        case sf::Event::MouseButtonPressed:
+            mousePress(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            break;
+        case sf::Event::MouseButtonReleased:
+            mouseRelease(sf::Vector2i(event.mouseButton.x, event.mouseButton.y));
+            break;
+        default:
+            break;
+        }//end switch
+    }//end while
+}
+
+void setup_window()
+{
+    sf::VideoMode mode = sf::VideoMode::getDesktopMode();
+    mode.width = 1000;
+    mode.height = 1000;
+    window.create(mode, "Fantasy World");
+    window.setKeyRepeatEnabled(false);
+    window.setFramerateLimit(60);
+}
+}//end namespace
+
+
+void Engine::setup()
+{
+    setup_window();
+    Interface::setup(window);
+    Interface::loginScreen();
+}
+
+bool Engine::run_game()
+{
+    process_input();
+    game_logic();
+    draw_frame();
+
+    return window.isOpen();
+}
+
+bool Engine::run_network()
+{
+    process_network(Network::receive());
+
+    return window.isOpen();
 }

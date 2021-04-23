@@ -6,10 +6,45 @@
 #include <SFML/System/FileInputStream.hpp>
 #include <SFML/System/MemoryInputStream.hpp>
 
-std::map<std::string, sf::Texture> ResourceManager::storage;
-
 namespace
 {
+//48
+std::map<std::string, sf::Texture> storage;
+
+void loadGraphic(const std::string& URI)
+{
+    if(storage.count(URI))
+        return;
+
+    std::string path = "cache" + URI;
+    sf::FileInputStream sfFile;
+    if(sfFile.open(path))
+    {
+        storage[URI].loadFromStream(sfFile);
+        return;
+    }
+
+    sf::Http http("alkatria.pl");
+    sf::Http::Request requ(URI);
+    sf::Http::Response resp = http.sendRequest(requ);
+    const std::string& body = resp.getBody();
+
+    sf::MemoryInputStream data;
+    data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
+    storage[URI].loadFromStream(data);
+
+    Poco::File dir(path.substr(0, path.rfind('/')));
+    dir.createDirectories();
+    Poco::FileOutputStream pocoFile(path);
+    pocoFile << body;
+}
+
+const sf::Texture& getTextureByURI(const std::string& URI)
+{
+    loadGraphic(URI);
+    return storage[URI];
+}
+
 std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
@@ -38,45 +73,10 @@ std::string getURI(const std::string& name, Graphic type)
         return name;
     }//end switch
 }
-}
+}//end namespace
+
 
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)
 {
-    return getTexture(getURI(name, type));
-}
-
-// private
-
-const sf::Texture& ResourceManager::getTexture(const std::string& name)
-{
-    loadGraphic(name);
-    return storage[name];
-}
-
-void ResourceManager::loadGraphic(const std::string& name)
-{
-    if(storage.count(name))
-        return;
-
-    std::string path = "cache" + name;
-    sf::FileInputStream sfFile;
-    if(sfFile.open(path))
-    {
-        storage[name].loadFromStream(sfFile);
-        return;
-    }
-
-    sf::Http http("alkatria.pl");
-    sf::Http::Request requ(name);
-    sf::Http::Response resp = http.sendRequest(requ);
-    const std::string& body = resp.getBody();
-
-    sf::MemoryInputStream data;
-    data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
-    storage[name].loadFromStream(data);
-
-    Poco::File dir(path.substr(0, path.rfind('/')));
-    dir.createDirectories();
-    Poco::FileOutputStream pocoFile(path);
-    pocoFile << body;
+    return getTextureByURI(getURI(name, type));
 }

@@ -1,14 +1,73 @@
 #include "interface.hpp"
 #include "network.hpp"
 #include "threads.hpp"
+#include <TGUI/Gui.hpp>
+#include <TGUI/Widgets/ChatBox.hpp>
+#include <TGUI/Widgets/ProgressBar.hpp>
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <TGUI/SignalImpl.hpp>
 
-tgui::Gui Interface::gui;
-tgui::ChatBox::Ptr Interface::chatBox;
-tgui::ProgressBar::Ptr Interface::healthBar;
+namespace
+{
+//248
+tgui::Gui gui;
+//16
+tgui::ChatBox::Ptr chatBox;
+tgui::ProgressBar::Ptr healthBar;
+
+void addChatLine(const std::string& line)
+{
+    chatBox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
+}
+
+void gameScreen()
+{
+    Network::startWebSocket();
+    networkThread.launch();
+
+    //gui
+
+    auto editbox = tgui::EditBox::create();
+    editbox->setSize("100%", editbox->getFullSize().y);
+    editbox->setPosition(0.f, "100% - height");
+    editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
+    {
+        Network::message(text);
+        editbox->setText(sf::String());
+    });
+
+    chatBox->setSize("100%", bindTop(editbox));
+
+    auto chatwindow = tgui::ChildWindow::create();
+    chatwindow->setResizable();
+    chatwindow->add(editbox);
+    chatwindow->add(chatBox);
+
+    gui.add(chatwindow);
+    gui.add(healthBar);
+}
+
+void selectHeroScreen()
+{
+    auto listBox = Network::getHeroesList();
+    listBox->setPosition("50% - width/2", "50% - height");
+
+    auto button = tgui::Button::create("Select");
+    button->setPosition("50% - width/2", "50%");
+    button->connect(tgui::Signals::Button::Pressed, [=]
+    {
+        Network::selectHero(listBox->getSelectedItem());
+        gui.removeAllWidgets();
+        gameScreen();
+    });
+
+    gui.add(listBox);
+    gui.add(button);
+}
+}//end namespace
+
 
 void Interface::setup(sf::RenderWindow& window)
 {
@@ -70,56 +129,4 @@ bool Interface::handleEvent(const sf::Event& event)
 void Interface::draw()
 {
     gui.draw();
-}
-
-// private
-
-void Interface::selectHeroScreen()
-{
-    auto listBox = Network::getHeroesList();
-    listBox->setPosition("50% - width/2", "50% - height");
-
-    auto button = tgui::Button::create("Select");
-    button->setPosition("50% - width/2", "50%");
-    button->connect(tgui::Signals::Button::Pressed, [=]
-    {
-        Network::selectHero(listBox->getSelectedItem());
-        gui.removeAllWidgets();
-        gameScreen();
-    });
-
-    gui.add(listBox);
-    gui.add(button);
-}
-
-void Interface::gameScreen()
-{
-    Network::startWebSocket();
-    networkThread.launch();
-
-    //gui
-
-    auto editbox = tgui::EditBox::create();
-    editbox->setSize("100%", editbox->getFullSize().y);
-    editbox->setPosition(0.f, "100% - height");
-    editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
-    {
-        Network::message(text);
-        editbox->setText(sf::String());
-    });
-
-    chatBox->setSize("100%", bindTop(editbox));
-
-    auto chatwindow = tgui::ChildWindow::create();
-    chatwindow->setResizable();
-    chatwindow->add(editbox);
-    chatwindow->add(chatBox);
-
-    gui.add(chatwindow);
-    gui.add(healthBar);
-}
-
-void Interface::addChatLine(const std::string& line)
-{
-    chatBox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
 }

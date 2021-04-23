@@ -1,29 +1,98 @@
 #include "network.hpp"
 #include "localplayer.hpp"
+#include <Poco/Net/HTTPSClientSession.h>
+#include <Poco/Net/HTTPRequest.h>
+#include <Poco/Net/HTTPResponse.h>
+#include <Poco/Net/WebSocket.h>
+#include <Poco/DynamicStruct.h>
 #include <Poco/Net/HTMLForm.h>
-
-Poco::Net::HTTPSClientSession Network::https("alkatria.pl");
-Poco::Net::HTTPSClientSession Network::wssHTTPS("alkatria.pl");
-Poco::Net::HTTPRequest Network::wssREQUEST;
-Poco::Net::HTTPResponse Network::wssRESPONSE;
-Poco::Net::NameValueCollection Network::cookies;
-Poco::Buffer<char> Network::buffer(0);
-Poco::Net::WebSocket* Network::socket;
 
 namespace
 {
+//344
+Poco::Net::HTTPSClientSession https("alkatria.pl");
+Poco::Net::HTTPSClientSession wssHTTPS("alkatria.pl");
+//136
+Poco::Net::HTTPRequest wssREQUEST;
+//112
+Poco::Net::HTTPResponse wssRESPONSE;
+//32
+Poco::Net::NameValueCollection cookies;
+Poco::Buffer<char> buffer(0);
+//8
+Poco::Net::WebSocket* webSocket;
+
 std::string toString(std::istream& stream)
 {
     std::string body;
     std::getline(stream, body, '\0');
     return body;
 }
-bool isLoginSucessfull(const Poco::DynamicAny& data)
+
+void sendJson(const std::string& json)
 {
-    bool check1 = data["code"] == 200ul;
-    bool check2 = data["status"] == 200ul;
-    return check1 && check2;
+    webSocket->sendFrame(json.data(), json.size());
 }
+
+void send(const Poco::DynamicStruct& data, unsigned long code)
+{
+    Poco::DynamicStruct json;
+    json.insert("code", code);
+    json.insert("data", data);
+    sendJson(json.toString());
+}
+
+void send(const Poco::DynamicStruct& data, const char* code)
+{
+    Poco::DynamicStruct json;
+    json.insert("code", code);
+    json.insert("data", data);
+    sendJson(json.toString());
+}
+
+void sendStart(const std::string& token)
+{
+    std::vector<Poco::DynamicAny> jsonArray;
+    jsonArray.emplace_back(1000ul);
+    jsonArray.emplace_back(1000ul);
+
+    Poco::DynamicStruct json;
+    json.insert("code", 1ul);
+    json.insert("window", jsonArray);
+    json.insert("token", token);
+
+    sendJson(json.toString());
+}
+
+std::string getLOOKTYPE(const std::string& body)
+{
+    unsigned long pos = body.find("url") + 5;
+    return body.substr(pos, body.find('\'', pos) - pos);
+}
+
+std::string getTOKEN(const std::string& body)
+{
+    unsigned long pos = body.find("token") + 9;
+    return body.substr(pos, body.find('\'', pos) - pos);
+}
+
+std::string getURI(const std::string& body)
+{
+    unsigned long pos = body.find("host") + 9;
+    return '/' + body.substr(pos, body.find('\'', pos) - pos);
+}
+
+std::string loadGameData()
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                "/game",
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    requ.setCookies(cookies);
+    https.sendRequest(requ);
+    return toString(https.receiveResponse(resp));
+}
+
 tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
 {
     tgui::ListBox::Ptr listBox = tgui::ListBox::create();
@@ -38,22 +107,15 @@ tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
     }
     return listBox;
 }
-std::string getLOOKTYPE(const std::string& body)
+
+bool isLoginSucessfull(const Poco::DynamicAny& data)
 {
-    unsigned long pos = body.find("url") + 5;
-    return body.substr(pos, body.find('\'', pos) - pos);
+    bool check1 = data["code"] == 200ul;
+    bool check2 = data["status"] == 200ul;
+    return check1 && check2;
 }
-std::string getTOKEN(const std::string& body)
-{
-    unsigned long pos = body.find("token") + 9;
-    return body.substr(pos, body.find('\'', pos) - pos);
-}
-std::string getURI(const std::string& body)
-{
-    unsigned long pos = body.find("host") + 9;
-    return '/' + body.substr(pos, body.find('\'', pos) - pos);
-}
-}
+}//end namespace
+
 
 bool Network::credentials(const std::string& login, const std::string& password)
 {
@@ -103,14 +165,14 @@ void Network::startWebSocket()
 {
     std::string body = loadGameData();
     wssREQUEST.setURI(getURI(body));
-    socket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
+    webSocket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
     sendStart(getTOKEN(body));
     LocalPlayer::looktype = getLOOKTYPE(body);
 }
 
 void Network::stopWebSocket()
 {
-    delete socket;
+    delete webSocket;
 }
 
 Poco::DynamicAny Network::receive(const std::string& token)
@@ -128,7 +190,7 @@ Poco::DynamicAny Network::receive()
 {
     int flags;
     buffer.resize(0, false);
-    socket->receiveFrame(buffer, flags);
+    webSocket->receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(Poco::UTF8::unescape(
                                        std::string::const_iterator(buffer.begin()),
                                        std::string::const_iterator(buffer.end())));
@@ -231,52 +293,4 @@ void Network::spellMonster(unsigned long spell_id, unsigned long target_id)
     data.insert("target", target_id);
     data.insert("fight_type", "monster");
     send(data, "spell");
-}
-
-// private
-
-std::string Network::loadGameData()
-{
-    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
-                                "/game",
-                                Poco::Net::HTTPRequest::HTTP_1_1);
-    Poco::Net::HTTPResponse resp;
-    requ.setCookies(cookies);
-    https.sendRequest(requ);
-    return toString(https.receiveResponse(resp));
-}
-
-void Network::sendStart(const std::string& token)
-{
-    std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(1000ul);
-    jsonArray.emplace_back(1000ul);
-
-    Poco::DynamicStruct json;
-    json.insert("code", 1ul);
-    json.insert("window", jsonArray);
-    json.insert("token", token);
-
-    sendJson(json.toString());
-}
-
-void Network::send(const Poco::DynamicStruct& data, unsigned long code)
-{
-    Poco::DynamicStruct json;
-    json.insert("code", code);
-    json.insert("data", data);
-    sendJson(json.toString());
-}
-
-void Network::send(const Poco::DynamicStruct& data, const char* code)
-{
-    Poco::DynamicStruct json;
-    json.insert("code", code);
-    json.insert("data", data);
-    sendJson(json.toString());
-}
-
-void Network::sendJson(const std::string& json)
-{
-    socket->sendFrame(json.data(), json.size());
 }
