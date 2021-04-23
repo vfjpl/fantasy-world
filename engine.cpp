@@ -211,16 +211,16 @@ void mouseRelease(sf::Vector2i point)
 void mousePress(sf::Vector2i point)
 {
     MapClickData data = Map::mapMouseClick(window, point);
-    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.item || data.tile)
+    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
     {
         if(data.chestID)
             Network::openChest(data.chestID);
         if(data.monsterID)
             EventHandler::startMonsterAttack(data.monsterID);
-        if(data.item)
-            Network::pickUpItem(data.x, data.y);
         if(data.tile)
             Network::useElement(data.x, data.y);
+        if(data.item)
+            Network::pickUpItem(data.x, data.y);
     }
     else
     {
