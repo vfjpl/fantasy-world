@@ -31,9 +31,9 @@ std::map<unsigned long, Player> players;
 std::vector<sf::Sprite> map_backgrounds;
 std::vector<Tile> tiles;
 //8
+Poco::DynamicAny obstacles;
 sf::Vector2i current_camera;
 sf::Vector2i desired_camera;
-Poco::DynamicAny obstacles;
 sf::Mutex mutex;
 unsigned long max_x;
 unsigned long max_y;
@@ -181,8 +181,8 @@ void addTile(const Poco::DynamicAny& data)
 void addMultiMapData(const Poco::DynamicAny& data)
 {
     const sf::Texture& texture = ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI);
-    float x = data["x"] * 640ul;
-    float y = data["y"] * 640ul;
+    unsigned long x = data["x"] * 640ul;
+    unsigned long y = data["y"] * 640ul;
     sf::Lock lock(mutex);
     map_backgrounds.emplace_back(texture);
     map_backgrounds.back().setPosition(x, y);
