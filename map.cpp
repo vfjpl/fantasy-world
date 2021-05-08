@@ -294,7 +294,7 @@ void Map::updateMapData(const Poco::DynamicAny& data)
         case char2int("monster_yells"):
             break;
         default:
-            std::cout << i.first << '\n';
+            std::cout << i.first << ' ' << data.toString() << '\n';
             break;
         }//end switch
     }//end for
