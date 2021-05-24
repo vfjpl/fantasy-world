@@ -7,34 +7,33 @@
 #include <Poco/DynamicStruct.h>
 #include <Poco/Net/HTMLForm.h>
 
-namespace
-{
 //344
-Poco::Net::HTTPSClientSession https("alkatria.pl");
-Poco::Net::HTTPSClientSession wssHTTPS("alkatria.pl");
+static Poco::Net::HTTPSClientSession https("alkatria.pl");
+static Poco::Net::HTTPSClientSession wssHTTPS("alkatria.pl");
 //136
-Poco::Net::HTTPRequest wssREQUEST;
+static Poco::Net::HTTPRequest wssREQUEST;
 //112
-Poco::Net::HTTPResponse wssRESPONSE;
+static Poco::Net::HTTPResponse wssRESPONSE;
 //32
-Poco::Net::NameValueCollection cookies;
-Poco::Buffer<char> buffer(0);
+static Poco::Net::NameValueCollection cookies;
+static Poco::Buffer<char> buffer(0ul);
 //8
-Poco::Net::WebSocket* webSocket;
+static Poco::Net::WebSocket* webSocket;
 
-std::string toString(std::istream& stream)
+
+static std::string toString(std::istream& stream)
 {
     std::string body;
     std::getline(stream, body, '\0');
     return body;
 }
 
-void sendJson(const std::string& json)
+static void sendJson(const std::string& json)
 {
     webSocket->sendFrame(json.data(), json.size());
 }
 
-void send(const Poco::DynamicStruct& data, unsigned long code)
+static void send(const Poco::DynamicStruct& data, unsigned long code)
 {
     Poco::DynamicStruct json;
     json.insert("code", code);
@@ -42,7 +41,7 @@ void send(const Poco::DynamicStruct& data, unsigned long code)
     sendJson(json.toString());
 }
 
-void send(const Poco::DynamicStruct& data, const char* code)
+static void send(const Poco::DynamicStruct& data, const char* code)
 {
     Poco::DynamicStruct json;
     json.insert("code", code);
@@ -50,7 +49,7 @@ void send(const Poco::DynamicStruct& data, const char* code)
     sendJson(json.toString());
 }
 
-void sendStart(const std::string& token)
+static void sendStart(const std::string& token)
 {
     std::vector<Poco::DynamicAny> jsonArray;
     jsonArray.emplace_back(1000ul);
@@ -64,25 +63,25 @@ void sendStart(const std::string& token)
     sendJson(json.toString());
 }
 
-std::string getLOOKTYPE(const std::string& body)
+static std::string getLOOKTYPE(const std::string& body)
 {
-    unsigned long pos = body.find("url") + 5;
+    unsigned long pos = body.find("url") + 5ul;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
 
-std::string getTOKEN(const std::string& body)
+static std::string getTOKEN(const std::string& body)
 {
-    unsigned long pos = body.find("token") + 9;
+    unsigned long pos = body.find("token") + 9ul;
     return body.substr(pos, body.find('\'', pos) - pos);
 }
 
-std::string getURI(const std::string& body)
+static std::string getURI(const std::string& body)
 {
-    unsigned long pos = body.find("host") + 9;
+    unsigned long pos = body.find("host") + 9ul;
     return '/' + body.substr(pos, body.find('\'', pos) - pos);
 }
 
-std::string loadGameData()
+static std::string loadGameData()
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
                                 "/game",
@@ -93,28 +92,27 @@ std::string loadGameData()
     return toString(https.receiveResponse(resp));
 }
 
-tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
+static tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
 {
     tgui::ListBox::Ptr listBox = tgui::ListBox::create();
     for(unsigned long start_pos = body.find("login");;)
     {
-        start_pos += 6;
-        unsigned long end_pos = body.find('\'', start_pos + 1);
+        start_pos += 6ul;
+        unsigned long end_pos = body.find('\'', start_pos + 1ul);
         listBox->addItem(body.substr(start_pos, end_pos - start_pos));
-        start_pos = body.find("login", end_pos + 1);
+        start_pos = body.find("login", end_pos + 1ul);
         if(start_pos == std::string::npos)
             break;
     }
     return listBox;
 }
 
-bool isLoginSucessfull(const Poco::DynamicAny& data)
+static bool isLoginSucessfull(const Poco::DynamicAny& data)
 {
     bool check1 = data["code"] == 200ul;
     bool check2 = data["status"] == 200ul;
     return check1 && check2;
 }
-}//end namespace
 
 
 bool Network::credentials(const std::string& login, const std::string& password)
@@ -189,7 +187,7 @@ Poco::DynamicAny Network::receive(const std::string& token)
 Poco::DynamicAny Network::receive()
 {
     int flags;
-    buffer.resize(0, false);
+    buffer.resize(0ul, false);
     webSocket->receiveFrame(buffer, flags);
     return Poco::DynamicAny::parse(Poco::UTF8::unescape(
                                        std::string::const_iterator(buffer.begin()),
@@ -201,21 +199,21 @@ void Network::attackMonster(unsigned long target_id)
     Poco::DynamicStruct data;
     data.insert("monster", target_id);
     data.insert("skill", 0ul);
-    send(data, 3);
+    send(data, 3ul);
 }
 
 void Network::message(const sf::String& message)
 {
     Poco::DynamicStruct data;
     data.insert("message", (const char*)message.toUtf8().data());
-    send(data, 4);
+    send(data, 4ul);
 }
 
 void Network::move(unsigned long dir)
 {
     Poco::DynamicStruct data;
     data.insert("dir", dir);
-    send(data, 5);
+    send(data, 5ul);
 }
 
 void Network::use(unsigned long slot, const char* type)
@@ -223,21 +221,21 @@ void Network::use(unsigned long slot, const char* type)
     Poco::DynamicStruct data;
     data.insert("slot", slot);
     data.insert("type", type);
-    send(data, 9);
+    send(data, 9ul);
 }
 
 void Network::takeLoot(unsigned long index)
 {
     Poco::DynamicStruct data;
     data.insert("action", index);
-    send(data, 18);
+    send(data, 18ul);
 }
 
 void Network::sendReloadPlayer(unsigned long player_id)
 {
     Poco::DynamicStruct data;
     data.insert("player", player_id);
-    send(data, 71);
+    send(data, 71ul);
 }
 
 void Network::pickUpItem(unsigned long x, unsigned long y)
@@ -245,7 +243,7 @@ void Network::pickUpItem(unsigned long x, unsigned long y)
     Poco::DynamicStruct data;
     data.insert("x", x);
     data.insert("y", y);
-    send(data, 877);
+    send(data, 877ul);
 }
 
 void Network::useElement(unsigned long x, unsigned long y)
@@ -253,13 +251,13 @@ void Network::useElement(unsigned long x, unsigned long y)
     Poco::DynamicStruct data;
     data.insert("x", x);
     data.insert("y", y);
-    send(data, 879);
+    send(data, 879ul);
 }
 
 void Network::sendReload()
 {
     Poco::DynamicStruct data;
-    send(data, 1019);
+    send(data, 1019ul);
 }
 
 void Network::attackPlayer(unsigned long target_id)
@@ -267,7 +265,7 @@ void Network::attackPlayer(unsigned long target_id)
     Poco::DynamicStruct data;
     data.insert("target", target_id);
     data.insert("skill", 0ul);
-    send(data, 1042);
+    send(data, 1042ul);
 }
 
 void Network::openChest(unsigned long id)

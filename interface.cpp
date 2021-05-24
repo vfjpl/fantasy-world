@@ -9,20 +9,19 @@
 #include <TGUI/Widgets/Button.hpp>
 #include <TGUI/SignalImpl.hpp>
 
-namespace
-{
 //248
-tgui::Gui gui;
+static tgui::Gui gui;
 //16
-tgui::ChatBox::Ptr chatBox;
-tgui::ProgressBar::Ptr healthBar;
+static tgui::ChatBox::Ptr chatBox;
+static tgui::ProgressBar::Ptr healthBar;
 
-void addChatLine(const std::string& line)
+
+static void addChatLine(const std::string& line)
 {
     chatBox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
 }
 
-void gameScreen()
+static void gameScreen()
 {
     Network::startWebSocket();
     networkThread.launch();
@@ -49,7 +48,7 @@ void gameScreen()
     gui.add(healthBar);
 }
 
-void selectHeroScreen()
+static void selectHeroScreen()
 {
     auto listBox = Network::getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -66,7 +65,6 @@ void selectHeroScreen()
     gui.add(listBox);
     gui.add(button);
 }
-}//end namespace
 
 
 void Interface::setup(sf::RenderWindow& window)

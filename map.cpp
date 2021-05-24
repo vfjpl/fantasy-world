@@ -16,41 +16,40 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/map.js
 
-namespace
-{
 //168
-sf::View camera;
+static sf::View camera;
 //48
-std::map<unsigned long, MapObject> map_objects;
-std::map<unsigned long, Chest> chests;
-std::map<unsigned long, MapItem> map_items;
-std::map<unsigned long, Monster> monsters;
-std::map<unsigned long, Npc> npcs;
-std::map<unsigned long, Player> players;
+static std::map<unsigned long, MapObject> map_objects;
+static std::map<unsigned long, Chest> chests;
+static std::map<unsigned long, MapItem> map_items;
+static std::map<unsigned long, Monster> monsters;
+static std::map<unsigned long, Npc> npcs;
+static std::map<unsigned long, Player> players;
 //24
-std::vector<sf::Sprite> map_backgrounds;
-std::vector<Tile> tiles;
+static std::vector<sf::Sprite> map_backgrounds;
+static std::vector<Tile> tiles;
 //8
-Poco::DynamicAny obstacles;
-sf::Vector2i current_camera;
-sf::Vector2i desired_camera;
-sf::Mutex mutex;
-unsigned long max_x;
-unsigned long max_y;
+static Poco::DynamicAny obstacles;
+static sf::Vector2i current_camera;
+static sf::Vector2i desired_camera;
+static sf::Mutex mutex;
+static unsigned long max_x;
+static unsigned long max_y;
 
-void moveCamera(unsigned long x, unsigned long y)
+
+static void moveCamera(unsigned long x, unsigned long y)
 {
     desired_camera.x = (x * 32) - 16;
     desired_camera.y = (y * 32);
 }
 
-void setCamera(unsigned long x, unsigned long y)
+static void setCamera(unsigned long x, unsigned long y)
 {
     moveCamera(x, y);
     current_camera = desired_camera;
 }
 
-bool isMapItem(sf::Vector2f coords)
+static bool isMapItem(sf::Vector2f coords)
 {
     for(auto& i: map_items)
         if(i.second.contains(coords))
@@ -58,7 +57,7 @@ bool isMapItem(sf::Vector2f coords)
     return false;
 }
 
-bool isTile(sf::Vector2f coords)
+static bool isTile(sf::Vector2f coords)
 {
     for(auto& i: tiles)
         if(i.contains(coords))
@@ -66,7 +65,7 @@ bool isTile(sf::Vector2f coords)
     return false;
 }
 
-unsigned long getPlayerIDf(sf::Vector2f coords)
+static unsigned long getPlayerIDf(sf::Vector2f coords)
 {
     for(auto& i: players)
         if(i.second.contains(coords))
@@ -74,7 +73,7 @@ unsigned long getPlayerIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long getNpcIDf(sf::Vector2f coords)
+static unsigned long getNpcIDf(sf::Vector2f coords)
 {
     for(auto& i: npcs)
         if(i.second.contains(coords))
@@ -82,7 +81,7 @@ unsigned long getNpcIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long getMonsterIDf(sf::Vector2f coords)
+static unsigned long getMonsterIDf(sf::Vector2f coords)
 {
     for(auto& i: monsters)
         if(i.second.contains(coords))
@@ -90,7 +89,7 @@ unsigned long getMonsterIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long getChestIDf(sf::Vector2f coords)
+static unsigned long getChestIDf(sf::Vector2f coords)
 {
     for(auto& i: chests)
         if(i.second.contains(coords))
@@ -98,49 +97,49 @@ unsigned long getChestIDf(sf::Vector2f coords)
     return 0;
 }
 
-void moveNpc(const Poco::DynamicAny& data)
+static void moveNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["npc"];
     npcs[id].move(data["x"], data["y"]);
     npcs[id].setDir(data["dir"]);
 }
 
-void moveMonster(const Poco::DynamicAny& data)
+static void moveMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["monster"];
     monsters[id].move(data["x"], data["y"]);
     monsters[id].setDir(data["dir"]);
 }
 
-void addNpc(const Poco::DynamicAny& data)
+static void addNpc(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     npcs[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::NPC));
     npcs[id].setPosition(data["x"], data["y"], data["can_walk"]);
 }
 
-void addMonster(const Poco::DynamicAny& data)
+static void addMonster(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     monsters[id].setTexture(ResourceManager::getTexture(data["looktype"], Graphic::MONSTER), data["width"], data["height"]);
     monsters[id].setPosition(data["x"], data["y"]);
 }
 
-void addChest(const Poco::DynamicAny& data)
+static void addChest(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     chests[id].setTexture(ResourceManager::getTexture(data["type"], data["open"] ? Graphic::CHEST_OPEN : Graphic::CHEST));
     chests[id].setPosition(data["x"], data["y"]);
 }
 
-void addMapObject(const Poco::DynamicAny& data)
+static void addMapObject(const Poco::DynamicAny& data)
 {
     unsigned long id = data["id"];
     map_objects[id].setTexture(ResourceManager::getTexture(data["file"], Graphic::GAME_OBJECT), data["width"], data["height"]);
     map_objects[id].setPosition(data["x"], data["y"]);
 }
 
-void addTile(const Poco::DynamicAny& data)
+static void addTile(const Poco::DynamicAny& data)
 {
     switch((unsigned long)data["type"])
     {
@@ -178,7 +177,7 @@ void addTile(const Poco::DynamicAny& data)
     }//end switch
 }
 
-void addMultiMapData(const Poco::DynamicAny& data)
+static void addMultiMapData(const Poco::DynamicAny& data)
 {
     const sf::Texture& texture = ResourceManager::getTexture(data["source"], Graphic::MAP_MULTI);
     unsigned long x = data["x"] * 640ul;
@@ -188,14 +187,14 @@ void addMultiMapData(const Poco::DynamicAny& data)
     map_backgrounds.back().setPosition(x, y);
 }
 
-void addSingleMapData(const Poco::DynamicAny& data)
+static void addSingleMapData(const Poco::DynamicAny& data)
 {
     const sf::Texture& texture = ResourceManager::getTexture(data["id"], Graphic::MAP_SINGLE);
     sf::Lock lock(mutex);
     map_backgrounds.emplace_back(texture);
 }
 
-void loadMapPositionData(const Poco::DynamicAny& data)
+static void loadMapPositionData(const Poco::DynamicAny& data)
 {
     max_x = data["MAX_X"];
     max_y = data["MAX_Y"];
@@ -205,7 +204,6 @@ void loadMapPositionData(const Poco::DynamicAny& data)
     players[LocalPlayer::id].setTexture(ResourceManager::getTexture(LocalPlayer::looktype, Graphic::DIRECT));
     players[LocalPlayer::id].setPosition(LocalPlayer::x, LocalPlayer::y);
 }
-}//end namespace
 
 
 void Map::updateWindowSize(float width, float height)

@@ -8,19 +8,17 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/game.js
 
-namespace
-{
 //528
-sf::RenderWindow window;
+static sf::RenderWindow window;
 
-unsigned long var2int(const Poco::DynamicAny& var)
+static unsigned long var2int(const Poco::DynamicAny& var)
 {
     if(var.isString())
         return str2int(var);
     return var;
 }
 
-void process_network(const Poco::DynamicAny& networkData)
+static void process_network(const Poco::DynamicAny& networkData)
 {
     switch(var2int(networkData["code"]))
     {
@@ -172,7 +170,7 @@ void process_network(const Poco::DynamicAny& networkData)
     }//end switch
 }
 
-void draw_frame()
+static void draw_frame()
 {
     window.clear();
     Map::draw(window);
@@ -180,7 +178,7 @@ void draw_frame()
     window.display();
 }
 
-void moveLocalPlayer(unsigned long dir)
+static void moveLocalPlayer(unsigned long dir)
 {
     if(dir)
         Network::move(dir);
@@ -188,7 +186,7 @@ void moveLocalPlayer(unsigned long dir)
         EventHandler::stopMoveEvent();
 }
 
-void game_logic()
+static void game_logic()
 {
     switch(EventHandler::pollEvent())
     {
@@ -203,12 +201,12 @@ void game_logic()
     }//end switch
 }
 
-void mouseRelease(sf::Vector2i point)
+static void mouseRelease(sf::Vector2i point)
 {
 
 }
 
-void mousePress(sf::Vector2i point)
+static void mousePress(sf::Vector2i point)
 {
     MapClickData data = Map::mapMouseClick(window, point);
     if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
@@ -228,7 +226,7 @@ void mousePress(sf::Vector2i point)
     }
 }
 
-void keyRelease(sf::Keyboard::Key code)
+static void keyRelease(sf::Keyboard::Key code)
 {
     switch(code)
     {
@@ -251,7 +249,7 @@ void keyRelease(sf::Keyboard::Key code)
     }//end switch
 }
 
-void keyPress(sf::Keyboard::Key code)
+static void keyPress(sf::Keyboard::Key code)
 {
     switch(code)
     {
@@ -274,7 +272,7 @@ void keyPress(sf::Keyboard::Key code)
     }//end switch
 }
 
-void process_input()
+static void process_input()
 {
     sf::Event event;
     while(window.pollEvent(event))
@@ -310,7 +308,7 @@ void process_input()
     }//end while
 }
 
-void setup_window()
+static void setup_window()
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
     mode.width = 1000;
@@ -319,7 +317,6 @@ void setup_window()
     window.setKeyRepeatEnabled(false);
     window.setFramerateLimit(60);
 }
-}//end namespace
 
 
 void Engine::setup()

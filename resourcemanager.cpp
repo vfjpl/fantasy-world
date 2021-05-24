@@ -6,12 +6,11 @@
 #include <SFML/System/FileInputStream.hpp>
 #include <SFML/System/MemoryInputStream.hpp>
 
-namespace
-{
 //48
-std::map<std::string, sf::Texture> storage;
+static std::map<std::string, sf::Texture> storage;
 
-void loadGraphic(const std::string& URI)
+
+static void loadGraphic(const std::string& URI)
 {
     if(storage.count(URI))
         return;
@@ -39,13 +38,13 @@ void loadGraphic(const std::string& URI)
     pocoFile << body;
 }
 
-const sf::Texture& getTextureByURI(const std::string& URI)
+static const sf::Texture& getTextureByURI(const std::string& URI)
 {
     loadGraphic(URI);
     return storage[URI];
 }
 
-std::string getURI(const std::string& name, Graphic type)
+static std::string getURI(const std::string& name, Graphic type)
 {
     switch(type)
     {
@@ -73,7 +72,6 @@ std::string getURI(const std::string& name, Graphic type)
         return name;
     }//end switch
 }
-}//end namespace
 
 
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)

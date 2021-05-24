@@ -14,18 +14,17 @@ struct timedEvent
 };
 typedef std::pair<unsigned long, unsigned long> Position;
 
-namespace
-{
 //80
-std::deque<timedEvent> events;
-std::deque<unsigned long> directions;
+static std::deque<timedEvent> events;
+static std::deque<unsigned long> directions;
 //48
-std::map<Position, unsigned long> path;
+static std::map<Position, unsigned long> path;
 //8
-sf::Clock sfClock;
-unsigned long attack_id;
+static sf::Clock sfClock;
+static unsigned long attack_id;
 
-void stopEvent(Event code)
+
+static void stopEvent(Event code)
 {
     auto it_begin = events.cbegin();
     auto it_end = events.cend();
@@ -34,7 +33,7 @@ void stopEvent(Event code)
         events.erase(it_found);
 }
 
-void startEvent(Event code)
+static void startEvent(Event code)
 {
     auto it_begin = events.cbegin();
     auto it_end = events.cend();
@@ -43,7 +42,7 @@ void startEvent(Event code)
         events.emplace_front(code);
 }
 
-unsigned long positionsToDir(Position from, Position to)
+static unsigned long positionsToDir(Position from, Position to)
 {
     if(from.second < to.second)
         return 4;
@@ -56,10 +55,10 @@ unsigned long positionsToDir(Position from, Position to)
     return 0;
 }
 
+static sf::Time getPeriod(Event code)
+{
 #define PERIOD_IN_FRAMES(frames, fps) ((1000000 * (frames)) / (fps))
 #define PERIOD_IN_MILISECONDS(miliseconds) (1000 * (miliseconds))
-sf::Time getPeriod(Event code)
-{
     switch(code)
     {
     case Event::MOVE:
@@ -70,7 +69,6 @@ sf::Time getPeriod(Event code)
         return sf::Time::Zero;
     }//end switch
 }
-}//end namespace
 
 
 Event EventHandler::pollEvent()

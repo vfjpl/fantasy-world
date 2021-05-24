@@ -1,13 +1,12 @@
 #include <SFML/System/Vector2.hpp>
 #include <string>
 
-namespace
-{
-int clamp(int val)
+
+static int clamp(int val)
 {
     return std::min(std::max(val, -2), 2);
 }
-}
+
 
 sf::Vector2i clamp(sf::Vector2i val)
 {
