@@ -232,9 +232,9 @@ void Map::loadData_teleport(const Poco::DynamicAny& data)
     loadMapPositionData(data["map_positions"]);
 
     //todo better
-    if(data["map"]["type"] == 2ul)
+    if(const auto& map_data = data["map"]; map_data["type"] == 2ul)
     {
-        addSingleMapData(data["map"]);
+        addSingleMapData(map_data);
     }
     else
     {
@@ -242,26 +242,26 @@ void Map::loadData_teleport(const Poco::DynamicAny& data)
             addMultiMapData(map_chunk);
     }
 
-    if(data["tiles"].size())
-        for(const auto& tile: data["tiles"])
+    if(const auto& tiles_data = data["tiles"]; tiles_data.size())
+        for(const auto& tile: tiles_data)
             addTile(tile);
-    if(data["map_objects"].size())
-        for(const auto& map_object: data["map_objects"])
+    if(const auto& map_objects_data = data["map_objects"]; map_objects_data.size())
+        for(const auto& map_object: map_objects_data)
             addMapObject(map_object);
-    if(data["chests"].size())
-        for(const auto& chest: data["chests"])
+    if(const auto& chests_data = data["chests"]; chests_data.size())
+        for(const auto& chest: chests_data)
             addChest(chest);
-    if(data["map_items"].size())
-        for(const auto& map_item: data["map_items"])
+    if(const auto& map_items_data = data["map_items"]; map_items_data.size())
+        for(const auto& map_item: map_items_data)
             addMapItem(map_item);
-    if(data["monsters"].size())
-        for(const auto& monster: data["monsters"])
+    if(const auto& monsters_data = data["monsters"]; monsters_data.size())
+        for(const auto& monster: monsters_data)
             addMonster(monster);
-    if(data["npcs"].size())
-        for(const auto& npc: data["npcs"])
+    if(const auto& npcs_data = data["npcs"]; npcs_data.size())
+        for(const auto& npc: npcs_data)
             addNpc(npc);
-    if(data["players"].size())
-        for(const auto& player: data["players"])
+    if(const auto& players_data = data["players"]; players_data.size())
+        for(const auto& player: players_data)
             addPlayer(player);
 }
 
@@ -346,9 +346,9 @@ void Map::deletePlayer(const Poco::DynamicAny& data)
 void Map::openChest(const Poco::DynamicAny& data)
 {
     //todo better
-    if(data["chest"].size())
+    if(const auto& chest_data = data["chest"]; chest_data.size())
     {
-        unsigned long id = data["chest"];
+        unsigned long id = chest_data;
         chests[id].setTexture(ResourceManager::getTexture(std::to_string(1ul), Graphic::CHEST_OPEN));
     }
 }
