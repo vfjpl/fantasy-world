@@ -10,71 +10,70 @@
 static std::map<std::string, sf::Texture> storage;
 
 
-static void loadGraphic(const std::string& URI)
+static void loadGraphic(const std::string& path)
 {
-    if(storage.count(URI))
+    if(storage.count(path))
         return;
 
-    std::string path = "cache" + URI;
-    sf::FileInputStream sfFile;
-    if(sfFile.open(path))
+    if(sf::FileInputStream sfFile; sfFile.open(path))
     {
-        storage[URI].loadFromStream(sfFile);
+        storage[path].loadFromStream(sfFile);
         return;
     }
 
     sf::Http http("alkatria.pl");
-    sf::Http::Request requ(URI);
+    sf::Http::Request requ(path.substr(path.find('/')));
     sf::Http::Response resp = http.sendRequest(requ);
     const std::string& body = resp.getBody();
 
     sf::MemoryInputStream data;
     data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
-    storage[URI].loadFromStream(data);
+    storage[path].loadFromStream(data);
 
-    Poco::File dir(path.substr(0, path.rfind('/')));
+    Poco::File dir(path.substr(0ul, path.rfind('/')));
     dir.createDirectories();
+
     Poco::FileOutputStream pocoFile(path);
     pocoFile << body;
 }
 
-static const sf::Texture& getTextureByURI(const std::string& URI)
+static const sf::Texture& getTextureByPath(const std::string& path)
 {
-    loadGraphic(URI);
-    return storage[URI];
+    loadGraphic(path);
+    return storage[path];
 }
 
-static std::string getURI(const std::string& name, Graphic type)
+static std::string getPath(const std::string& name, Graphic type)
 {
     switch(type)
     {
     case Graphic::NPC:
-        return "/assets/avatars/" + name + ".gif";
+        return "cache/assets/avatars/" + name + ".gif";
     case Graphic::PLAYER:
-        return "/assets/looktypes/" + name + ".gif";
+        return "cache/assets/looktypes/" + name + ".gif";
     case Graphic::ATTACK_EFFECT:
-        return "/assets/attacks/" + name + ".gif";
+        return "cache/assets/attacks/" + name + ".gif";
     case Graphic::MONSTER:
-        return "/templates/client/default/images/monsters/" + name + ".gif";
+        return "cache/templates/client/default/images/monsters/" + name + ".gif";
     case Graphic::MAP_MULTI:
-        return "/assets/" + name + ".png";
+        return "cache/assets/" + name + ".png";
     case Graphic::MAP_SINGLE:
-        return "/assets/maps/files/" + name + ".png";
+        return "cache/assets/maps/files/" + name + ".png";
     case Graphic::ITEM:
-        return "/templates/client/default/images/items/" + name + ".png";
+        return "cache/templates/client/default/images/items/" + name + ".png";
     case Graphic::CHEST:
-        return "/templates/client/default/images/tiles/chest_" + name + ".png";
+        return "cache/templates/client/default/images/tiles/chest_" + name + ".png";
     case Graphic::CHEST_OPEN:
-        return "/templates/client/default/images/tiles/chest_" + name + "_open.png";
+        return "cache/templates/client/default/images/tiles/chest_" + name + "_open.png";
     case Graphic::GAME_OBJECT:
-        return "/assets/game_objects/" + name;
+        return "cache/assets/game_objects/" + name;
     default:
-        return name;
+        return "cache" + name;
     }//end switch
 }
 
 
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)
 {
-    return getTextureByURI(getURI(name, type));
+    return getTextureByPath(getPath(name, type));
 }
