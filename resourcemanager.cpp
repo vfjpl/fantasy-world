@@ -47,12 +47,12 @@ static std::string getPath(const std::string& name, Graphic type)
 {
     switch(type)
     {
+    case Graphic::ATTACK_EFFECT:
+        return "cache/assets/attacks/" + name + ".gif";
     case Graphic::NPC:
         return "cache/assets/avatars/" + name + ".gif";
     case Graphic::PLAYER:
         return "cache/assets/looktypes/" + name + ".gif";
-    case Graphic::ATTACK_EFFECT:
-        return "cache/assets/attacks/" + name + ".gif";
     case Graphic::MONSTER:
         return "cache/templates/client/default/images/monsters/" + name + ".gif";
     case Graphic::MAP_MULTI:

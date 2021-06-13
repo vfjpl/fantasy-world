@@ -5,9 +5,9 @@
 
 enum class Graphic
 {
+    ATTACK_EFFECT,
     NPC,
     PLAYER,
-    ATTACK_EFFECT,
     MONSTER,
     MAP_MULTI,
     MAP_SINGLE,
