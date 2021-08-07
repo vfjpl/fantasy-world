@@ -11,6 +11,8 @@
 
 //248
 static tgui::Gui gui;
+//168
+static sf::View camera;
 //16
 static tgui::ChatBox::Ptr chatBox;
 static tgui::ProgressBar::Ptr healthBar;
@@ -75,11 +77,6 @@ void Interface::setup(sf::RenderWindow& window)
     healthBar->setPosition("50% - width/2", "100% - height");
 }
 
-void Interface::updateWindowSize(float width, float height)
-{
-    gui.setView(sf::View(sf::FloatRect(0, 0, width, height)));
-}
-
 void Interface::loginScreen()
 {
     auto editBoxUsername = tgui::EditBox::create();
@@ -117,6 +114,12 @@ void Interface::health(const Poco::DynamicAny& data)
 void Interface::chatMessage(const Poco::DynamicAny& data)
 {
     addChatLine(data["player"] + ": " + data["message"]);
+}
+
+void Interface::updateWindowSize(float width, float height)
+{
+    camera.reset(sf::FloatRect(0, 0, width, height));
+    gui.setView(camera);
 }
 
 bool Interface::handleEvent(const sf::Event& event)

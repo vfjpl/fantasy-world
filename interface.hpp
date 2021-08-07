@@ -7,13 +7,12 @@
 namespace Interface
 {
 void setup(sf::RenderWindow& window);
-void updateWindowSize(float width, float height);
-
 void loginScreen();
 
 void health(const Poco::DynamicAny& data);
 void chatMessage(const Poco::DynamicAny& data);
 
+void updateWindowSize(float width, float height);
 bool handleEvent(const sf::Event& event);
 void draw();
 }
