@@ -13,7 +13,9 @@ static std::map<std::string, sf::Texture> storage;
 static void loadGraphic(const std::string& path)
 {
     if(storage.count(path))
+    {
         return;
+    }
 
     if(sf::FileInputStream sfFile; sfFile.open(path))
     {
@@ -26,15 +28,19 @@ static void loadGraphic(const std::string& path)
     sf::Http::Response resp = http.sendRequest(requ);
     const std::string& body = resp.getBody();
 
-    sf::MemoryInputStream data;
-    data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
-    storage[path].loadFromStream(data);
-
-    Poco::File dir(path.substr(0ul, path.rfind('/')));
-    dir.createDirectories();
-
-    Poco::FileOutputStream pocoFile(path);
-    pocoFile << body;
+    {
+        sf::MemoryInputStream data;
+        data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
+        storage[path].loadFromStream(data);
+    }
+    {
+        Poco::File dir(path.substr(0ul, path.rfind('/')));
+        dir.createDirectories();
+    }
+    {
+        Poco::FileOutputStream pocoFile(path);
+        pocoFile << body;
+    }
 }
 
 static const sf::Texture& getTextureByPath(const std::string& path)
