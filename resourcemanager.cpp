@@ -33,20 +33,9 @@ static void loadGraphic(const std::string& path)
         data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
         storage[path].loadFromStream(data);
     }
-    {
-        Poco::File dir(path.substr(0ul, path.rfind('/')));
-        dir.createDirectories();
-    }
-    {
-        Poco::FileOutputStream pocoFile(path);
-        pocoFile << body;
-    }
-}
 
-static const sf::Texture& getTextureByPath(const std::string& path)
-{
-    loadGraphic(path);
-    return storage[path];
+    Poco::File(path.substr(0ul, path.rfind('/'))).createDirectories();
+    Poco::FileOutputStream(path) << body;
 }
 
 static std::string getPath(const std::string& name, Graphic type)
@@ -81,5 +70,7 @@ static std::string getPath(const std::string& name, Graphic type)
 
 const sf::Texture& ResourceManager::getTexture(const std::string& name, Graphic type)
 {
-    return getTextureByPath(getPath(name, type));
+    std::string path = getPath(name, type);
+    loadGraphic(path);
+    return storage[path];
 }
