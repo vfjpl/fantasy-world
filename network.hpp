@@ -6,6 +6,8 @@
 
 namespace Network
 {
+std::istream& receiveData(const std::string& uri);
+
 bool credentials(const std::string& login, const std::string& password);
 tgui::ListBox::Ptr getHeroesList();
 void selectHero(const std::string& hero);

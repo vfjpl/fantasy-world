@@ -115,6 +115,16 @@ static bool isLoginSucessfull(const Poco::DynamicAny& data)
 }
 
 
+std::istream& Network::receiveData(const std::string& uri)
+{
+    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_GET,
+                                uri,
+                                Poco::Net::HTTPRequest::HTTP_1_1);
+    Poco::Net::HTTPResponse resp;
+    https.sendRequest(requ);
+    return https.receiveResponse(resp);
+}
+
 bool Network::credentials(const std::string& login, const std::string& password)
 {
     Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
@@ -193,6 +203,7 @@ Poco::DynamicAny Network::receive()
                                        std::string::const_iterator(buffer.begin()),
                                        std::string::const_iterator(buffer.end())));
 }
+
 
 void Network::attackMonster(unsigned long target_id)
 {
