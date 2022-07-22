@@ -34,7 +34,6 @@
 		</Compiler>
 		<Linker>
 			<Add library="tgui" />
-			<Add library="sfml-network" />
 			<Add library="sfml-graphics" />
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />

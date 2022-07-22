@@ -1,7 +1,7 @@
 #include "resourcemanager.hpp"
+#include "network.hpp"
 #include <Poco/File.h>
 #include <Poco/FileStream.h>
-#include <SFML/Network/Http.hpp>
 #include <SFML/System/FileInputStream.hpp>
 
 //48
@@ -17,13 +17,7 @@ static void loadGraphic(const std::string& path)
     if(!sfFile.open(path))
     {
         Poco::File(path.substr(0ul, path.rfind('/'))).createDirectories();
-
-        sf::Http http("alkatria.pl");
-        sf::Http::Request requ(path.substr(path.find('/')));
-        sf::Http::Response resp = http.sendRequest(requ);
-
-        Poco::FileOutputStream(path) << resp.getBody();
-
+        Poco::FileOutputStream(path) << Network::receiveData(path.substr(path.find('/'))).rdbuf();
         sfFile.open(path);
     }
     storage[path].loadFromStream(sfFile);
