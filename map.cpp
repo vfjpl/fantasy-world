@@ -162,6 +162,17 @@ static void addTile(const Poco::DynamicAny& data)
         tiles.back().setPosition(x, y);
         break;
     }
+    case 120://sign
+    {
+        const auto& image = data["data"]["image"];
+        const sf::Texture& texture = ResourceManager::getTexture(image["path"], Graphic::DIRECT);
+        unsigned long width = image["width"];
+        unsigned long height = image["height"];
+        unsigned long x = data["x"];
+        unsigned long y = data["y"];
+        //todo
+        break;
+    }
     default:
     {
         const sf::Texture& texture = ResourceManager::getTexture(data["tile"], Graphic::GAME_OBJECT);
