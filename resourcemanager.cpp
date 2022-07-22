@@ -1,10 +1,8 @@
 #include "resourcemanager.hpp"
-#include <Poco/Net/HTTPMessage.h>
 #include <Poco/File.h>
 #include <Poco/FileStream.h>
 #include <SFML/Network/Http.hpp>
 #include <SFML/System/FileInputStream.hpp>
-#include <SFML/System/MemoryInputStream.hpp>
 
 //48
 static std::map<std::string, sf::Texture> storage;
@@ -13,29 +11,22 @@ static std::map<std::string, sf::Texture> storage;
 static void loadGraphic(const std::string& path)
 {
     if(storage.count(path))
-    {
         return;
-    }
 
-    if(sf::FileInputStream sfFile; sfFile.open(path))
+    sf::FileInputStream sfFile;
+    if(!sfFile.open(path))
     {
-        storage[path].loadFromStream(sfFile);
-        return;
+        Poco::File(path.substr(0ul, path.rfind('/'))).createDirectories();
+
+        sf::Http http("alkatria.pl");
+        sf::Http::Request requ(path.substr(path.find('/')));
+        sf::Http::Response resp = http.sendRequest(requ);
+
+        Poco::FileOutputStream(path) << resp.getBody();
+
+        sfFile.open(path);
     }
-
-    sf::Http http("alkatria.pl");
-    sf::Http::Request requ(path.substr(path.find('/')));
-    sf::Http::Response resp = http.sendRequest(requ);
-    const std::string& body = resp.getBody();
-
-    {
-        sf::MemoryInputStream data;
-        data.open(body.data(), std::stoul(resp.getField(Poco::Net::HTTPMessage::CONTENT_LENGTH)));
-        storage[path].loadFromStream(data);
-    }
-
-    Poco::File(path.substr(0ul, path.rfind('/'))).createDirectories();
-    Poco::FileOutputStream(path) << body;
+    storage[path].loadFromStream(sfFile);
 }
 
 static std::string getPath(const std::string& name, Graphic type)
