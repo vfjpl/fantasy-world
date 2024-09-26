@@ -1,5 +1,5 @@
 #include <SFML/System/Vector2.hpp>
-#include <string>
+#include <SFML/System/String.hpp>
 
 
 static int clamp(int val)
@@ -19,4 +19,9 @@ unsigned long str2int(const std::string& str)
     for(auto c: str)
         res += c;
     return res;
+}
+
+sf::String fromUtf8(std::string::const_iterator cbegin, std::string::const_iterator cend)
+{
+	return sf::String::fromUtf8(cbegin, cend);
 }

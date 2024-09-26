@@ -1,6 +1,7 @@
 #include "interface.hpp"
 #include "network.hpp"
 #include "threads.hpp"
+#include "helperfunctions.hpp"
 #include <TGUI/Gui.hpp>
 #include <TGUI/Widgets/ChatBox.hpp>
 #include <TGUI/Widgets/ProgressBar.hpp>
@@ -20,7 +21,7 @@ static tgui::ProgressBar::Ptr healthBar;
 
 static void addChatLine(const std::string& line)
 {
-    chatBox->addLine(sf::String::fromUtf8(line.cbegin(), line.cend()));
+	chatBox->addLine(fromUtf8(line.cbegin(), line.cend()));
 }
 
 static void gameScreen()

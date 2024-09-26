@@ -1,5 +1,6 @@
 #include "network.hpp"
 #include "localplayer.hpp"
+#include "helperfunctions.hpp"
 #include <Poco/Net/HTTPSClientSession.h>
 #include <Poco/Net/HTTPRequest.h>
 #include <Poco/Net/HTTPResponse.h>
@@ -99,7 +100,7 @@ static tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
     {
         start_pos += 6ul;
         unsigned long end_pos = body.find('\'', start_pos + 1ul);
-        listBox->addItem(body.substr(start_pos, end_pos - start_pos));
+		listBox->addItem(fromUtf8(body.cbegin() + start_pos, body.cbegin() + end_pos));
         start_pos = body.find("login", end_pos + 1ul);
         if(start_pos == std::string::npos)
             break;
