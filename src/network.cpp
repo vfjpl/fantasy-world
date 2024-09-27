@@ -12,7 +12,7 @@
 static Poco::Net::HTTPSClientSession https("alkatria.pl");
 static Poco::Net::HTTPSClientSession wssHTTPS("alkatria.pl");
 //136
-static Poco::Net::HTTPRequest wssREQUEST;
+static Poco::Net::HTTPRequest wssREQUEST(Poco::Net::HTTPRequest::HTTP_1_1);
 //112
 static Poco::Net::HTTPResponse wssRESPONSE;
 //32
