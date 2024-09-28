@@ -11,17 +11,10 @@
 //528
 static sf::RenderWindow window;
 
-static unsigned long var2int(const Poco::DynamicAny& var)
-{
-    if(var.isString())
-        return str2int(var);
-    return var;
-}
-
 static void process_network(const Poco::DynamicAny& networkData)
 {
-    switch(var2int(networkData["code"]))
-    {
+	switch(var2hash(networkData["code"]))
+	{
     case 1://global chat message
     {
         Interface::chatMessage(networkData);
@@ -102,72 +95,77 @@ static void process_network(const Poco::DynamicAny& networkData)
     {
         break;
     }
-    case char2int("move_me"):
-    {
-        Map::moveLocalPlayer(networkData);
-        break;
-    }
-    case char2int("reset_move"):
-    {
-        break;
-    }
-    case char2int("spell_effect"):
-    {
-        break;
-    }
-    case char2int("loot"):
-    {
-        EventHandler::stopMonsterAttack();
-        break;
-    }
-    case char2int("move_outfit"):
-    {
-        Map::moveOutfit(networkData);
-        break;
-    }
-    case char2int("show_tile"):
-    {
-        Map::updateTile(networkData);
-        break;
-    }
-    case char2int("exhaust_tile"):
-    {
-        Map::updateTile(networkData);
-        break;
-    }
-    case char2int("multi_code"):
-    {
-        for(const auto& item: networkData["items"])
-            process_network(item.isString() ? Poco::DynamicAny::parse(item) : item);
-        break;
-    }
-    case char2int("json"):
-    {
-        process_network(Network.receive(networkData["hash"]));
-        break;
-    }
-    case char2int("load_game"):
-    {
-        process_network(Network.receive(networkData["token"]));
-        break;
-    }
-    case char2int("teleport"):
-    {
-        Map::clear();
-        Map::loadData_teleport(networkData["data"]);
-        break;
-    }
-    case char2int("death"):
-    {
-        Network.sendReload();
-        break;
-    }
-    default:
-    {
-        std::cout << networkData.toString() << '\n';
-        break;
-    }
-    }//end switch
+	case char2hash("move_me"):
+	{
+		Map::moveLocalPlayer(networkData);
+		break;
+	}
+	case char2hash("reset_move"):
+	{
+		break;
+	}
+	case char2hash("spell_effect"):
+	{
+		break;
+	}
+	case char2hash("loot"):
+	{
+		EventHandler::stopMonsterAttack();
+		break;
+	}
+	case char2hash("move_outfit"):
+	{
+		Map::moveOutfit(networkData);
+		break;
+	}
+	case char2hash("show_tile"):
+	{
+		Map::updateTile(networkData);
+		break;
+	}
+	case char2hash("exhaust_tile"):
+	{
+		Map::updateTile(networkData);
+		break;
+	}
+	case char2hash("multi_code"):
+	{
+		for(const auto& item : networkData["items"])
+		{
+			if(item.isString())
+				process_network(Poco::DynamicAny::parse(var2str(item)));
+			else
+				process_network(item);
+		}
+		break;
+	}
+	case char2hash("json"):
+	{
+		process_network(Network.receive(networkData["hash"]));
+		break;
+	}
+	case char2hash("load_game"):
+	{
+		process_network(Network.receive(networkData["token"]));
+		break;
+	}
+	case char2hash("teleport"):
+	{
+		Map::clear();
+		Map::loadData_teleport(networkData["data"]);
+		break;
+	}
+	case char2hash("death"):
+	{
+		Network.sendReload();
+		break;
+	}
+	default:
+	{
+		std::cout << "process_network: " << var2str(networkData) << '\n';
+		break;
+	}
+	}//end switch
 }
 
 static void draw_frame()

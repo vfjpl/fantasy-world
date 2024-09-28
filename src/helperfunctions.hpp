@@ -1,18 +1,25 @@
 #ifndef HELPERFUNCTIONS_HPP_INCLUDED
 #define HELPERFUNCTIONS_HPP_INCLUDED
 
-sf::Vector2i clamp(sf::Vector2i val);
+#include <Poco/DynamicAny.h>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/System/String.hpp>
 
-unsigned long str2int(const std::string& str);
+sf::Vector2i clamp(sf::Vector2i val);
 
 sf::String fromUtf8(std::string::const_iterator cbegin, std::string::const_iterator cend);
 
-constexpr unsigned long char2int(const char* str)
+std::string var2str(const Poco::DynamicAny& var);
+unsigned long var2int(const Poco::DynamicAny& var);
+
+unsigned long var2hash(const Poco::DynamicAny& var);
+unsigned long str2hash(const std::string& str);
+constexpr unsigned long char2hash(const char* str)
 {
-    unsigned long res = 0;
-    for(; *str != '\0'; ++str)
-        res += *str;
-    return res;
+	unsigned long res = 0;
+	for(; *str != '\0'; ++str)
+		res += *str;
+	return res;
 }
 
 #endif // HELPERFUNCTIONS_HPP_INCLUDED

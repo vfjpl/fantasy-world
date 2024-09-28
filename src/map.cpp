@@ -278,35 +278,35 @@ void Map::loadData_teleport(const Poco::DynamicAny& data)
 
 void Map::updateMapData(const Poco::DynamicAny& data)
 {
-    for(const auto& i: data.extract<Poco::DynamicStruct>())
-    {
-        switch(str2int(i.first))
-        {
-        case char2int("moves"):
-            for(const auto& monster: i.second)
-                moveMonster(monster);
-            break;
-        case char2int("npc_moves"):
-            for(const auto& npc: i.second)
-                moveNpc(npc);
-            break;
-        case char2int("respawns"):
-            for(const auto& monster: i.second)
-                addMonster(monster);
-            break;
-        case char2int("damages"):
-            break;
-        case char2int("spells"):
-            break;
-        case char2int("yells"):
-            break;
-        case char2int("monster_yells"):
-            break;
-        default:
-            std::cout << i.first << ' ' << data.toString() << '\n';
-            break;
-        }//end switch
-    }//end for
+	for(const auto& i : data.extract<Poco::DynamicStruct>())
+	{
+		switch(str2hash(i.first))
+		{
+		case char2hash("moves"):
+			for(const auto& monster : i.second)
+				moveMonster(monster);
+			break;
+		case char2hash("npc_moves"):
+			for(const auto& npc : i.second)
+				moveNpc(npc);
+			break;
+		case char2hash("respawns"):
+			for(const auto& monster : i.second)
+				addMonster(monster);
+			break;
+		case char2hash("damages"):
+			break;
+		case char2hash("spells"):
+			break;
+		case char2hash("yells"):
+			break;
+		case char2hash("monster_yells"):
+			break;
+		default:
+			std::cout << "updateMapData: " << i.first << ' ' << var2str(data) << '\n';
+			break;
+		}//end switch
+	}//end for
 }
 
 void Map::moveOutfit(const Poco::DynamicAny& data)
