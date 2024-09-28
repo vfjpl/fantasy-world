@@ -121,24 +121,24 @@ std::istream& Network_t::receiveData(const std::string& uri)
 
 bool Network_t::credentials(const std::string& login, const std::string& password)
 {
-    Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
-                                "/ajax/login",
-                                Poco::Net::HTTPRequest::HTTP_1_1);
-    Poco::Net::HTTPResponse resp;
-    Poco::Net::HTMLForm html;
-    html.add("login", login);
-    html.add("password", password);
-    html.prepareSubmit(requ);
-    html.write(https.sendRequest(requ));
-    if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))))
-        return false;
+	Poco::Net::HTTPRequest requ(Poco::Net::HTTPRequest::HTTP_POST,
+								"/ajax/login",
+								Poco::Net::HTTPRequest::HTTP_1_1);
+	Poco::Net::HTTPResponse resp;
+	Poco::Net::HTMLForm html;
+	html.add("login", login);
+	html.add("password", password);
+	html.prepareSubmit(requ);
+	html.write(https.sendRequest(requ));
+	if(!isLoginSucessfull(Poco::DynamicAny::parse(toString(https.receiveResponse(resp)))))
+		return false;
 
-    std::vector<Poco::Net::HTTPCookie> cookies_vector;
-    resp.getCookies(cookies_vector);
-    for(const auto& i: cookies_vector)
-        cookies.add(i.getName(), i.getValue());
+	std::vector<Poco::Net::HTTPCookie> cookies_vector;
+	resp.getCookies(cookies_vector);
+	for(const auto& i : cookies_vector)
+		cookies.add(i.getName(), i.getValue());
 
-    return true;
+	return true;
 }
 
 tgui::ListBox::Ptr Network_t::getHeroesList()
@@ -165,16 +165,16 @@ void Network_t::selectHero(const std::string& hero)
 
 void Network_t::startWebSocket()
 {
-    std::string body = loadGameData();
-    wssREQUEST.setURI(getURI(body));
-    webSocket = new Poco::Net::WebSocket(wssHTTPS, wssREQUEST, wssRESPONSE);
-    sendStart(getTOKEN(body));
-    LocalPlayer::looktype = getLOOKTYPE(body);
+	std::string body = loadGameData();
+	wssREQUEST.setURI(getURI(body));
+	webSocket = std::make_unique<Poco::Net::WebSocket>(wssHTTPS, wssREQUEST, wssRESPONSE);
+	sendStart(getTOKEN(body));
+	LocalPlayer::looktype = getLOOKTYPE(body);
 }
 
 void Network_t::stopWebSocket()
 {
-    delete webSocket;
+	webSocket.reset();
 }
 
 

@@ -22,7 +22,7 @@ class Network_t
 	Poco::Net::NameValueCollection cookies;
 	Poco::Buffer<char> buffer;
 	//8
-	Poco::Net::WebSocket* webSocket;
+	std::unique_ptr<Poco::Net::WebSocket> webSocket;
 
 
 	void sendJson(const std::string& json);
