@@ -3,12 +3,16 @@
 
 #include <string>
 
-namespace LocalPlayer
+struct LocalPlayer_t
 {
-extern std::string looktype;
-extern unsigned long id;
-extern unsigned long x;
-extern unsigned long y;
-}
+	//32
+	std::string looktype;
+	//8
+	unsigned long id;
+	unsigned long x;
+	unsigned long y;
+};
+
+extern LocalPlayer_t LocalPlayer;
 
 #endif // LOCALPLAYER_HPP_INCLUDED

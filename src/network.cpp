@@ -169,7 +169,7 @@ void Network_t::startWebSocket()
 	wssREQUEST.setURI(getURI(body));
 	webSocket = std::make_unique<Poco::Net::WebSocket>(wssHTTPS, wssREQUEST, wssRESPONSE);
 	sendStart(getTOKEN(body));
-	LocalPlayer::looktype = getLOOKTYPE(body);
+	LocalPlayer.looktype = getLOOKTYPE(body);
 }
 
 void Network_t::stopWebSocket()

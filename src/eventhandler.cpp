@@ -161,7 +161,7 @@ unsigned long EventHandler::getDir()
     if(!directions.empty())
         return directions.back();
     if(!path.empty())
-        return path[Position(LocalPlayer::x, LocalPlayer::y)];
+        return path[Position(LocalPlayer.x, LocalPlayer.y)];
     return 0;
 }
 

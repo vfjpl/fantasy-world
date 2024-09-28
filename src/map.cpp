@@ -209,11 +209,11 @@ static void loadMapPositionData(const Poco::DynamicAny& data)
 {
     max_x = data["MAX_X"];
     max_y = data["MAX_Y"];
-    LocalPlayer::x = data["PLAYER_X"];
-    LocalPlayer::y = data["PLAYER_Y"];
-    setCamera(LocalPlayer::x, LocalPlayer::y);
-    players[LocalPlayer::id].setTexture(ResourceManager.getTexture(LocalPlayer::looktype, Graphic::DIRECT));
-    players[LocalPlayer::id].setPosition(LocalPlayer::x, LocalPlayer::y);
+    LocalPlayer.x = data["PLAYER_X"];
+    LocalPlayer.y = data["PLAYER_Y"];
+    setCamera(LocalPlayer.x, LocalPlayer.y);
+    players[LocalPlayer.id].setTexture(ResourceManager.getTexture(LocalPlayer.looktype, Graphic::DIRECT));
+    players[LocalPlayer.id].setPosition(LocalPlayer.x, LocalPlayer.y);
 }
 
 
@@ -224,16 +224,16 @@ void Map::updateWindowSize(float width, float height)
 
 void Map::moveLocalPlayer(const Poco::DynamicAny& data)
 {
-    LocalPlayer::x = data["x"];
-    LocalPlayer::y = data["y"];
-    moveCamera(LocalPlayer::x, LocalPlayer::y);
-    players[LocalPlayer::id].move(LocalPlayer::x, LocalPlayer::y);
-    players[LocalPlayer::id].setDir(data["dir"]);
+    LocalPlayer.x = data["x"];
+    LocalPlayer.y = data["y"];
+    moveCamera(LocalPlayer.x, LocalPlayer.y);
+    players[LocalPlayer.id].move(LocalPlayer.x, LocalPlayer.y);
+    players[LocalPlayer.id].setDir(data["dir"]);
 }
 
 void Map::loadData_100(const Poco::DynamicAny& data)
 {
-    LocalPlayer::id = data["player"]["id"];
+    LocalPlayer.id = data["player"]["id"];
     loadData_teleport(data);
 }
 
