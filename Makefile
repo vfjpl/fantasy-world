@@ -1,6 +1,6 @@
 
 EXE = fantasy-world
-FLAGS = -ITGUI/include -Wall -Os -ffast-math -s
+FLAGS = -ITGUI/include -Wall -Os -ffast-math -g
 LIBS = -L. -ltgui -lsfml-graphics -lsfml-window -lsfml-system -lPocoNetSSL -lPocoNet -lPocoFoundation
 
 

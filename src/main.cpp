@@ -5,14 +5,14 @@
 
 sf::Thread networkThread([]
 {
-    while(Engine::run_network());
+	while(Engine.run_network());
 });
 
 int main()
 {
-    Engine::setup();
+	Engine.setup();
 
-    while(Engine::run_game());
+	while(Engine.run_game());
 
-    return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }

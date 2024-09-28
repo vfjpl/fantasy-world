@@ -35,7 +35,7 @@ unsigned long var2hash(const Poco::DynamicAny& var)
 	if(var.isString())
 		return char2hash(&const_cast<Poco::DynamicAny&>(var).at(0));
 	else
-		return var;
+		return var2int(var);
 }
 
 unsigned long str2hash(const std::string& str)

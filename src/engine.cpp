@@ -8,8 +8,7 @@
 
 // view-source:http://alkatria.pl/templates/client/default/js/game.js
 
-//528
-static sf::RenderWindow window;
+Engine_t Engine;
 
 static void process_network(const Poco::DynamicAny& networkData)
 {
@@ -167,14 +166,6 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}//end switch
 }
 
-static void draw_frame()
-{
-    window.clear();
-    Map::draw(window);
-    Interface::draw();
-    window.display();
-}
-
 static void moveLocalPlayer(unsigned long dir)
 {
     if(dir)
@@ -201,26 +192,6 @@ static void game_logic()
 static void mouseRelease(sf::Vector2i point)
 {
 
-}
-
-static void mousePress(sf::Vector2i point)
-{
-    MapClickData data = Map::mapMouseClick(window, point);
-    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
-    {
-        if(data.chestID)
-            Network.openChest(data.chestID);
-        if(data.monsterID)
-            EventHandler::startMonsterAttack(data.monsterID);
-        if(data.tile)
-            Network.useElement(data.x, data.y);
-        if(data.item)
-            Network.pickUpItem(data.x, data.y);
-    }
-    else
-    {
-        EventHandler::startMovePath(data.x, data.y);
-    }
 }
 
 static void keyRelease(sf::Keyboard::Key code)
@@ -269,7 +240,36 @@ static void keyPress(sf::Keyboard::Key code)
     }//end switch
 }
 
-static void process_input()
+
+void Engine_t::draw_frame()
+{
+    window.clear();
+    Map::draw(window);
+    Interface::draw();
+    window.display();
+}
+
+void Engine_t::mousePress(sf::Vector2i point)
+{
+    MapClickData data = Map::mapMouseClick(window, point);
+    if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
+    {
+        if(data.chestID)
+            Network.openChest(data.chestID);
+        if(data.monsterID)
+            EventHandler::startMonsterAttack(data.monsterID);
+        if(data.tile)
+            Network.useElement(data.x, data.y);
+        if(data.item)
+            Network.pickUpItem(data.x, data.y);
+    }
+    else
+    {
+        EventHandler::startMovePath(data.x, data.y);
+    }
+}
+
+void Engine_t::process_input()
 {
     sf::Event event;
     while(window.pollEvent(event))
@@ -305,7 +305,7 @@ static void process_input()
     }//end while
 }
 
-static void setup_window()
+void Engine_t::setup_window()
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
     mode.width = 1000;
@@ -315,15 +315,14 @@ static void setup_window()
     window.setFramerateLimit(60);
 }
 
-
-void Engine::setup()
+void Engine_t::setup()
 {
     setup_window();
     Interface::setup(window);
     Interface::loginScreen();
 }
 
-bool Engine::run_game()
+bool Engine_t::run_game()
 {
     process_input();
     game_logic();
@@ -332,7 +331,7 @@ bool Engine::run_game()
     return window.isOpen();
 }
 
-bool Engine::run_network()
+bool Engine_t::run_network()
 {
     process_network(Network.receive());
 
