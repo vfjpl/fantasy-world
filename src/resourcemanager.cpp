@@ -48,7 +48,7 @@ const sf::Texture& ResourceManager_t::getTexture(const std::string& name, Graphi
 		if(!sfFile.open(path))
 		{
 			Poco::File(path.substr(0ul, path.rfind('/'))).createDirectories();
-			Poco::FileOutputStream(path) << Network::receiveData(path.substr(path.find('/'))).rdbuf();
+			Poco::FileOutputStream(path) << Network.receiveData(path.substr(path.find('/'))).rdbuf();
 			sfFile.open(path);
 		}
 		texture.loadFromStream(sfFile);

@@ -26,7 +26,7 @@ static void addChatLine(const std::string& line)
 
 static void gameScreen()
 {
-    Network::startWebSocket();
+    Network.startWebSocket();
     networkThread.launch();
 
     //gui
@@ -36,7 +36,7 @@ static void gameScreen()
     editbox->setPosition(0.f, "100% - height");
     editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
     {
-        Network::message(text);
+        Network.message(text);
         editbox->setText(sf::String());
     });
 
@@ -53,14 +53,14 @@ static void gameScreen()
 
 static void selectHeroScreen()
 {
-    auto listBox = Network::getHeroesList();
+    auto listBox = Network.getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
 
     auto button = tgui::Button::create("Select");
     button->setPosition("50% - width/2", "50%");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        Network::selectHero(listBox->getSelectedItem());
+        Network.selectHero(listBox->getSelectedItem());
         gui.removeAllWidgets();
         gameScreen();
     });
@@ -92,7 +92,7 @@ void Interface::loginScreen()
     button->setPosition("50% - width/2", "50% + height");
     button->connect(tgui::Signals::Button::Pressed, [=]
     {
-        if(Network::credentials(editBoxUsername->getText(), editBoxPassword->getText()))
+        if(Network.credentials(editBoxUsername->getText(), editBoxPassword->getText()))
         {
             gui.removeAllWidgets();
             selectHeroScreen();

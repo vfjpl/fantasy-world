@@ -143,12 +143,12 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("json"):
     {
-        process_network(Network::receive(networkData["hash"]));
+        process_network(Network.receive(networkData["hash"]));
         break;
     }
     case char2int("load_game"):
     {
-        process_network(Network::receive(networkData["token"]));
+        process_network(Network.receive(networkData["token"]));
         break;
     }
     case char2int("teleport"):
@@ -159,7 +159,7 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
     case char2int("death"):
     {
-        Network::sendReload();
+        Network.sendReload();
         break;
     }
     default:
@@ -181,7 +181,7 @@ static void draw_frame()
 static void moveLocalPlayer(unsigned long dir)
 {
     if(dir)
-        Network::move(dir);
+        Network.move(dir);
     else
         EventHandler::stopMoveEvent();
 }
@@ -194,7 +194,7 @@ static void game_logic()
         moveLocalPlayer(EventHandler::getDir());
         break;
     case Event::ATTACK:
-        Network::attackMonster(EventHandler::getAttackId());
+        Network.attackMonster(EventHandler::getAttackId());
         break;
     default:
         break;
@@ -212,13 +212,13 @@ static void mousePress(sf::Vector2i point)
     if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
     {
         if(data.chestID)
-            Network::openChest(data.chestID);
+            Network.openChest(data.chestID);
         if(data.monsterID)
             EventHandler::startMonsterAttack(data.monsterID);
         if(data.tile)
-            Network::useElement(data.x, data.y);
+            Network.useElement(data.x, data.y);
         if(data.item)
-            Network::pickUpItem(data.x, data.y);
+            Network.pickUpItem(data.x, data.y);
     }
     else
     {
@@ -337,7 +337,7 @@ bool Engine::run_game()
 
 bool Engine::run_network()
 {
-    process_network(Network::receive());
+    process_network(Network.receive());
 
     return window.isOpen();
 }
