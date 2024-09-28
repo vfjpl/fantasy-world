@@ -191,12 +191,13 @@ Poco::DynamicAny Network_t::receive(const std::string& token)
 
 Poco::DynamicAny Network_t::receive()
 {
-    int flags;
-    buffer.resize(0ul, false);
-    webSocket->receiveFrame(buffer, flags);
-    return Poco::DynamicAny::parse(Poco::UTF8::unescape(
-                                       std::string::const_iterator(buffer.begin()),
-                                       std::string::const_iterator(buffer.end())));
+	int flags = 0;
+	buffer.resize(0ul, false);
+	webSocket->receiveFrame(buffer, flags);
+	//sometimes "multi_code" message needs second unescape before parse
+	return Poco::DynamicAny::parse(Poco::UTF8::unescape(Poco::UTF8::unescape(
+									std::string::const_iterator(buffer.begin()),
+									std::string::const_iterator(buffer.end()))));
 }
 
 
