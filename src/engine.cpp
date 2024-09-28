@@ -75,12 +75,11 @@ static void process_network(const Poco::DynamicAny& networkData)
     {
         break;
     }
-    case 1016:
-    {
-        std::cout << networkData.toString() << '\n';
-        Interface::health(networkData);
-        break;
-    }
+	case 1016:
+	{
+		std::cout << "process_network: " << var2str(networkData) << '\n';
+		break;
+	}
     case 1030://my health + message about dealt/received damage
     {
         Interface::health(networkData);
