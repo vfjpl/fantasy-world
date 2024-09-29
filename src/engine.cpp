@@ -16,7 +16,7 @@ static void process_network(const Poco::DynamicAny& networkData)
 	{
     case 1://global chat message
     {
-        Interface::chatMessage(networkData);
+        Interface.chatMessage(networkData);
         break;
     }
     case 5://show attack/damage
@@ -51,7 +51,7 @@ static void process_network(const Poco::DynamicAny& networkData)
     case 654://gui update (general update?)
     {
         std::cout << networkData.toString() << '\n';
-        Interface::health(networkData);
+        Interface.health(networkData);
         break;
     }
     case 685://open chest (general update?)
@@ -81,7 +81,7 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}
     case 1030://my health + message about dealt/received damage
     {
-        Interface::health(networkData);
+        Interface.health(networkData);
         break;
     }
     case 1051://other player left
@@ -245,7 +245,7 @@ void Engine_t::draw_frame()
 {
     window.clear();
     Map::draw(window);
-    Interface::draw();
+    Interface.draw();
     window.display();
 }
 
@@ -275,7 +275,7 @@ void Engine_t::process_input()
     while(window.pollEvent(event))
     {
         //process event only if gui didn't consume it
-        if(Interface::handleEvent(event))
+        if(Interface.handleEvent(event))
             continue;
 
         switch(event.type)
@@ -285,7 +285,7 @@ void Engine_t::process_input()
             break;
         case sf::Event::Resized:
             Map::updateWindowSize(event.size.width, event.size.height);
-            Interface::updateWindowSize(event.size.width, event.size.height);
+            Interface.updateWindowSize(event.size.width, event.size.height);
             break;
         case sf::Event::KeyPressed:
             keyPress(event.key.code);
@@ -318,8 +318,8 @@ void Engine_t::setup_window()
 void Engine_t::setup()
 {
     setup_window();
-    Interface::setup(window);
-    Interface::loginScreen();
+    Interface.setup(window);
+    Interface.loginScreen();
 }
 
 bool Engine_t::run_game()

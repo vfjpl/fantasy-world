@@ -2,29 +2,20 @@
 #include "network.hpp"
 #include "threads.hpp"
 #include "helperfunctions.hpp"
-#include <TGUI/Gui.hpp>
-#include <TGUI/Widgets/ChatBox.hpp>
-#include <TGUI/Widgets/ProgressBar.hpp>
 #include <TGUI/Widgets/ChildWindow.hpp>
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <TGUI/SignalImpl.hpp>
 
-//248
-static tgui::Gui gui;
-//168
-static sf::View camera;
-//16
-static tgui::ChatBox::Ptr chatBox;
-static tgui::ProgressBar::Ptr healthBar;
+Interface_t Interface;
 
 
-static void addChatLine(const std::string& line)
+void Interface_t::addChatLine(const std::string& line)
 {
 	chatBox->addLine(fromUtf8(line.cbegin(), line.cend()));
 }
 
-static void gameScreen()
+void Interface_t::gameScreen()
 {
     Network.startWebSocket();
     networkThread.launch();
@@ -51,7 +42,7 @@ static void gameScreen()
     gui.add(healthBar);
 }
 
-static void selectHeroScreen()
+void Interface_t::selectHeroScreen()
 {
     auto listBox = Network.getHeroesList();
     listBox->setPosition("50% - width/2", "50% - height");
@@ -70,7 +61,7 @@ static void selectHeroScreen()
 }
 
 
-void Interface::setup(sf::RenderWindow& window)
+void Interface_t::setup(sf::RenderWindow& window)
 {
     gui.setTarget(window);
     chatBox = tgui::ChatBox::create();
@@ -78,7 +69,7 @@ void Interface::setup(sf::RenderWindow& window)
     healthBar->setPosition("50% - width/2", "100% - height");
 }
 
-void Interface::loginScreen()
+void Interface_t::loginScreen()
 {
     auto editBoxUsername = tgui::EditBox::create();
     editBoxUsername->setPosition("50% - width/2", "50% - height");
@@ -104,7 +95,7 @@ void Interface::loginScreen()
     gui.add(button);
 }
 
-void Interface::health(const Poco::DynamicAny& data)
+void Interface_t::health(const Poco::DynamicAny& data)
 {
     unsigned long health_max = data["health_max"];
     unsigned long health = data["health"];
@@ -112,23 +103,23 @@ void Interface::health(const Poco::DynamicAny& data)
     healthBar->setValue(health);
 }
 
-void Interface::chatMessage(const Poco::DynamicAny& data)
+void Interface_t::chatMessage(const Poco::DynamicAny& data)
 {
     addChatLine(data["player"] + ": " + data["message"]);
 }
 
-void Interface::updateWindowSize(float width, float height)
+void Interface_t::updateWindowSize(float width, float height)
 {
     camera.reset(sf::FloatRect(0, 0, width, height));
     gui.setView(camera);
 }
 
-bool Interface::handleEvent(const sf::Event& event)
+bool Interface_t::handleEvent(const sf::Event& event)
 {
     return gui.handleEvent(event);
 }
 
-void Interface::draw()
+void Interface_t::draw()
 {
     gui.draw();
 }
