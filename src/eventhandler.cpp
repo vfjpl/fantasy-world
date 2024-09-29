@@ -2,38 +2,42 @@
 #include "map.hpp"
 #include "localplayer.hpp"
 
-struct timedEvent
+#define PERIOD_IN_FRAMES(frames, fps) ((1000000 * (frames)) / (fps))
+#define PERIOD_IN_MILISECONDS(miliseconds) (1000 * (miliseconds))
+
+
+EventHandler_t EventHandler;
+
+
+static unsigned long positionsToDir(Position from, Position to)
 {
-    sf::Time time;
-    Event code;
-    timedEvent(Event c): code(c) {}
-    bool operator==(Event c) const
-    {
-        return code == c;
-    }
-};
-typedef std::pair<unsigned long, unsigned long> Position;
+	if(from.second < to.second)
+		return 4;
+	if(from.second > to.second)
+		return 3;
+	if(from.first < to.first)
+		return 2;
+	if(from.first > to.first)
+		return 1;
 
-//80
-static std::deque<timedEvent> events;
-static std::deque<unsigned long> directions;
-//48
-static std::map<Position, unsigned long> path;
-//8
-static sf::Clock sfClock;
-static unsigned long attack_id;
-
-
-static void stopEvent(Event code)
-{
-    auto it_begin = events.cbegin();
-    auto it_end = events.cend();
-    auto it_found = std::find(it_begin, it_end, code);
-    if(it_found != it_end)
-        events.erase(it_found);
+	return 0;
 }
 
-static void startEvent(Event code)
+static sf::Time getPeriod(Event code)
+{
+	switch(code)
+	{
+	case Event::MOVE:
+		return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
+	case Event::ATTACK:
+		return sf::microseconds(PERIOD_IN_MILISECONDS(1000));
+	default:
+		return sf::Time::Zero;
+	}//end switch
+}
+
+
+void EventHandler_t::startEvent(Event code)
 {
     auto it_begin = events.cbegin();
     auto it_end = events.cend();
@@ -42,36 +46,17 @@ static void startEvent(Event code)
         events.emplace_front(code);
 }
 
-static unsigned long positionsToDir(Position from, Position to)
+void EventHandler_t::stopEvent(Event code)
 {
-    if(from.second < to.second)
-        return 4;
-    if(from.second > to.second)
-        return 3;
-    if(from.first < to.first)
-        return 2;
-    if(from.first > to.first)
-        return 1;
-    return 0;
-}
-
-static sf::Time getPeriod(Event code)
-{
-#define PERIOD_IN_FRAMES(frames, fps) ((1000000 * (frames)) / (fps))
-#define PERIOD_IN_MILISECONDS(miliseconds) (1000 * (miliseconds))
-    switch(code)
-    {
-    case Event::MOVE:
-        return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
-    case Event::ATTACK:
-        return sf::microseconds(PERIOD_IN_MILISECONDS(1000));
-    default:
-        return sf::Time::Zero;
-    }//end switch
+    auto it_begin = events.cbegin();
+    auto it_end = events.cend();
+    auto it_found = std::find(it_begin, it_end, code);
+    if(it_found != it_end)
+        events.erase(it_found);
 }
 
 
-Event EventHandler::pollEvent()
+Event EventHandler_t::pollEvent()
 {
     sf::Time currentTime = sfClock.getElapsedTime();
     for(auto& event: events)
@@ -86,7 +71,7 @@ Event EventHandler::pollEvent()
 }
 
 
-void EventHandler::startMove(unsigned long dir)
+void EventHandler_t::startMove(unsigned long dir)
 {
     if(directions.empty())
     {
@@ -104,7 +89,7 @@ void EventHandler::startMove(unsigned long dir)
     }
 }
 
-void EventHandler::stopMove(unsigned long dir)
+void EventHandler_t::stopMove(unsigned long dir)
 {
     auto it_begin = directions.cbegin();
     auto it_end = directions.cend();
@@ -113,7 +98,7 @@ void EventHandler::stopMove(unsigned long dir)
         directions.erase(it_found);
 }
 
-void EventHandler::startMovePath(unsigned long x, unsigned long y)
+void EventHandler_t::startMovePath(unsigned long x, unsigned long y)
 {
     if(Map::isObstacle(x - 1, y - 1))
         return;
@@ -150,13 +135,13 @@ void EventHandler::startMovePath(unsigned long x, unsigned long y)
     startEvent(Event::MOVE);
 }
 
-void EventHandler::stopMoveEvent()
+void EventHandler_t::stopMoveEvent()
 {
     stopEvent(Event::MOVE);
     path.clear();
 }
 
-unsigned long EventHandler::getDir()
+unsigned long EventHandler_t::getDir()
 {
     if(!directions.empty())
         return directions.back();
@@ -165,7 +150,7 @@ unsigned long EventHandler::getDir()
     return 0;
 }
 
-void EventHandler::startMonsterAttack(unsigned long id)
+void EventHandler_t::startMonsterAttack(unsigned long id)
 {
     if(attack_id == id)
     {
@@ -179,7 +164,7 @@ void EventHandler::startMonsterAttack(unsigned long id)
     }
 }
 
-void EventHandler::stopMonsterAttack()
+void EventHandler_t::stopMonsterAttack()
 {
     if(attack_id != 0)
     {
@@ -188,7 +173,7 @@ void EventHandler::stopMonsterAttack()
     }
 }
 
-unsigned long EventHandler::getAttackId()
+unsigned long EventHandler_t::getAttackId()
 {
     return attack_id;
 }

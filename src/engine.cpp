@@ -108,7 +108,7 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}
 	case char2hash("loot"):
 	{
-		EventHandler::stopMonsterAttack();
+		EventHandler.stopMonsterAttack();
 		break;
 	}
 	case char2hash("move_outfit"):
@@ -171,18 +171,18 @@ static void moveLocalPlayer(unsigned long dir)
     if(dir)
         Network.move(dir);
     else
-        EventHandler::stopMoveEvent();
+        EventHandler.stopMoveEvent();
 }
 
 static void game_logic()
 {
-    switch(EventHandler::pollEvent())
+    switch(EventHandler.pollEvent())
     {
     case Event::MOVE:
-        moveLocalPlayer(EventHandler::getDir());
+        moveLocalPlayer(EventHandler.getDir());
         break;
     case Event::ATTACK:
-        Network.attackMonster(EventHandler::getAttackId());
+        Network.attackMonster(EventHandler.getAttackId());
         break;
     default:
         break;
@@ -199,16 +199,16 @@ static void keyRelease(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        EventHandler::stopMove(1);
+        EventHandler.stopMove(1);
         break;
     case sf::Keyboard::D:
-        EventHandler::stopMove(2);
+        EventHandler.stopMove(2);
         break;
     case sf::Keyboard::S:
-        EventHandler::stopMove(4);
+        EventHandler.stopMove(4);
         break;
     case sf::Keyboard::W:
-        EventHandler::stopMove(3);
+        EventHandler.stopMove(3);
         break;
     case sf::Keyboard::Escape:
         break;
@@ -222,16 +222,16 @@ static void keyPress(sf::Keyboard::Key code)
     switch(code)
     {
     case sf::Keyboard::A:
-        EventHandler::startMove(1);
+        EventHandler.startMove(1);
         break;
     case sf::Keyboard::D:
-        EventHandler::startMove(2);
+        EventHandler.startMove(2);
         break;
     case sf::Keyboard::S:
-        EventHandler::startMove(4);
+        EventHandler.startMove(4);
         break;
     case sf::Keyboard::W:
-        EventHandler::startMove(3);
+        EventHandler.startMove(3);
         break;
     case sf::Keyboard::Escape:
         break;
@@ -257,7 +257,7 @@ void Engine_t::mousePress(sf::Vector2i point)
         if(data.chestID)
             Network.openChest(data.chestID);
         if(data.monsterID)
-            EventHandler::startMonsterAttack(data.monsterID);
+            EventHandler.startMonsterAttack(data.monsterID);
         if(data.tile)
             Network.useElement(data.x, data.y);
         if(data.item)
@@ -265,7 +265,7 @@ void Engine_t::mousePress(sf::Vector2i point)
     }
     else
     {
-        EventHandler::startMovePath(data.x, data.y);
+        EventHandler.startMovePath(data.x, data.y);
     }
 }
 
