@@ -10,116 +10,116 @@
 Interface_t Interface;
 
 
-void Interface_t::addChatLine(const std::string& line)
+void Interface_t::addChatLine(Poco::DynamicAny line)
 {
-	chatBox->addLine(fromUtf8(line.cbegin(), line.cend()));
+	const char* ptr_begin = var2char(line);
+	chatBox->addLine(fromUtf8(std::string::const_iterator(ptr_begin), std::string::const_iterator(ptr_begin + line.size())));
 }
 
 void Interface_t::gameScreen()
 {
-    Network.startWebSocket();
-    networkThread.launch();
+	gui.removeAllWidgets();
 
-    //gui
+	auto editbox = tgui::EditBox::create();
+	editbox->setSize("100%", editbox->getFullSize().y);
+	editbox->setPosition(0.f, "100% - height");
+	editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
+	{
+		Network.message(text);
+		editbox->setText(sf::String());
+	});
 
-    auto editbox = tgui::EditBox::create();
-    editbox->setSize("100%", editbox->getFullSize().y);
-    editbox->setPosition(0.f, "100% - height");
-    editbox->connect(tgui::Signals::EditBox::ReturnKeyPressed, [=](const sf::String& text)
-    {
-        Network.message(text);
-        editbox->setText(sf::String());
-    });
+	chatBox->setSize("100%", bindTop(editbox));
 
-    chatBox->setSize("100%", bindTop(editbox));
+	auto chatwindow = tgui::ChildWindow::create();
+	chatwindow->setResizable();
+	chatwindow->add(editbox);
+	chatwindow->add(chatBox);
 
-    auto chatwindow = tgui::ChildWindow::create();
-    chatwindow->setResizable();
-    chatwindow->add(editbox);
-    chatwindow->add(chatBox);
-
-    gui.add(chatwindow);
-    gui.add(healthBar);
+	gui.add(chatwindow);
+	gui.add(healthBar);
 }
 
 void Interface_t::selectHeroScreen()
 {
-    auto listBox = Network.getHeroesList();
-    listBox->setPosition("50% - width/2", "50% - height");
+	gui.removeAllWidgets();
 
-    auto button = tgui::Button::create("Select");
-    button->setPosition("50% - width/2", "50%");
-    button->connect(tgui::Signals::Button::Pressed, [=]
-    {
-        Network.selectHero(listBox->getSelectedItem());
-        gui.removeAllWidgets();
-        gameScreen();
-    });
+	auto listBox = Network.getHeroesList();
+	listBox->setPosition("50% - width/2", "50% - height");
 
-    gui.add(listBox);
-    gui.add(button);
+	auto button = tgui::Button::create("Select");
+	button->setPosition("50% - width/2", "50%");
+	button->connect(tgui::Signals::Button::Pressed, [=]
+	{
+		Network.selectHero(listBox->getSelectedItem());
+		Network.startWebSocket();
+		networkThread.launch();
+		gameScreen();
+	});
+
+	gui.add(listBox);
+	gui.add(button);
 }
 
 
 void Interface_t::setup(sf::RenderWindow& window)
 {
-    gui.setTarget(window);
-    chatBox = tgui::ChatBox::create();
-    healthBar = tgui::ProgressBar::create();
-    healthBar->setPosition("50% - width/2", "100% - height");
+	gui.setTarget(window);
+	chatBox = tgui::ChatBox::create();
+	healthBar = tgui::ProgressBar::create();
+	healthBar->setPosition("50% - width/2", "100% - height");
 }
 
 void Interface_t::loginScreen()
 {
-    auto editBoxUsername = tgui::EditBox::create();
-    editBoxUsername->setPosition("50% - width/2", "50% - height");
-    editBoxUsername->setPasswordCharacter('*');
+	auto editBoxUsername = tgui::EditBox::create();
+	editBoxUsername->setPosition("50% - width/2", "50% - height");
+	editBoxUsername->setPasswordCharacter('*');
 
-    auto editBoxPassword = tgui::EditBox::create();
-    editBoxPassword->setPosition("50% - width/2", "50%");
-    editBoxPassword->setPasswordCharacter('*');
+	auto editBoxPassword = tgui::EditBox::create();
+	editBoxPassword->setPosition("50% - width/2", "50%");
+	editBoxPassword->setPasswordCharacter('*');
 
-    auto button = tgui::Button::create("Login");
-    button->setPosition("50% - width/2", "50% + height");
-    button->connect(tgui::Signals::Button::Pressed, [=]
-    {
-        if(Network.credentials(editBoxUsername->getText(), editBoxPassword->getText()))
-        {
-            gui.removeAllWidgets();
-            selectHeroScreen();
-        }
-    });
+	auto button = tgui::Button::create("Login");
+	button->setPosition("50% - width/2", "50% + height");
+	button->connect(tgui::Signals::Button::Pressed, [=]
+	{
+		if(Network.credentials(editBoxUsername->getText(), editBoxPassword->getText()))
+		{
+			selectHeroScreen();
+		}
+	});
 
-    gui.add(editBoxUsername);
-    gui.add(editBoxPassword);
-    gui.add(button);
+	gui.add(editBoxUsername);
+	gui.add(editBoxPassword);
+	gui.add(button);
 }
 
 void Interface_t::health(const Poco::DynamicAny& data)
 {
-    unsigned long health_max = data["health_max"];
-    unsigned long health = data["health"];
-    healthBar->setMaximum(health_max);
-    healthBar->setValue(health);
+	unsigned long health_max = var2int(data["health_max"]);
+	unsigned long health = var2int(data["health"]);
+	healthBar->setMaximum(health_max);
+	healthBar->setValue(health);
 }
 
 void Interface_t::chatMessage(const Poco::DynamicAny& data)
 {
-    addChatLine(data["player"] + ": " + data["message"]);
+	addChatLine(data["player"] + ": " + data["message"]);
 }
 
 void Interface_t::updateWindowSize(float width, float height)
 {
-    camera.reset(sf::FloatRect(0, 0, width, height));
-    gui.setView(camera);
+	camera.reset(sf::FloatRect(0, 0, width, height));
+	gui.setView(camera);
 }
 
 bool Interface_t::handleEvent(const sf::Event& event)
 {
-    return gui.handleEvent(event);
+	return gui.handleEvent(event);
 }
 
 void Interface_t::draw()
 {
-    gui.draw();
+	gui.draw();
 }

@@ -10,6 +10,7 @@ sf::Vector2i clamp(sf::Vector2i val);
 sf::String fromUtf8(std::string::const_iterator cbegin, std::string::const_iterator cend);
 
 std::string var2str(const Poco::DynamicAny& var);
+const char* var2char(const Poco::DynamicAny& var);
 unsigned long var2int(const Poco::DynamicAny& var);
 
 unsigned long var2hash(const Poco::DynamicAny& var);

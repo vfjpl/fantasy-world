@@ -24,6 +24,11 @@ std::string var2str(const Poco::DynamicAny& var)
 	return var.toString();
 }
 
+const char* var2char(const Poco::DynamicAny& var)
+{
+	return &const_cast<Poco::DynamicAny&>(var).at(0);
+}
+
 unsigned long var2int(const Poco::DynamicAny& var)
 {
 	return var;
@@ -33,7 +38,7 @@ unsigned long var2int(const Poco::DynamicAny& var)
 unsigned long var2hash(const Poco::DynamicAny& var)
 {
 	if(var.isString())
-		return char2hash(&const_cast<Poco::DynamicAny&>(var).at(0));
+		return char2hash(var2char(var));
 	else
 		return var2int(var);
 }
