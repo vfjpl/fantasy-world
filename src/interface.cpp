@@ -6,6 +6,7 @@
 #include <TGUI/Widgets/EditBox.hpp>
 #include <TGUI/Widgets/Button.hpp>
 #include <TGUI/SignalImpl.hpp>
+#include <iostream>
 
 Interface_t Interface;
 
@@ -105,7 +106,9 @@ void Interface_t::health(const Poco::DynamicAny& data)
 
 void Interface_t::chatMessage(const Poco::DynamicAny& data)
 {
-	addChatLine(data["player"] + ": " + data["message"]);
+	std::cout << "chatMessage: " << var2str(data) << '\n';
+	// data["player"] vs data["name"] ??
+	addChatLine(data["time"] + " [" + data["profession"] + "] " + data["player"] + " [" + data["level"] + "]: " + data["message"]);
 }
 
 void Interface_t::updateWindowSize(float width, float height)
