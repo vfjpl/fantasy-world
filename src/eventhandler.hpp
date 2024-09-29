@@ -18,11 +18,9 @@ class timedEvent
 public:
 	sf::Time time;
 	Event code;
-	timedEvent(Event c):code(c) {}
-	bool operator==(Event c) const
-	{
-		return code == c;
-	}
+
+	timedEvent(Event c);
+	bool operator==(Event c) const;
 };
 
 typedef std::pair<unsigned long, unsigned long> Position;

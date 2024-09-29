@@ -9,6 +9,19 @@
 EventHandler_t EventHandler;
 
 
+static sf::Time getPeriod(Event code)
+{
+	switch(code)
+	{
+	case Event::MOVE:
+		return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
+	case Event::ATTACK:
+		return sf::microseconds(PERIOD_IN_MILISECONDS(1000));
+	default:
+		return sf::Time::Zero;
+	}//end switch
+}
+
 static unsigned long positionsToDir(Position from, Position to)
 {
 	if(from.second < to.second)
@@ -23,17 +36,14 @@ static unsigned long positionsToDir(Position from, Position to)
 	return 0;
 }
 
-static sf::Time getPeriod(Event code)
+
+timedEvent::timedEvent(Event c):
+	code(c) {}
+
+
+bool timedEvent::operator==(Event c) const
 {
-	switch(code)
-	{
-	case Event::MOVE:
-		return sf::microseconds(PERIOD_IN_FRAMES(16, 60));
-	case Event::ATTACK:
-		return sf::microseconds(PERIOD_IN_MILISECONDS(1000));
-	default:
-		return sf::Time::Zero;
-	}//end switch
+	return code == c;
 }
 
 
