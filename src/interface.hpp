@@ -17,6 +17,7 @@ class Interface_t
 	tgui::ChatBox::Ptr chatBox;
 	tgui::ProgressBar::Ptr healthBar;
 
+
 	void addChatLine(Poco::DynamicAny line);
 	void gameScreen();
 	void selectHeroScreen();

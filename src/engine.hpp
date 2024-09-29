@@ -8,6 +8,7 @@ class Engine_t
 	//528
 	sf::RenderWindow window;
 
+
 	void draw_frame();
 	void mousePress(sf::Vector2i point);
 	void process_input();

@@ -278,6 +278,9 @@ void Map::loadData_teleport(const Poco::DynamicAny& data)
 
 void Map::updateMapData(const Poco::DynamicAny& data)
 {
+	if(!data.size())//can be empty, just {"code":55}
+		return;
+
 	for(const auto& i : data.extract<Poco::DynamicStruct>())
 	{
 		switch(str2hash(i.first))
