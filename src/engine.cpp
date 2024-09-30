@@ -25,27 +25,27 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
     case 10://other player movement
     {
-        Map::movePlayer(networkData);
+        Map.movePlayer(networkData);
         break;
     }
     case 54://remove monster
     {
-        Map::deleteMonster(networkData);
+        Map.deleteMonster(networkData);
         break;
     }
     case 55://update map data
     {
-        Map::updateMapData(networkData["data"]);
+        Map.updateMapData(networkData["data"]);
         break;
     }
     case 71://other player join
     {
-        Map::addPlayer(networkData);
+        Map.addPlayer(networkData);
         break;
     }
     case 100://first load map data
     {
-        Map::loadData_100(networkData["data"]);
+        Map.loadData_100(networkData["data"]);
         break;
     }
     case 654://gui update (general update?)
@@ -57,17 +57,17 @@ static void process_network(const Poco::DynamicAny& networkData)
     case 685://open chest (general update?)
     {
         std::cout << networkData.toString() << '\n';
-        Map::openChest(networkData);
+        Map.openChest(networkData);
         break;
     }
     case 877://remove map item
     {
-        Map::deleteMapItem(networkData);
+        Map.deleteMapItem(networkData);
         break;
     }
     case 878://new map item
     {
-        Map::addMapItem(networkData["item"]);
+        Map.addMapItem(networkData["item"]);
         break;
     }
     case 964://monster health percentage
@@ -86,7 +86,7 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
     case 1051://other player left
     {
-        Map::deletePlayer(networkData["player"]);
+        Map.deletePlayer(networkData["player"]);
         break;
     }
     case 1504://other player yell
@@ -95,7 +95,7 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
 	case char2hash("move_me"):
 	{
-		Map::moveLocalPlayer(networkData);
+		Map.moveLocalPlayer(networkData);
 		break;
 	}
 	case char2hash("reset_move"):
@@ -113,17 +113,17 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}
 	case char2hash("move_outfit"):
 	{
-		Map::moveOutfit(networkData);
+		Map.moveOutfit(networkData);
 		break;
 	}
 	case char2hash("show_tile"):
 	{
-		Map::updateTile(networkData);
+		Map.updateTile(networkData);
 		break;
 	}
 	case char2hash("exhaust_tile"):
 	{
-		Map::updateTile(networkData);
+		Map.updateTile(networkData);
 		break;
 	}
 	case char2hash("multi_code"):
@@ -149,8 +149,8 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}
 	case char2hash("teleport"):
 	{
-		Map::clear();
-		Map::loadData_teleport(networkData["data"]);
+		Map.clear();
+		Map.loadData_teleport(networkData["data"]);
 		break;
 	}
 	case char2hash("death"):
@@ -244,14 +244,14 @@ static void keyPress(sf::Keyboard::Key code)
 void Engine_t::draw_frame()
 {
     window.clear();
-    Map::draw(window);
+    Map.draw(window);
     Interface.draw();
     window.display();
 }
 
 void Engine_t::mousePress(sf::Vector2i point)
 {
-    MapClickData data = Map::mapMouseClick(window, point);
+    MapClickData data = Map.mapMouseClick(window, point);
     if(data.chestID || data.monsterID || data.npcID || data.playerID || data.tile || data.item)
     {
         if(data.chestID)
@@ -284,7 +284,7 @@ void Engine_t::process_input()
             window.close();
             break;
         case sf::Event::Resized:
-            Map::updateWindowSize(event.size.width, event.size.height);
+            Map.updateWindowSize(event.size.width, event.size.height);
             Interface.updateWindowSize(event.size.width, event.size.height);
             break;
         case sf::Event::KeyPressed:

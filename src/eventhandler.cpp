@@ -110,7 +110,7 @@ void EventHandler_t::stopMove(unsigned long dir)
 
 void EventHandler_t::startMovePath(unsigned long x, unsigned long y)
 {
-    if(Map::isObstacle(x - 1, y - 1))
+    if(Map.isObstacle(x - 1, y - 1))
         return;
 
     path.clear();
@@ -131,11 +131,11 @@ void EventHandler_t::startMovePath(unsigned long x, unsigned long y)
                     Position(current.first + 1, current.second)
                 })
         {
-            if(Map::isObstacle(next.first - 1, next.second - 1))
+            if(Map.isObstacle(next.first - 1, next.second - 1))
                 continue;
             if(path.count(next))
                 continue;
-            if(Map::isNpc(next.first, next.second))
+            if(Map.isNpc(next.first, next.second))
                 continue;
 
             path.emplace(next, positionsToDir(next, current));
