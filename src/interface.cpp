@@ -98,8 +98,8 @@ void Interface_t::loginScreen()
 
 void Interface_t::health(const Poco::DynamicAny& data)
 {
-	unsigned long health_max = var2int(data["health_max"]);
-	unsigned long health = var2int(data["health"]);
+	long health_max = var2long(data["health_max"]);
+	long health = var2long(data["health"]);
 	healthBar->setMaximum(health_max);
 	healthBar->setValue(health);
 }
@@ -113,7 +113,7 @@ void Interface_t::chatMessage(const Poco::DynamicAny& data)
 
 void Interface_t::updateWindowSize(float width, float height)
 {
-	camera.reset(sf::FloatRect(0, 0, width, height));
+	camera.reset(sf::FloatRect(0.f, 0.f, width, height));
 	gui.setView(camera);
 }
 

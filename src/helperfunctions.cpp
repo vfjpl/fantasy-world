@@ -29,23 +29,23 @@ const char* var2char(const Poco::DynamicAny& var)
 	return &const_cast<Poco::DynamicAny&>(var).at(0);
 }
 
-unsigned long var2int(const Poco::DynamicAny& var)
+long var2long(const Poco::DynamicAny& var)
 {
 	return var;
 }
 
 
-unsigned long var2hash(const Poco::DynamicAny& var)
+long var2hash(const Poco::DynamicAny& var)
 {
 	if(var.isString())
 		return char2hash(var2char(var));
 	else
-		return var2int(var);
+		return var2long(var);
 }
 
-unsigned long str2hash(const std::string& str)
+long str2hash(const std::string& str)
 {
-	unsigned long res = 0;
+	long res = 0;
 	for(auto c: str)
 		res += c;
 	return res;

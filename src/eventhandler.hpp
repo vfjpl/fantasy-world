@@ -20,21 +20,21 @@ public:
 	Event code;
 
 	timedEvent(Event c);
-	bool operator==(Event c) const;
+	bool operator == (Event c) const;
 };
 
-typedef std::pair<unsigned long, unsigned long> Position;
+typedef std::pair<long, long> Position;
 
 class EventHandler_t
 {
 	//80
 	std::deque<timedEvent> events;
-	std::deque<unsigned long> directions;
+	std::deque<long> directions;
 	//48
-	std::map<Position, unsigned long> path;
+	std::map<Position, long> path;
 	//8
 	sf::Clock sfClock;
-	unsigned long attack_id;
+	long attack_id;
 
 
 	void startEvent(Event code);
@@ -43,15 +43,15 @@ class EventHandler_t
 public:
 	Event pollEvent();
 
-	void startMove(unsigned long dir);
-	void stopMove(unsigned long dir);
-	void startMovePath(unsigned long x, unsigned long y);
+	void startMove(long dir);
+	void stopMove(long dir);
+	void startMovePath(long x, long y);
 	void stopMoveEvent();
-	unsigned long getDir();
+	long getDir();
 
-	void startMonsterAttack(unsigned long id);
+	void startMonsterAttack(long id);
 	void stopMonsterAttack();
-	unsigned long getAttackId();
+	long getAttackId();
 };
 
 extern EventHandler_t EventHandler;

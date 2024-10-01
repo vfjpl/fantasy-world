@@ -22,7 +22,7 @@ static sf::Time getPeriod(Event code)
 	}//end switch
 }
 
-static unsigned long positionsToDir(Position from, Position to)
+static long positionsToDir(Position from, Position to)
 {
 	if(from.second < to.second)
 		return 4;
@@ -41,7 +41,7 @@ timedEvent::timedEvent(Event c):
 	code(c) {}
 
 
-bool timedEvent::operator==(Event c) const
+bool timedEvent::operator == (Event c) const
 {
 	return code == c;
 }
@@ -81,7 +81,7 @@ Event EventHandler_t::pollEvent()
 }
 
 
-void EventHandler_t::startMove(unsigned long dir)
+void EventHandler_t::startMove(long dir)
 {
     if(directions.empty())
     {
@@ -99,7 +99,7 @@ void EventHandler_t::startMove(unsigned long dir)
     }
 }
 
-void EventHandler_t::stopMove(unsigned long dir)
+void EventHandler_t::stopMove(long dir)
 {
     auto it_begin = directions.cbegin();
     auto it_end = directions.cend();
@@ -108,7 +108,7 @@ void EventHandler_t::stopMove(unsigned long dir)
         directions.erase(it_found);
 }
 
-void EventHandler_t::startMovePath(unsigned long x, unsigned long y)
+void EventHandler_t::startMovePath(long x, long y)
 {
     if(Map.isObstacle(x - 1, y - 1))
         return;
@@ -151,7 +151,7 @@ void EventHandler_t::stopMoveEvent()
     path.clear();
 }
 
-unsigned long EventHandler_t::getDir()
+long EventHandler_t::getDir()
 {
     if(!directions.empty())
         return directions.back();
@@ -160,7 +160,7 @@ unsigned long EventHandler_t::getDir()
     return 0;
 }
 
-void EventHandler_t::startMonsterAttack(unsigned long id)
+void EventHandler_t::startMonsterAttack(long id)
 {
     if(attack_id == id)
     {
@@ -183,7 +183,7 @@ void EventHandler_t::stopMonsterAttack()
     }
 }
 
-unsigned long EventHandler_t::getAttackId()
+long EventHandler_t::getAttackId()
 {
     return attack_id;
 }

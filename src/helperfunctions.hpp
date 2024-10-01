@@ -11,13 +11,13 @@ sf::String fromUtf8(std::string::const_iterator cbegin, std::string::const_itera
 
 std::string var2str(const Poco::DynamicAny& var);
 const char* var2char(const Poco::DynamicAny& var);
-unsigned long var2int(const Poco::DynamicAny& var);
+long var2long(const Poco::DynamicAny& var);
 
-unsigned long var2hash(const Poco::DynamicAny& var);
-unsigned long str2hash(const std::string& str);
-constexpr unsigned long char2hash(const char* str)
+long var2hash(const Poco::DynamicAny& var);
+long str2hash(const std::string& str);
+constexpr long char2hash(const char* str)
 {
-	unsigned long res = 0;
+	long res = 0;
 	for(; *str != '\0'; ++str)
 		res += *str;
 	return res;
