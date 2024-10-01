@@ -13,13 +13,13 @@ class Player
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
-    unsigned long steps;
+    long steps;
 
 public:
     void setTexture(const sf::Texture& texture);
-    void setDir(unsigned long dir);
-    void setPosition(unsigned long x, unsigned long y);
-    void move(unsigned long x, unsigned long y);
+    void setDir(long dir);
+    void setPosition(long x, long y);
+    void move(long x, long y);
 
     bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);

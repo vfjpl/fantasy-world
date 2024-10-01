@@ -13,19 +13,19 @@ class Monster
     //8
     sf::Vector2i current_px;
     sf::Vector2i desired_px;
-    unsigned long position_x;
-    unsigned long position_y;
-    unsigned long steps;
-    unsigned long frames_x;
-    unsigned long frames_y;
+    long position_x;
+    long position_y;
+    long steps;
+    long frames_x;
+    long frames_y;
 
 public:
-    void setTexture(const sf::Texture& texture, unsigned long width, unsigned long height);
-    void setDir(unsigned long dir);
-    void setPosition(unsigned long x, unsigned long y);
-    void move(unsigned long x, unsigned long y);
+    void setTexture(const sf::Texture& texture, long width, long height);
+    void setDir(long dir);
+    void setPosition(long x, long y);
+    void move(long x, long y);
 
-    bool isOnPosition(unsigned long x, unsigned long y);
+    bool isOnPosition(long x, long y);
     bool contains(sf::Vector2f coords);
     void draw(sf::RenderWindow& window);
 };

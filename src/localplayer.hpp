@@ -8,9 +8,9 @@ struct LocalPlayer_t
 	//32
 	std::string looktype;
 	//8
-	unsigned long id;
-	unsigned long x;
-	unsigned long y;
+	long id;
+	long x;
+	long y;
 };
 
 extern LocalPlayer_t LocalPlayer;

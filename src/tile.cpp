@@ -13,7 +13,7 @@ Tile::Tile(const sf::Texture& texture):
     rect_height(32) {}
 
 
-Tile::Tile(const sf::Texture& texture, unsigned long width, unsigned long height):
+Tile::Tile(const sf::Texture& texture, long width, long height):
     sprite(texture),
     rect_width(width),
     rect_height(height) {}
@@ -24,7 +24,7 @@ void Tile::setTexture(const sf::Texture& texture)
     sprite.setTexture(texture, true);
 }
 
-void Tile::setPosition(unsigned long x, unsigned long y)
+void Tile::setPosition(long x, long y)
 {
     position_x = x;
     position_y = y;
@@ -32,7 +32,7 @@ void Tile::setPosition(unsigned long x, unsigned long y)
                        (y * 32) - 32 - (rect_height - 32));
 }
 
-bool Tile::isOnPosition(unsigned long x, unsigned long y)
+bool Tile::isOnPosition(long x, long y)
 {
     return (position_x == x && position_y == y);
 }

@@ -5,7 +5,7 @@ void Chest::setTexture(const sf::Texture& texture)
     sprite.setTexture(texture, true);
 }
 
-void Chest::setPosition(unsigned long x, unsigned long y)
+void Chest::setPosition(long x, long y)
 {
     sprite.setPosition((x * 32) - 32,
                        (y * 32) - 32);

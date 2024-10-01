@@ -9,12 +9,12 @@ class MapObject
     //288
     sf::Sprite sprite;
     //8
-    unsigned long rect_width;
-    unsigned long rect_height;
+    long rect_width;
+    long rect_height;
 
 public:
-    void setTexture(const sf::Texture& texture, unsigned long width, unsigned long height);
-    void setPosition(unsigned long x, unsigned long y);
+    void setTexture(const sf::Texture& texture, long width, long height);
+    void setPosition(long x, long y);
 
     void draw(sf::RenderWindow& window);
 };
