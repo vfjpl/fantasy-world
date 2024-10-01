@@ -1,16 +1,16 @@
 #include "tile.hpp"
 
 Tile::Tile():
-    rect_width(32),
-    rect_height(32)
+    rect_width(32l),
+    rect_height(32l)
 {
     sprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 }
 
 Tile::Tile(const sf::Texture& texture):
     sprite(texture),
-    rect_width(32),
-    rect_height(32) {}
+    rect_width(32l),
+    rect_height(32l) {}
 
 
 Tile::Tile(const sf::Texture& texture, long width, long height):
@@ -28,8 +28,8 @@ void Tile::setPosition(long x, long y)
 {
     position_x = x;
     position_y = y;
-    const int px_x = (x * 32) - 32 - ((rect_width - 32)/2);
-    const int px_y = (y * 32) - 32 - (rect_height - 32);
+    const int px_x = (x * 32l) - 32l - ((rect_width - 32l)/2l);
+    const int px_y = (y * 32l) - 32l - (rect_height - 32l);
     sprite.setPosition(px_x, px_y);//float conversion
 }
 

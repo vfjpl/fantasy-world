@@ -5,8 +5,8 @@
 void Monster::setTexture(const sf::Texture& texture, long width, long height)
 {
     const sf::Vector2u size = texture.getSize();
-    frames_x = std::max<long>(size.x/width, 1);
-    frames_y = std::max<long>(size.y/height, 1);
+    frames_x = std::max<long>(size.x/width, 1l);
+    frames_y = std::max<long>(size.y/height, 1l);
     rect.width = width;
     rect.height = height;
     sprite.setTextureRect(rect);
@@ -30,8 +30,8 @@ void Monster::move(long x, long y)
 {
     position_x = x;
     position_y = y;
-    desired_px.x = (x * 32) - ((rect.width - 32)/2);
-    desired_px.y = (y * 32) - (rect.height - 32);
+    desired_px.x = (x * 32l) - ((rect.width - 32l)/2l);
+    desired_px.y = (y * 32l) - (rect.height - 32l);
 }
 
 bool Monster::isOnPosition(long x, long y)

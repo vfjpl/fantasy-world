@@ -4,16 +4,16 @@
 
 void Player::setTexture(const sf::Texture& texture)
 {
-    rect.width = 32;
-    rect.height = 48;
+    rect.width = 32l;
+    rect.height = 48l;
     sprite.setTextureRect(rect);
     sprite.setTexture(texture, false);
 }
 
 void Player::setDir(long dir)
 {
-    rect.left = (++steps % 4) * 32;
-    rect.top = (dir % 4) * 48;
+    rect.left = (++steps % 4l) * 32l;
+    rect.top = (dir % 4l) * 48l;
     sprite.setTextureRect(rect);
 }
 
@@ -25,8 +25,8 @@ void Player::setPosition(long x, long y)
 
 void Player::move(long x, long y)
 {
-    desired_px.x = (x * 32) - 32;
-    desired_px.y = (y * 32) - 48;
+    desired_px.x = (x * 32l) - 32l;
+    desired_px.y = (y * 32l) - 48l;
 }
 
 bool Player::contains(sf::Vector2f coords)

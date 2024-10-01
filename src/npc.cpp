@@ -7,19 +7,20 @@
 void Npc::setTexture(const sf::Texture& texture)
 {
     const sf::Vector2u size = texture.getSize();
-    const sf::Vector2u frames(size.x/32, size.y/48);
-    frames_x = std::max<long>(frames.x, 1);
-    frames_y = std::max<long>(frames.y, 1);
-    rect.width = frames.x == 1 ? size.x : 32;
-    rect.height = frames.y == 1 ? size.y : 48;
+    const long calc_frames_x = size.x/32l;
+    const long calc_frames_y = size.y/48l;
+    frames_x = std::max<long>(calc_frames_x, 1l);
+    frames_y = std::max<long>(calc_frames_y, 1l);
+    rect.width = calc_frames_x == 1l ? size.x : 32l;
+    rect.height = calc_frames_y == 1l ? size.y : 48l;
     sprite.setTextureRect(rect);
     sprite.setTexture(texture, false);
 }
 
 void Npc::setDir(long dir)
 {
-    rect.left = (++steps % frames_x) * 32;
-    rect.top = (dir % frames_y) * 48;
+    rect.left = (++steps % frames_x) * 32l;
+    rect.top = (dir % frames_y) * 48l;
     sprite.setTextureRect(rect);
 }
 
@@ -34,8 +35,8 @@ void Npc::move(long x, long y)
 {
     position_x = x;
     position_y = y;
-    desired_px.x = (x * 32) - 32;
-    desired_px.y = (y * 32) - 48;
+    desired_px.x = (x * 32l) - 32l;
+    desired_px.y = (y * 32l) - 48l;
 }
 
 bool Npc::isOnPosition(long x, long y)
