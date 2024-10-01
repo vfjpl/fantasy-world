@@ -166,7 +166,7 @@ static void process_network(const Poco::DynamicAny& networkData)
 	}//end switch
 }
 
-static void moveLocalPlayer(unsigned long dir)
+static void moveLocalPlayer(long dir)
 {
     if(dir)
         Network.move(dir);

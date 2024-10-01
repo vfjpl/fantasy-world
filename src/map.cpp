@@ -11,13 +11,13 @@
 Map_t Map;
 
 
-void Map_t::moveCamera(unsigned long x, unsigned long y)
+void Map_t::moveCamera(long x, long y)
 {
     desired_camera.x = (x * 32) - 16;
     desired_camera.y = (y * 32);
 }
 
-void Map_t::setCamera(unsigned long x, unsigned long y)
+void Map_t::setCamera(long x, long y)
 {
     moveCamera(x, y);
     current_camera = desired_camera;
@@ -39,7 +39,7 @@ bool Map_t::isTile(sf::Vector2f coords)
     return false;
 }
 
-unsigned long Map_t::getPlayerIDf(sf::Vector2f coords)
+long Map_t::getPlayerIDf(sf::Vector2f coords)
 {
     for(auto& i: players)
         if(i.second.contains(coords))
@@ -47,7 +47,7 @@ unsigned long Map_t::getPlayerIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long Map_t::getNpcIDf(sf::Vector2f coords)
+long Map_t::getNpcIDf(sf::Vector2f coords)
 {
     for(auto& i: npcs)
         if(i.second.contains(coords))
@@ -55,7 +55,7 @@ unsigned long Map_t::getNpcIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long Map_t::getMonsterIDf(sf::Vector2f coords)
+long Map_t::getMonsterIDf(sf::Vector2f coords)
 {
     for(auto& i: monsters)
         if(i.second.contains(coords))
@@ -63,7 +63,7 @@ unsigned long Map_t::getMonsterIDf(sf::Vector2f coords)
     return 0;
 }
 
-unsigned long Map_t::getChestIDf(sf::Vector2f coords)
+long Map_t::getChestIDf(sf::Vector2f coords)
 {
     for(auto& i: chests)
         if(i.second.contains(coords))
@@ -73,55 +73,55 @@ unsigned long Map_t::getChestIDf(sf::Vector2f coords)
 
 void Map_t::moveNpc(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["npc"];
+    long id = data["npc"];
     npcs[id].move(data["x"], data["y"]);
     npcs[id].setDir(data["dir"]);
 }
 
 void Map_t::moveMonster(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["monster"];
+    long id = data["monster"];
     monsters[id].move(data["x"], data["y"]);
     monsters[id].setDir(data["dir"]);
 }
 
 void Map_t::addNpc(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     npcs[id].setTexture(ResourceManager.getTexture(data["looktype"], Graphic::NPC));
     npcs[id].setPosition(data["x"], data["y"], data["can_walk"]);
 }
 
 void Map_t::addMonster(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     monsters[id].setTexture(ResourceManager.getTexture(data["looktype"], Graphic::MONSTER), data["width"], data["height"]);
     monsters[id].setPosition(data["x"], data["y"]);
 }
 
 void Map_t::addChest(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     chests[id].setTexture(ResourceManager.getTexture(data["type"], data["open"] ? Graphic::CHEST_OPEN : Graphic::CHEST));
     chests[id].setPosition(data["x"], data["y"]);
 }
 
 void Map_t::addMapObject(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     map_objects[id].setTexture(ResourceManager.getTexture(data["file"], Graphic::GAME_OBJECT), data["width"], data["height"]);
     map_objects[id].setPosition(data["x"], data["y"]);
 }
 
 void Map_t::addTile(const Poco::DynamicAny& data)
 {
-    switch((unsigned long)data["type"])
+    switch((long)data["type"])
     {
     case 2://door
     {
         const sf::Texture& texture = ResourceManager.getTexture(data["bg"], Graphic::DIRECT);
-        unsigned long x = data["x"];
-        unsigned long y = data["y"];
+        long x = data["x"];
+        long y = data["y"];
         sf::Lock lock(mutex);
         tiles.emplace_back(texture);
         tiles.back().setPosition(x, y);
@@ -129,8 +129,8 @@ void Map_t::addTile(const Poco::DynamicAny& data)
     }
     case 21://well
     {
-        unsigned long x = data["x"];
-        unsigned long y = data["y"];
+        long x = data["x"];
+        long y = data["y"];
         sf::Lock lock(mutex);
         tiles.emplace_back();
         tiles.back().setPosition(x, y);
@@ -140,20 +140,20 @@ void Map_t::addTile(const Poco::DynamicAny& data)
     {
         const auto& image = data["data"]["image"];
         const sf::Texture& texture = ResourceManager.getTexture(image["path"], Graphic::DIRECT);
-        unsigned long width = image["width"];
-        unsigned long height = image["height"];
-        unsigned long x = data["x"];
-        unsigned long y = data["y"];
+        long width = image["width"];
+        long height = image["height"];
+        long x = data["x"];
+        long y = data["y"];
         //todo
         break;
     }
     default:
     {
         const sf::Texture& texture = ResourceManager.getTexture(data["tile"], Graphic::GAME_OBJECT);
-        unsigned long width = data["width"];
-        unsigned long height = data["height"];
-        unsigned long x = data["x"];
-        unsigned long y = data["y"];
+        long width = data["width"];
+        long height = data["height"];
+        long x = data["x"];
+        long y = data["y"];
         sf::Lock lock(mutex);
         tiles.emplace_back(texture, width, height);
         tiles.back().setPosition(x, y);
@@ -165,8 +165,8 @@ void Map_t::addTile(const Poco::DynamicAny& data)
 void Map_t::addMultiMapData(const Poco::DynamicAny& data)
 {
     const sf::Texture& texture = ResourceManager.getTexture(data["source"], Graphic::MAP_MULTI);
-    unsigned long x = data["x"] * 640ul;
-    unsigned long y = data["y"] * 640ul;
+    long x = data["x"] * 640ul;
+    long y = data["y"] * 640ul;
     sf::Lock lock(mutex);
     map_backgrounds.emplace_back(texture);
     map_backgrounds.back().setPosition(x, y);
@@ -288,46 +288,46 @@ void Map_t::updateMapData(const Poco::DynamicAny& data)
 
 void Map_t::moveOutfit(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["player"];
+    long id = data["player"];
     players[id].setDir(data["dir"]);
 }
 
 void Map_t::movePlayer(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["player"];
+    long id = data["player"];
     players[id].move(data["x"], data["y"]);
     players[id].setDir(data["dir"]);
 }
 
 void Map_t::addMapItem(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     map_items[id].setTexture(ResourceManager.getTexture(data["item_id"], Graphic::ITEM));
     map_items[id].setPosition(data["x"], data["y"]);
 }
 
 void Map_t::addPlayer(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     players[id].setTexture(ResourceManager.getTexture(data["looktype"], Graphic::PLAYER));
     players[id].setPosition(data["x"] + 1ul, data["y"] + 1ul);//server bug
 }
 
 void Map_t::deleteMapItem(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     map_items.erase(id);
 }
 
 void Map_t::deleteMonster(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     monsters.erase(id);
 }
 
 void Map_t::deletePlayer(const Poco::DynamicAny& data)
 {
-    unsigned long id = data["id"];
+    long id = data["id"];
     players.erase(id);
 }
 
@@ -336,15 +336,15 @@ void Map_t::openChest(const Poco::DynamicAny& data)
     //todo better
     if(const auto& chest_data = data["chest"]; chest_data.size())
     {
-        unsigned long id = chest_data;
+        long id = chest_data;
         chests[id].setTexture(ResourceManager.getTexture(std::to_string(1ul), Graphic::CHEST_OPEN));
     }
 }
 
 void Map_t::updateTile(const Poco::DynamicAny& data)
 {
-    unsigned long x = data["x"];
-    unsigned long y = data["y"];
+    long x = data["x"];
+    long y = data["y"];
     //todo better
     for(auto& i: tiles)
     {
@@ -360,11 +360,11 @@ MapClickData Map_t::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
     return {getChestIDf(coords), getMonsterIDf(coords), getNpcIDf(coords), getPlayerIDf(coords),
-            (unsigned long)std::ceil(coords.x/32), (unsigned long)std::ceil(coords.y/32),
+            (long)std::ceil(coords.x/32), (long)std::ceil(coords.y/32),
             isTile(coords), isMapItem(coords)};
 }
 
-unsigned long Map_t::getMonsterID(unsigned long x, unsigned long y)
+long Map_t::getMonsterID(long x, long y)
 {
     for(auto& i: monsters)
         if(i.second.isOnPosition(x, y))
@@ -372,14 +372,14 @@ unsigned long Map_t::getMonsterID(unsigned long x, unsigned long y)
     return 0;
 }
 
-bool Map_t::isObstacle(unsigned long x, unsigned long y)
+bool Map_t::isObstacle(long x, long y)
 {
-    if(x >= max_x || y >= max_y)
-        return true;
-    return obstacles[x][y];
+	if((x < 0l) | (x >= max_x) | (y < 0l) | (y >= max_y))
+		return true;
+	return obstacles[x][y];
 }
 
-bool Map_t::isNpc(unsigned long x, unsigned long y)
+bool Map_t::isNpc(long x, long y)
 {
     for(auto& i: npcs)
         if(i.second.isOnPosition(x, y))

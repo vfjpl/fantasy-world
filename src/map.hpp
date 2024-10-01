@@ -13,13 +13,13 @@
 
 struct MapClickData
 {
-    unsigned long chestID;
-    unsigned long monsterID;
-    unsigned long npcID;
-    unsigned long playerID;
+    long chestID;
+    long monsterID;
+    long npcID;
+    long playerID;
 
-    unsigned long x;
-    unsigned long y;
+    long x;
+    long y;
 
     bool tile;
     bool item;
@@ -30,12 +30,12 @@ class Map_t
 	//168
 	sf::View camera;
 	//48
-	std::map<unsigned long, MapObject> map_objects;
-	std::map<unsigned long, Chest> chests;
-	std::map<unsigned long, MapItem> map_items;
-	std::map<unsigned long, Monster> monsters;
-	std::map<unsigned long, Npc> npcs;
-	std::map<unsigned long, Player> players;
+	std::map<long, MapObject> map_objects;
+	std::map<long, Chest> chests;
+	std::map<long, MapItem> map_items;
+	std::map<long, Monster> monsters;
+	std::map<long, Npc> npcs;
+	std::map<long, Player> players;
 	//24
 	std::vector<sf::Sprite> map_backgrounds;
 	std::vector<Tile> tiles;
@@ -44,18 +44,18 @@ class Map_t
 	sf::Vector2i current_camera;
 	sf::Vector2i desired_camera;
 	sf::Mutex mutex;
-	unsigned long max_x;
-	unsigned long max_y;
+	long max_x;
+	long max_y;
 
 
-	void moveCamera(unsigned long x, unsigned long y);
-	void setCamera(unsigned long x, unsigned long y);
+	void moveCamera(long x, long y);
+	void setCamera(long x, long y);
 	bool isMapItem(sf::Vector2f coords);
 	bool isTile(sf::Vector2f coords);
-	unsigned long getPlayerIDf(sf::Vector2f coords);
-	unsigned long getNpcIDf(sf::Vector2f coords);
-	unsigned long getMonsterIDf(sf::Vector2f coords);
-	unsigned long getChestIDf(sf::Vector2f coords);
+	long getPlayerIDf(sf::Vector2f coords);
+	long getNpcIDf(sf::Vector2f coords);
+	long getMonsterIDf(sf::Vector2f coords);
+	long getChestIDf(sf::Vector2f coords);
 	void moveNpc(const Poco::DynamicAny& data);
 	void moveMonster(const Poco::DynamicAny& data);
 	void addNpc(const Poco::DynamicAny& data);
@@ -86,9 +86,9 @@ public:
 	void updateTile(const Poco::DynamicAny& data);
 
 	MapClickData mapMouseClick(sf::RenderWindow& window, sf::Vector2i point);
-	unsigned long getMonsterID(unsigned long x, unsigned long y);
-	bool isObstacle(unsigned long x, unsigned long y);
-	bool isNpc(unsigned long x, unsigned long y);
+	long getMonsterID(long x, long y);
+	bool isObstacle(long x, long y);
+	bool isNpc(long x, long y);
 	void draw(sf::RenderWindow& window);
 	void clear();
 };
