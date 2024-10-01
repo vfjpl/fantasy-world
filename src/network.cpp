@@ -48,8 +48,8 @@ static tgui::ListBox::Ptr createHeroesListBox(const std::string& body)
 
 static bool isLoginSucessfull(const Poco::DynamicAny& data)
 {
-	bool check1 = data["code"] == 200ul;
-	bool check2 = data["status"] == 200ul;
+	bool check1 = data["code"] == 200l;
+	bool check2 = data["status"] == 200l;
 	return check1 & check2;
 }
 
@@ -59,7 +59,7 @@ void Network_t::sendJson(const std::string& json)
     webSocket->sendFrame(json.data(), json.size());
 }
 
-void Network_t::send(const Poco::DynamicStruct& data, unsigned long code)
+void Network_t::send(const Poco::DynamicStruct& data, long code)
 {
     Poco::DynamicStruct json;
     json.insert("code", code);
@@ -78,11 +78,11 @@ void Network_t::send(const Poco::DynamicStruct& data, const char* code)
 void Network_t::sendStart(const std::string& token)
 {
     std::vector<Poco::DynamicAny> jsonArray;
-    jsonArray.emplace_back(1000ul);
-    jsonArray.emplace_back(1000ul);
+    jsonArray.emplace_back(1000l);
+    jsonArray.emplace_back(1000l);
 
     Poco::DynamicStruct json;
-    json.insert("code", 1ul);
+    json.insert("code", 1l);
     json.insert("window", jsonArray);
     json.insert("token", token);
 
@@ -201,97 +201,97 @@ Poco::DynamicAny Network_t::receive()
 }
 
 
-void Network_t::attackMonster(unsigned long target_id)
+void Network_t::attackMonster(long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("monster", target_id);
-    data.insert("skill", 0ul);
-    send(data, 3ul);
+    data.insert("skill", 0l);
+    send(data, 3l);
 }
 
 void Network_t::message(const sf::String& message)
 {
     Poco::DynamicStruct data;
     data.insert("message", (const char*)message.toUtf8().data());
-    send(data, 4ul);
+    send(data, 4l);
 }
 
-void Network_t::move(unsigned long dir)
+void Network_t::move(long dir)
 {
     Poco::DynamicStruct data;
     data.insert("dir", dir);
-    send(data, 5ul);
+    send(data, 5l);
 }
 
-void Network_t::use(unsigned long slot, const char* type)
+void Network_t::use(long slot, const char* type)
 {
     Poco::DynamicStruct data;
     data.insert("slot", slot);
     data.insert("type", type);
-    send(data, 9ul);
+    send(data, 9l);
 }
 
-void Network_t::takeLoot(unsigned long index)
+void Network_t::takeLoot(long index)
 {
     Poco::DynamicStruct data;
     data.insert("action", index);
-    send(data, 18ul);
+    send(data, 18l);
 }
 
-void Network_t::sendReloadPlayer(unsigned long player_id)
+void Network_t::sendReloadPlayer(long player_id)
 {
     Poco::DynamicStruct data;
     data.insert("player", player_id);
-    send(data, 71ul);
+    send(data, 71l);
 }
 
-void Network_t::pickUpItem(unsigned long x, unsigned long y)
+void Network_t::pickUpItem(long x, long y)
 {
     Poco::DynamicStruct data;
     data.insert("x", x);
     data.insert("y", y);
-    send(data, 877ul);
+    send(data, 877l);
 }
 
-void Network_t::useElement(unsigned long x, unsigned long y)
+void Network_t::useElement(long x, long y)
 {
     Poco::DynamicStruct data;
     data.insert("x", x);
     data.insert("y", y);
-    send(data, 879ul);
+    send(data, 879l);
 }
 
 void Network_t::sendReload()
 {
     Poco::DynamicStruct data;
-    send(data, 1019ul);
+    send(data, 1019l);
 }
 
-void Network_t::attackPlayer(unsigned long target_id)
+void Network_t::attackPlayer(long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("target", target_id);
-    data.insert("skill", 0ul);
-    send(data, 1042ul);
+    data.insert("skill", 0l);
+    send(data, 1042l);
 }
 
-void Network_t::openChest(unsigned long id)
+void Network_t::openChest(long id)
 {
     Poco::DynamicStruct data;
     data.insert("id", id);
     send(data, "chest");
 }
 
-void Network_t::spell(unsigned long spell_id)
+void Network_t::spell(long spell_id)
 {
     Poco::DynamicStruct data;
     data.insert("spell", spell_id);
-    data.insert("type", 0ul);
-    data.insert("fight_type", 0ul);
+    data.insert("type", 0l);
+    data.insert("fight_type", 0l);
     send(data, "spell");
 }
 
-void Network_t::spellMonster(unsigned long spell_id, unsigned long target_id)
+void Network_t::spellMonster(long spell_id, long target_id)
 {
     Poco::DynamicStruct data;
     data.insert("spell", spell_id);

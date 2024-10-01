@@ -26,7 +26,7 @@ class Network_t
 
 
 	void sendJson(const std::string& json);
-	void send(const Poco::DynamicStruct& data, unsigned long code);
+	void send(const Poco::DynamicStruct& data, long code);
 	void send(const Poco::DynamicStruct& data, const char* code);
 	void sendStart(const std::string& token);
 	std::string loadGameData();
@@ -45,19 +45,19 @@ public:
 	Poco::DynamicAny receive(const std::string& token);
 	Poco::DynamicAny receive();
 
-	void attackMonster(unsigned long target_id);
+	void attackMonster(long target_id);
 	void message(const sf::String& message);
-	void move(unsigned long dir);
-	void use(unsigned long slot, const char* type);
-	void takeLoot(unsigned long index);
-	void sendReloadPlayer(unsigned long player_id);
-	void pickUpItem(unsigned long x, unsigned long y);
-	void useElement(unsigned long x, unsigned long y);
+	void move(long dir);
+	void use(long slot, const char* type);
+	void takeLoot(long index);
+	void sendReloadPlayer(long player_id);
+	void pickUpItem(long x, long y);
+	void useElement(long x, long y);
 	void sendReload();
-	void attackPlayer(unsigned long target_id);
-	void openChest(unsigned long id);
-	void spell(unsigned long spell_id);
-	void spellMonster(unsigned long spell_id, unsigned long target_id);
+	void attackPlayer(long target_id);
+	void openChest(long id);
+	void spell(long spell_id);
+	void spellMonster(long spell_id, long target_id);
 };
 
 extern Network_t Network;
