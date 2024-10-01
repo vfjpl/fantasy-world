@@ -4,7 +4,7 @@
 
 void Monster::setTexture(const sf::Texture& texture, long width, long height)
 {
-    sf::Vector2u size = texture.getSize();
+    const sf::Vector2u size = texture.getSize();
     frames_x = std::max<long>(size.x/width, 1);
     frames_y = std::max<long>(size.y/height, 1);
     rect.width = width;

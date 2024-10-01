@@ -28,8 +28,9 @@ void Tile::setPosition(long x, long y)
 {
     position_x = x;
     position_y = y;
-    sprite.setPosition((x * 32) - 32 - ((rect_width - 32)/2),
-                       (y * 32) - 32 - (rect_height - 32));
+    const int px_x = (x * 32) - 32 - ((rect_width - 32)/2);
+    const int px_y = (y * 32) - 32 - (rect_height - 32);
+    sprite.setPosition(px_x, px_y);//float conversion
 }
 
 bool Tile::isOnPosition(long x, long y)

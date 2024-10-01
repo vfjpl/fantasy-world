@@ -6,8 +6,8 @@
 
 void Npc::setTexture(const sf::Texture& texture)
 {
-    sf::Vector2u size = texture.getSize();
-    sf::Vector2u frames(size.x/32, size.y/48);
+    const sf::Vector2u size = texture.getSize();
+    const sf::Vector2u frames(size.x/32, size.y/48);
     frames_x = std::max<long>(frames.x, 1);
     frames_y = std::max<long>(frames.y, 1);
     rect.width = frames.x == 1 ? size.x : 32;
