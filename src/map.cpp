@@ -13,8 +13,8 @@ Map_t Map;
 
 void Map_t::moveCamera(long x, long y)
 {
-    desired_camera.x = (x * 32) - 16;
-    desired_camera.y = (y * 32);
+    desired_camera.x = (x * 32l) - 16l;
+    desired_camera.y = (y * 32l);
 }
 
 void Map_t::setCamera(long x, long y)
@@ -25,7 +25,7 @@ void Map_t::setCamera(long x, long y)
 
 bool Map_t::isMapItem(sf::Vector2f coords)
 {
-    for(auto& i: map_items)
+    for(auto& i : map_items)
         if(i.second.contains(coords))
             return true;
     return false;
@@ -33,7 +33,7 @@ bool Map_t::isMapItem(sf::Vector2f coords)
 
 bool Map_t::isTile(sf::Vector2f coords)
 {
-    for(auto& i: tiles)
+    for(auto& i : tiles)
         if(i.contains(coords))
             return true;
     return false;
@@ -41,34 +41,34 @@ bool Map_t::isTile(sf::Vector2f coords)
 
 long Map_t::getPlayerIDf(sf::Vector2f coords)
 {
-    for(auto& i: players)
+    for(auto& i : players)
         if(i.second.contains(coords))
             return i.first;
-    return 0;
+    return 0l;
 }
 
 long Map_t::getNpcIDf(sf::Vector2f coords)
 {
-    for(auto& i: npcs)
+    for(auto& i : npcs)
         if(i.second.contains(coords))
             return i.first;
-    return 0;
+    return 0l;
 }
 
 long Map_t::getMonsterIDf(sf::Vector2f coords)
 {
-    for(auto& i: monsters)
+    for(auto& i : monsters)
         if(i.second.contains(coords))
             return i.first;
-    return 0;
+    return 0l;
 }
 
 long Map_t::getChestIDf(sf::Vector2f coords)
 {
-    for(auto& i: chests)
+    for(auto& i : chests)
         if(i.second.contains(coords))
             return i.first;
-    return 0;
+    return 0l;
 }
 
 void Map_t::moveNpc(const Poco::DynamicAny& data)
@@ -115,7 +115,7 @@ void Map_t::addMapObject(const Poco::DynamicAny& data)
 
 void Map_t::addTile(const Poco::DynamicAny& data)
 {
-    switch((long)data["type"])
+    switch(var2long(data["type"]))
     {
     case 2://door
     {
@@ -165,8 +165,8 @@ void Map_t::addTile(const Poco::DynamicAny& data)
 void Map_t::addMultiMapData(const Poco::DynamicAny& data)
 {
     const sf::Texture& texture = ResourceManager.getTexture(data["source"], Graphic::MAP_MULTI);
-    long x = data["x"] * 640ul;
-    long y = data["y"] * 640ul;
+    long x = data["x"] * 640l;
+    long y = data["y"] * 640l;
     sf::Lock lock(mutex);
     map_backgrounds.emplace_back(texture);
     map_backgrounds.back().setPosition(x, y);
@@ -217,36 +217,36 @@ void Map_t::loadData_teleport(const Poco::DynamicAny& data)
     loadMapPositionData(data["map_positions"]);
 
     //todo better
-    if(const auto& map_data = data["map"]; map_data["type"] == 2ul)
+    if(const auto& map_data = data["map"]; map_data["type"] == 2l)
     {
         addSingleMapData(map_data);
     }
     else
     {
-        for(const auto& map_chunk: data["map_data"])
+        for(const auto& map_chunk : data["map_data"])
             addMultiMapData(map_chunk);
     }
 
     if(const auto& tiles_data = data["tiles"]; tiles_data.size())
-        for(const auto& tile: tiles_data)
+        for(const auto& tile : tiles_data)
             addTile(tile);
     if(const auto& map_objects_data = data["map_objects"]; map_objects_data.size())
-        for(const auto& map_object: map_objects_data)
+        for(const auto& map_object : map_objects_data)
             addMapObject(map_object);
     if(const auto& chests_data = data["chests"]; chests_data.size())
-        for(const auto& chest: chests_data)
+        for(const auto& chest : chests_data)
             addChest(chest);
     if(const auto& map_items_data = data["map_items"]; map_items_data.size())
-        for(const auto& map_item: map_items_data)
+        for(const auto& map_item : map_items_data)
             addMapItem(map_item);
     if(const auto& monsters_data = data["monsters"]; monsters_data.size())
-        for(const auto& monster: monsters_data)
+        for(const auto& monster : monsters_data)
             addMonster(monster);
     if(const auto& npcs_data = data["npcs"]; npcs_data.size())
-        for(const auto& npc: npcs_data)
+        for(const auto& npc : npcs_data)
             addNpc(npc);
     if(const auto& players_data = data["players"]; players_data.size())
-        for(const auto& player: players_data)
+        for(const auto& player : players_data)
             addPlayer(player);
 }
 
@@ -310,7 +310,7 @@ void Map_t::addPlayer(const Poco::DynamicAny& data)
 {
     long id = data["id"];
     players[id].setTexture(ResourceManager.getTexture(data["looktype"], Graphic::PLAYER));
-    players[id].setPosition(data["x"] + 1ul, data["y"] + 1ul);//server bug
+    players[id].setPosition(data["x"] + 1l, data["y"] + 1l);//server bug
 }
 
 void Map_t::deleteMapItem(const Poco::DynamicAny& data)
@@ -337,7 +337,7 @@ void Map_t::openChest(const Poco::DynamicAny& data)
     if(const auto& chest_data = data["chest"]; chest_data.size())
     {
         long id = chest_data;
-        chests[id].setTexture(ResourceManager.getTexture(std::to_string(1ul), Graphic::CHEST_OPEN));
+        chests[id].setTexture(ResourceManager.getTexture(std::to_string(1l), Graphic::CHEST_OPEN));
     }
 }
 
@@ -346,7 +346,7 @@ void Map_t::updateTile(const Poco::DynamicAny& data)
     long x = data["x"];
     long y = data["y"];
     //todo better
-    for(auto& i: tiles)
+    for(auto& i : tiles)
     {
         if(i.isOnPosition(x, y))
         {
@@ -360,16 +360,16 @@ MapClickData Map_t::mapMouseClick(sf::RenderWindow& window, sf::Vector2i point)
 {
     sf::Vector2f coords = window.mapPixelToCoords(point, camera);
     return {getChestIDf(coords), getMonsterIDf(coords), getNpcIDf(coords), getPlayerIDf(coords),
-            (long)std::ceil(coords.x/32), (long)std::ceil(coords.y/32),
+            (long)std::ceil(coords.x/32.f), (long)std::ceil(coords.y/32.f),
             isTile(coords), isMapItem(coords)};
 }
 
 long Map_t::getMonsterID(long x, long y)
 {
-    for(auto& i: monsters)
+    for(auto& i : monsters)
         if(i.second.isOnPosition(x, y))
             return i.first;
-    return 0;
+    return 0l;
 }
 
 bool Map_t::isObstacle(long x, long y)
@@ -381,7 +381,7 @@ bool Map_t::isObstacle(long x, long y)
 
 bool Map_t::isNpc(long x, long y)
 {
-    for(auto& i: npcs)
+    for(auto& i : npcs)
         if(i.second.isOnPosition(x, y))
             return true;
     return false;
@@ -395,21 +395,21 @@ void Map_t::draw(sf::RenderWindow& window)
     camera.setCenter(current_camera.x, current_camera.y);
     window.setView(camera);
 
-    for(auto& i: map_backgrounds)
+    for(auto& i : map_backgrounds)
         window.draw(i);
-    for(auto& i: tiles)
+    for(auto& i : tiles)
         i.draw(window);
-    for(auto& i: map_objects)
+    for(auto& i : map_objects)
         i.second.draw(window);
-    for(auto& i: chests)
+    for(auto& i : chests)
         i.second.draw(window);
-    for(auto& i: map_items)
+    for(auto& i : map_items)
         i.second.draw(window);
-    for(auto& i: monsters)
+    for(auto& i : monsters)
         i.second.draw(window);
-    for(auto& i: npcs)
+    for(auto& i : npcs)
         i.second.draw(window);
-    for(auto& i: players)
+    for(auto& i : players)
         i.second.draw(window);
 }
 
