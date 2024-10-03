@@ -85,6 +85,13 @@ void Map_t::moveMonster(const Poco::DynamicAny& data)
     monsters[id].setDir(data["dir"]);
 }
 
+void Map_t::moveComrade(const Poco::DynamicAny& data)
+{
+	Comrade& comrade = comrades[var2long(data["comrade"])];
+	comrade.move(var2long(data["x"]), var2long(data["y"]));
+	comrade.setDir(var2long(data["dir"]));
+}
+
 void Map_t::addNpc(const Poco::DynamicAny& data)
 {
     long id = data["id"];
@@ -213,41 +220,44 @@ void Map_t::loadData_100(const Poco::DynamicAny& data)
 
 void Map_t::loadData_teleport(const Poco::DynamicAny& data)
 {
-    obstacles.swap((Poco::DynamicAny&)data["obstacles"]);
-    loadMapPositionData(data["map_positions"]);
+	obstacles.swap((Poco::DynamicAny&)data["obstacles"]);
+	loadMapPositionData(data["map_positions"]);
 
-    //todo better
-    if(const auto& map_data = data["map"]; map_data["type"] == 2l)
-    {
-        addSingleMapData(map_data);
-    }
-    else
-    {
-        for(const auto& map_chunk : data["map_data"])
-            addMultiMapData(map_chunk);
-    }
+	//todo better
+	if(const auto& map_data = data["map"]; map_data["type"] == 2l)
+	{
+		addSingleMapData(map_data);
+	}
+	else
+	{
+		for(const auto& map_chunk : data["map_data"])
+			addMultiMapData(map_chunk);
+	}
 
-    if(const auto& tiles_data = data["tiles"]; tiles_data.size())
-        for(const auto& tile : tiles_data)
-            addTile(tile);
-    if(const auto& map_objects_data = data["map_objects"]; map_objects_data.size())
-        for(const auto& map_object : map_objects_data)
-            addMapObject(map_object);
-    if(const auto& chests_data = data["chests"]; chests_data.size())
-        for(const auto& chest : chests_data)
-            addChest(chest);
-    if(const auto& map_items_data = data["map_items"]; map_items_data.size())
-        for(const auto& map_item : map_items_data)
-            addMapItem(map_item);
-    if(const auto& monsters_data = data["monsters"]; monsters_data.size())
-        for(const auto& monster : monsters_data)
-            addMonster(monster);
-    if(const auto& npcs_data = data["npcs"]; npcs_data.size())
-        for(const auto& npc : npcs_data)
-            addNpc(npc);
-    if(const auto& players_data = data["players"]; players_data.size())
-        for(const auto& player : players_data)
-            addPlayer(player);
+	if(const auto& tiles_data = data["tiles"]; tiles_data.size())
+		for(const auto& tile : tiles_data)
+			addTile(tile);
+	if(const auto& map_objects_data = data["map_objects"]; map_objects_data.size())
+		for(const auto& map_object : map_objects_data)
+			addMapObject(map_object);
+	if(const auto& chests_data = data["chests"]; chests_data.size())
+		for(const auto& chest : chests_data)
+			addChest(chest);
+	if(const auto& map_items_data = data["map_items"]; map_items_data.size())
+		for(const auto& map_item : map_items_data)
+			addMapItem(map_item);
+	if(const auto& monsters_data = data["monsters"]; monsters_data.size())
+		for(const auto& monster : monsters_data)
+			addMonster(monster);
+	if(const auto& npcs_data = data["npcs"]; npcs_data.size())
+		for(const auto& npc : npcs_data)
+			addNpc(npc);
+	if(const auto& comrades_data = data["comraded"]; comrades_data.size())
+		for(const auto& comrade : comrades_data)
+			addComrade(comrade);
+	if(const auto& players_data = data["players"]; players_data.size())
+		for(const auto& player : players_data)
+			addPlayer(player);
 }
 
 void Map_t::updateMapData(const Poco::DynamicAny& data)
@@ -267,6 +277,10 @@ void Map_t::updateMapData(const Poco::DynamicAny& data)
 			for(const auto& npc : i.second)
 				moveNpc(npc);
 			break;
+		case char2hash("comrade_moves"):
+			for(const auto& comrade : i.second)
+				moveComrade(comrade);
+			break;
 		case char2hash("respawns"):
 			for(const auto& monster : i.second)
 				addMonster(monster);
@@ -280,7 +294,7 @@ void Map_t::updateMapData(const Poco::DynamicAny& data)
 		case char2hash("monster_yells"):
 			break;
 		default:
-			std::cout << "updateMapData: " << i.first << ' ' << var2str(data) << '\n';
+			std::cout << "updateMapData: " << var2str(data) << '\n';
 			break;
 		}//end switch
 	}//end for
@@ -306,6 +320,13 @@ void Map_t::addMapItem(const Poco::DynamicAny& data)
     map_items[id].setPosition(data["x"], data["y"]);
 }
 
+void Map_t::addComrade(const Poco::DynamicAny& data)
+{
+	Comrade& comrade = comrades[var2long(data["id_player"])];//we use player id for comrade?
+	comrade.setTexture(ResourceManager.getTexture(var2str(data["path"]), Graphic::DIRECT), var2long(data["width"]), var2long(data["height"]));
+	comrade.setPosition(var2long(data["x"]), var2long(data["y"]));
+}
+
 void Map_t::addPlayer(const Poco::DynamicAny& data)
 {
     long id = data["id"];
@@ -327,8 +348,9 @@ void Map_t::deleteMonster(const Poco::DynamicAny& data)
 
 void Map_t::deletePlayer(const Poco::DynamicAny& data)
 {
-    long id = data["id"];
-    players.erase(id);
+	long id = var2long(data["id"]);
+	players.erase(id);
+	comrades.erase(id);
 }
 
 void Map_t::openChest(const Poco::DynamicAny& data)
@@ -389,40 +411,43 @@ bool Map_t::isNpc(long x, long y)
 
 void Map_t::draw(sf::RenderWindow& window)
 {
-    sf::Lock lock(mutex);
+	sf::Lock lock(mutex);
 
-    current_camera += clamp(desired_camera - current_camera);
-    camera.setCenter(current_camera.x, current_camera.y);
-    window.setView(camera);
+	current_camera += clamp(desired_camera - current_camera);
+	camera.setCenter(current_camera.x, current_camera.y);
+	window.setView(camera);
 
-    for(auto& i : map_backgrounds)
-        window.draw(i);
-    for(auto& i : tiles)
-        i.draw(window);
-    for(auto& i : map_objects)
-        i.second.draw(window);
-    for(auto& i : chests)
-        i.second.draw(window);
-    for(auto& i : map_items)
-        i.second.draw(window);
-    for(auto& i : monsters)
-        i.second.draw(window);
-    for(auto& i : npcs)
-        i.second.draw(window);
-    for(auto& i : players)
-        i.second.draw(window);
+	for(auto& i : map_backgrounds)
+		window.draw(i);
+	for(auto& i : tiles)
+		i.draw(window);
+	for(auto& i : map_objects)
+		i.second.draw(window);
+	for(auto& i : chests)
+		i.second.draw(window);
+	for(auto& i : map_items)
+		i.second.draw(window);
+	for(auto& i : monsters)
+		i.second.draw(window);
+	for(auto& i : npcs)
+		i.second.draw(window);
+	for(auto& i : comrades)
+		i.second.draw(window);
+	for(auto& i : players)
+		i.second.draw(window);
 }
 
 void Map_t::clear()
 {
-    sf::Lock lock(mutex);
+	sf::Lock lock(mutex);
 
-    map_backgrounds.clear();
-    tiles.clear();
-    map_objects.clear();
-    chests.clear();
-    map_items.clear();
-    monsters.clear();
-    npcs.clear();
-    players.clear();
+	map_backgrounds.clear();
+	tiles.clear();
+	map_objects.clear();
+	chests.clear();
+	map_items.clear();
+	monsters.clear();
+	npcs.clear();
+	comrades.clear();
+	players.clear();
 }

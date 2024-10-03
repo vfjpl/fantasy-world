@@ -158,6 +158,11 @@ static void process_network(const Poco::DynamicAny& networkData)
 		Network.sendReload();
 		break;
 	}
+	case char2hash("spawn_comrade"):
+	{
+		Map.addComrade(networkData["data"]);
+		break;
+	}
 	default:
 	{
 		std::cout << "process_network: " << var2str(networkData) << '\n';

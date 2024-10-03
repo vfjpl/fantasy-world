@@ -6,6 +6,7 @@
 #include "mapitem.hpp"
 #include "monster.hpp"
 #include "npc.hpp"
+#include "comrade.hpp"
 #include "player.hpp"
 #include "tile.hpp"
 #include <Poco/DynamicAny.h>
@@ -35,6 +36,7 @@ class Map_t
 	std::map<long, MapItem> map_items;
 	std::map<long, Monster> monsters;
 	std::map<long, Npc> npcs;
+	std::map<long, Comrade> comrades;
 	std::map<long, Player> players;
 	//24
 	std::vector<sf::Sprite> map_backgrounds;
@@ -58,6 +60,7 @@ class Map_t
 	long getChestIDf(sf::Vector2f coords);
 	void moveNpc(const Poco::DynamicAny& data);
 	void moveMonster(const Poco::DynamicAny& data);
+	void moveComrade(const Poco::DynamicAny& data);
 	void addNpc(const Poco::DynamicAny& data);
 	void addMonster(const Poco::DynamicAny& data);
 	void addChest(const Poco::DynamicAny& data);
@@ -78,6 +81,7 @@ public:
 	void moveOutfit(const Poco::DynamicAny& data);
 	void movePlayer(const Poco::DynamicAny& data);
 	void addMapItem(const Poco::DynamicAny& data);
+	void addComrade(const Poco::DynamicAny& data);
 	void addPlayer(const Poco::DynamicAny& data);
 	void deleteMapItem(const Poco::DynamicAny& data);
 	void deleteMonster(const Poco::DynamicAny& data);
