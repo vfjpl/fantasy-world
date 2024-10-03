@@ -17,10 +17,13 @@ long hashVar(const Poco::DynamicAny& var);
 long hashString(const std::string& str);
 constexpr long hashCharPtr(const char* str)
 {
-	long res = 0;
-	for(; *str != '\0'; ++str)
-		res += *str;
-	return res;
+	for(long ret = 0;;)
+	{
+		const char c = *str++;
+		ret += c;
+		if(c == '\0')
+			return ret;
+	}
 }
 
 #endif // HELPERFUNCTIONS_HPP_INCLUDED
