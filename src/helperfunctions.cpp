@@ -19,34 +19,31 @@ sf::String fromUtf8(std::string::const_iterator cbegin, std::string::const_itera
 }
 
 
-std::string var2str(const Poco::DynamicAny& var)
-{
-	return var.toString();
-}
-
-const char* var2char(const Poco::DynamicAny& var)
+const char* asCharPtr(const Poco::DynamicAny& var)
 {
 	return &const_cast<Poco::DynamicAny&>(var).at(0);
 }
 
-long var2long(const Poco::DynamicAny& var)
+std::string toString(const Poco::DynamicAny& var)
+{
+	return var.toString();
+}
+
+long toLong(const Poco::DynamicAny& var)
 {
 	return var;
 }
 
 
-long var2hash(const Poco::DynamicAny& var)
+long hashVar(const Poco::DynamicAny& var)
 {
 	if(var.isString())
-		return char2hash(var2char(var));
+		return hashCharPtr(asCharPtr(var));
 	else
-		return var2long(var);
+		return toLong(var);
 }
 
-long str2hash(const std::string& str)
+long hashString(const std::string& str)
 {
-	long res = 0;
-	for(auto c: str)
-		res += c;
-	return res;
+	return hashCharPtr(str.c_str());
 }

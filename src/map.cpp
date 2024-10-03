@@ -87,9 +87,9 @@ void Map_t::moveMonster(const Poco::DynamicAny& data)
 
 void Map_t::moveComrade(const Poco::DynamicAny& data)
 {
-	Comrade& comrade = comrades[var2long(data["comrade"])];
-	comrade.move(var2long(data["x"]), var2long(data["y"]));
-	comrade.setDir(var2long(data["dir"]));
+	Comrade& comrade = comrades[toLong(data["comrade"])];
+	comrade.move(toLong(data["x"]), toLong(data["y"]));
+	comrade.setDir(toLong(data["dir"]));
 }
 
 void Map_t::addNpc(const Poco::DynamicAny& data)
@@ -122,7 +122,7 @@ void Map_t::addMapObject(const Poco::DynamicAny& data)
 
 void Map_t::addTile(const Poco::DynamicAny& data)
 {
-    switch(var2long(data["type"]))
+    switch(toLong(data["type"]))
     {
     case 2://door
     {
@@ -267,34 +267,34 @@ void Map_t::updateMapData(const Poco::DynamicAny& data)
 
 	for(const auto& i : data.extract<Poco::DynamicStruct>())
 	{
-		switch(str2hash(i.first))
+		switch(hashString(i.first))
 		{
-		case char2hash("moves"):
+		case hashCharPtr("moves"):
 			for(const auto& monster : i.second)
 				moveMonster(monster);
 			break;
-		case char2hash("npc_moves"):
+		case hashCharPtr("npc_moves"):
 			for(const auto& npc : i.second)
 				moveNpc(npc);
 			break;
-		case char2hash("comrade_moves"):
+		case hashCharPtr("comrade_moves"):
 			for(const auto& comrade : i.second)
 				moveComrade(comrade);
 			break;
-		case char2hash("respawns"):
+		case hashCharPtr("respawns"):
 			for(const auto& monster : i.second)
 				addMonster(monster);
 			break;
-		case char2hash("damages"):
+		case hashCharPtr("damages"):
 			break;
-		case char2hash("spells"):
+		case hashCharPtr("spells"):
 			break;
-		case char2hash("yells"):
+		case hashCharPtr("yells"):
 			break;
-		case char2hash("monster_yells"):
+		case hashCharPtr("monster_yells"):
 			break;
 		default:
-			std::cout << "updateMapData: " << var2str(data) << '\n';
+			std::cout << "updateMapData: " << toString(data) << '\n';
 			break;
 		}//end switch
 	}//end for
@@ -322,9 +322,9 @@ void Map_t::addMapItem(const Poco::DynamicAny& data)
 
 void Map_t::addComrade(const Poco::DynamicAny& data)
 {
-	Comrade& comrade = comrades[var2long(data["id_player"])];//we use player id for comrade?
-	comrade.setTexture(ResourceManager.getTexture(var2str(data["path"]), Graphic::DIRECT), var2long(data["width"]), var2long(data["height"]));
-	comrade.setPosition(var2long(data["x"]), var2long(data["y"]));
+	Comrade& comrade = comrades[toLong(data["id_player"])];//we use player id for comrade?
+	comrade.setTexture(ResourceManager.getTexture(toString(data["path"]), Graphic::DIRECT), toLong(data["width"]), toLong(data["height"]));
+	comrade.setPosition(toLong(data["x"]), toLong(data["y"]));
 }
 
 void Map_t::addPlayer(const Poco::DynamicAny& data)
@@ -348,7 +348,7 @@ void Map_t::deleteMonster(const Poco::DynamicAny& data)
 
 void Map_t::deletePlayer(const Poco::DynamicAny& data)
 {
-	long id = var2long(data["id"]);
+	long id = toLong(data["id"]);
 	players.erase(id);
 	comrades.erase(id);
 }

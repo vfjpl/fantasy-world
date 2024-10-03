@@ -13,7 +13,7 @@ Interface_t Interface;
 
 void Interface_t::addChatLine(Poco::DynamicAny line)
 {
-	const char* ptr_begin = var2char(line);
+	const char* ptr_begin = asCharPtr(line);
 	chatBox->addLine(fromUtf8(std::string::const_iterator(ptr_begin), std::string::const_iterator(ptr_begin + line.size())));
 }
 
@@ -98,15 +98,15 @@ void Interface_t::loginScreen()
 
 void Interface_t::health(const Poco::DynamicAny& data)
 {
-	long health_max = var2long(data["health_max"]);
-	long health = var2long(data["health"]);
+	long health_max = toLong(data["health_max"]);
+	long health = toLong(data["health"]);
 	healthBar->setMaximum(health_max);
 	healthBar->setValue(health);
 }
 
 void Interface_t::chatMessage(const Poco::DynamicAny& data)
 {
-	std::cout << "chatMessage: " << var2str(data) << '\n';
+	std::cout << "chatMessage: " << toString(data) << '\n';
 	// data["player"] vs data["name"] ??
 	addChatLine(data["time"] + " [" + data["profession"] + "] " + data["player"] + " [" + data["level"] + "]: " + data["message"]);
 }

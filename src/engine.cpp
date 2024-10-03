@@ -12,7 +12,7 @@ Engine_t Engine;
 
 static void process_network(const Poco::DynamicAny& networkData)
 {
-	switch(var2hash(networkData["code"]))
+	switch(hashVar(networkData["code"]))
 	{
     case 1://global chat message
     {
@@ -76,7 +76,7 @@ static void process_network(const Poco::DynamicAny& networkData)
     }
 	case 1016:
 	{
-		std::cout << "process_network: " << var2str(networkData) << '\n';
+		std::cout << "process_network: " << toString(networkData) << '\n';
 		break;
 	}
     case 1030://my health + message about dealt/received damage
@@ -93,79 +93,79 @@ static void process_network(const Poco::DynamicAny& networkData)
     {
         break;
     }
-	case char2hash("move_me"):
+	case hashCharPtr("move_me"):
 	{
 		Map.moveLocalPlayer(networkData);
 		break;
 	}
-	case char2hash("reset_move"):
+	case hashCharPtr("reset_move"):
 	{
 		break;
 	}
-	case char2hash("spell_effect"):
+	case hashCharPtr("spell_effect"):
 	{
 		break;
 	}
-	case char2hash("loot"):
+	case hashCharPtr("loot"):
 	{
 		EventHandler.stopMonsterAttack();
 		break;
 	}
-	case char2hash("move_outfit"):
+	case hashCharPtr("move_outfit"):
 	{
 		Map.moveOutfit(networkData);
 		break;
 	}
-	case char2hash("show_tile"):
+	case hashCharPtr("show_tile"):
 	{
 		Map.updateTile(networkData);
 		break;
 	}
-	case char2hash("exhaust_tile"):
+	case hashCharPtr("exhaust_tile"):
 	{
 		Map.updateTile(networkData);
 		break;
 	}
-	case char2hash("multi_code"):
+	case hashCharPtr("multi_code"):
 	{
 		for(const auto& item : networkData["items"])
 		{
 			if(item.isString())
-				process_network(Poco::DynamicAny::parse(var2str(item)));
+				process_network(Poco::DynamicAny::parse(toString(item)));
 			else
 				process_network(item);
 		}
 		break;
 	}
-	case char2hash("json"):
+	case hashCharPtr("json"):
 	{
 		process_network(Network.receive(networkData["hash"]));
 		break;
 	}
-	case char2hash("load_game"):
+	case hashCharPtr("load_game"):
 	{
 		process_network(Network.receive(networkData["token"]));
 		break;
 	}
-	case char2hash("teleport"):
+	case hashCharPtr("teleport"):
 	{
 		Map.clear();
 		Map.loadData_teleport(networkData["data"]);
 		break;
 	}
-	case char2hash("death"):
+	case hashCharPtr("death"):
 	{
 		Network.sendReload();
 		break;
 	}
-	case char2hash("spawn_comrade"):
+	case hashCharPtr("spawn_comrade"):
 	{
 		Map.addComrade(networkData["data"]);
 		break;
 	}
 	default:
 	{
-		std::cout << "process_network: " << var2str(networkData) << '\n';
+		std::cout << "process_network: " << toString(networkData) << '\n';
 		break;
 	}
 	}//end switch
